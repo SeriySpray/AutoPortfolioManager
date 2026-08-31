@@ -1,0 +1,5742 @@
+[
+  {
+    "text": "This video is an introduction to",
+    "start": 0.96,
+    "duration": 4.16
+  },
+  {
+    "text": "quantitive trading. I'll show how quant",
+    "start": 2.639,
+    "duration": 4.881
+  },
+  {
+    "text": "firms use models to build a statistical",
+    "start": 5.12,
+    "duration": 4.88
+  },
+  {
+    "text": "edge and how they turn that edge into",
+    "start": 7.52,
+    "duration": 5.119
+  },
+  {
+    "text": "strategies like market making and market",
+    "start": 10.0,
+    "duration": 5.28
+  },
+  {
+    "text": "taking. Along the way, we'll also cover",
+    "start": 12.639,
+    "duration": 4.161
+  },
+  {
+    "text": "some key ideas for market",
+    "start": 15.28,
+    "duration": 3.12
+  },
+  {
+    "text": "microstructure.",
+    "start": 16.8,
+    "duration": 3.84
+  },
+  {
+    "text": "To keep it accessible, I'll use simple",
+    "start": 18.4,
+    "duration": 4.959
+  },
+  {
+    "text": "animations instead of heavy math. I hope",
+    "start": 20.64,
+    "duration": 4.32
+  },
+  {
+    "text": "you find it useful and I'd love to hear",
+    "start": 23.359,
+    "duration": 5.321
+  },
+  {
+    "text": "your thoughts in the comments.",
+    "start": 24.96,
+    "duration": 3.72
+  },
+  {
+    "text": "Defining quant trading in one one",
+    "start": 28.88,
+    "duration": 4.24
+  },
+  {
+    "text": "sentence would be creating a statistical",
+    "start": 30.88,
+    "duration": 4.72
+  },
+  {
+    "text": "edge and executing it to create risk",
+    "start": 33.12,
+    "duration": 5.84
+  },
+  {
+    "text": "adjusted returns. In this video, we will",
+    "start": 35.6,
+    "duration": 7.119
+  },
+  {
+    "text": "quantify the edge and also risk adjusted",
+    "start": 38.96,
+    "duration": 6.48
+  },
+  {
+    "text": "returns. We're going to into detail how",
+    "start": 42.719,
+    "duration": 5.201
+  },
+  {
+    "text": "the edge is created and how the edge is",
+    "start": 45.44,
+    "duration": 4.0
+  },
+  {
+    "text": "executed.",
+    "start": 47.92,
+    "duration": 4.319
+  },
+  {
+    "text": "A more modern version of of this would",
+    "start": 49.44,
+    "duration": 4.799
+  },
+  {
+    "text": "be applying machine learning to to",
+    "start": 52.239,
+    "duration": 4.721
+  },
+  {
+    "text": "create a statistical edge.",
+    "start": 54.239,
+    "duration": 4.96
+  },
+  {
+    "text": "And just need to emphasize as well that",
+    "start": 56.96,
+    "duration": 5.279
+  },
+  {
+    "text": "the execution is equally as important as",
+    "start": 59.199,
+    "duration": 6.921
+  },
+  {
+    "text": "the the edge itself.",
+    "start": 62.239,
+    "duration": 3.881
+  },
+  {
+    "text": "At the heart of quant trading is the",
+    "start": 67.36,
+    "duration": 4.0
+  },
+  {
+    "text": "model typically a machine learning",
+    "start": 69.28,
+    "duration": 4.64
+  },
+  {
+    "text": "model. It has both an input and an",
+    "start": 71.36,
+    "duration": 5.28
+  },
+  {
+    "text": "output. The output is a prediction of a",
+    "start": 73.92,
+    "duration": 6.0
+  },
+  {
+    "text": "future quantity and is denoted by yhat",
+    "start": 76.64,
+    "duration": 6.64
+  },
+  {
+    "text": "and the input is denoted by x.",
+    "start": 79.92,
+    "duration": 5.36
+  },
+  {
+    "text": "There are two types of models,",
+    "start": 83.28,
+    "duration": 4.96
+  },
+  {
+    "text": "regression and classification.",
+    "start": 85.28,
+    "duration": 5.04
+  },
+  {
+    "text": "A regression model is a model that",
+    "start": 88.24,
+    "duration": 4.96
+  },
+  {
+    "text": "predicts a real valued number. It could",
+    "start": 90.32,
+    "duration": 5.759
+  },
+  {
+    "text": "be predicting the future price, but it",
+    "start": 93.2,
+    "duration": 6.16
+  },
+  {
+    "text": "could also be trying to predict the the",
+    "start": 96.079,
+    "duration": 5.761
+  },
+  {
+    "text": "future price difference, which is also",
+    "start": 99.36,
+    "duration": 4.56
+  },
+  {
+    "text": "called a price delta. For example, here",
+    "start": 101.84,
+    "duration": 5.919
+  },
+  {
+    "text": "it is predicting it's going down by $5.",
+    "start": 103.92,
+    "duration": 5.6
+  },
+  {
+    "text": "or it could be trying to predict the",
+    "start": 107.759,
+    "duration": 3.841
+  },
+  {
+    "text": "future return represented as a",
+    "start": 109.52,
+    "duration": 4.72
+  },
+  {
+    "text": "percentage. Returns are unitless and so",
+    "start": 111.6,
+    "duration": 4.799
+  },
+  {
+    "text": "you're able to compare a model across",
+    "start": 114.24,
+    "duration": 4.64
+  },
+  {
+    "text": "multiple assets.",
+    "start": 116.399,
+    "duration": 4.881
+  },
+  {
+    "text": "The other form of model is a",
+    "start": 118.88,
+    "duration": 4.96
+  },
+  {
+    "text": "classification model which classifies",
+    "start": 121.28,
+    "duration": 4.96
+  },
+  {
+    "text": "into categories. For example, we could",
+    "start": 123.84,
+    "duration": 4.16
+  },
+  {
+    "text": "predict if the price is going to go up",
+    "start": 126.24,
+    "duration": 4.48
+  },
+  {
+    "text": "or down. It also provides an associated",
+    "start": 128.0,
+    "duration": 5.36
+  },
+  {
+    "text": "probability too. So here it predicts",
+    "start": 130.72,
+    "duration": 7.96
+  },
+  {
+    "text": "it's going up with a 75% probability.",
+    "start": 133.36,
+    "duration": 5.32
+  },
+  {
+    "text": "We call the inputs to a model features",
+    "start": 141.28,
+    "duration": 5.599
+  },
+  {
+    "text": "and the output it predicts the target.",
+    "start": 143.92,
+    "duration": 4.959
+  },
+  {
+    "text": "If there's only one feature that's a",
+    "start": 146.879,
+    "duration": 4.72
+  },
+  {
+    "text": "univaric model",
+    "start": 148.879,
+    "duration": 5.921
+  },
+  {
+    "text": "can of course use multiple features.",
+    "start": 151.599,
+    "duration": 5.201
+  },
+  {
+    "text": "Several factors may influence the",
+    "start": 154.8,
+    "duration": 5.36
+  },
+  {
+    "text": "target, but here's a rule of thumb. The",
+    "start": 156.8,
+    "duration": 5.12
+  },
+  {
+    "text": "more features you add, the more",
+    "start": 160.16,
+    "duration": 4.4
+  },
+  {
+    "text": "complexity you introduce. And with",
+    "start": 161.92,
+    "duration": 4.64
+  },
+  {
+    "text": "complexity comes a higher risk of",
+    "start": 164.56,
+    "duration": 4.319
+  },
+  {
+    "text": "overfitting to noise and weaker",
+    "start": 166.56,
+    "duration": 4.08
+  },
+  {
+    "text": "generalization.",
+    "start": 168.879,
+    "duration": 3.921
+  },
+  {
+    "text": "That's why in this video we'll focus on",
+    "start": 170.64,
+    "duration": 4.72
+  },
+  {
+    "text": "univariatic models. They're simple,",
+    "start": 172.8,
+    "duration": 5.2
+  },
+  {
+    "text": "robust, and less prone to overfitting",
+    "start": 175.36,
+    "duration": 5.36
+  },
+  {
+    "text": "noise. Advanced models like neuronet",
+    "start": 178.0,
+    "duration": 4.8
+  },
+  {
+    "text": "networks can even produce multiple",
+    "start": 180.72,
+    "duration": 4.72
+  },
+  {
+    "text": "outputs. For instance, they might",
+    "start": 182.8,
+    "duration": 4.56
+  },
+  {
+    "text": "predict returns at several time",
+    "start": 185.44,
+    "duration": 3.519
+  },
+  {
+    "text": "horizons,",
+    "start": 187.36,
+    "duration": 3.76
+  },
+  {
+    "text": "the next minute, the next two minutes,",
+    "start": 188.959,
+    "duration": 4.56
+  },
+  {
+    "text": "and so on, or generate signals for",
+    "start": 191.12,
+    "duration": 6.399
+  },
+  {
+    "text": "multiple tradable instruments at once.",
+    "start": 193.519,
+    "duration": 5.841
+  },
+  {
+    "text": "We won't be covering neural networks",
+    "start": 197.519,
+    "duration": 4.241
+  },
+  {
+    "text": "here. Think of them like driving a",
+    "start": 199.36,
+    "duration": 5.12
+  },
+  {
+    "text": "Ferrari. Incredibly powerful, but easy",
+    "start": 201.76,
+    "duration": 5.119
+  },
+  {
+    "text": "to crash if you don't have experience.",
+    "start": 204.48,
+    "duration": 4.8
+  },
+  {
+    "text": "They often overfit to noise unless",
+    "start": 206.879,
+    "duration": 5.28
+  },
+  {
+    "text": "carefully managed. In practice, it's",
+    "start": 209.28,
+    "duration": 5.28
+  },
+  {
+    "text": "often better to choose simpler models",
+    "start": 212.159,
+    "duration": 4.8
+  },
+  {
+    "text": "with fewer parameters rather than",
+    "start": 214.56,
+    "duration": 5.759
+  },
+  {
+    "text": "complex ones. This principle is known as",
+    "start": 216.959,
+    "duration": 5.84
+  },
+  {
+    "text": "OKAM's Razer.",
+    "start": 220.319,
+    "duration": 4.881
+  },
+  {
+    "text": "So, what actually goes into a model and",
+    "start": 222.799,
+    "duration": 4.8
+  },
+  {
+    "text": "what comes out?",
+    "start": 225.2,
+    "duration": 6.24
+  },
+  {
+    "text": "Typically, the input is a time series,",
+    "start": 227.599,
+    "duration": 7.36
+  },
+  {
+    "text": "values ordered over time.",
+    "start": 231.44,
+    "duration": 6.079
+  },
+  {
+    "text": "The model uses past values of the time",
+    "start": 234.959,
+    "duration": 5.041
+  },
+  {
+    "text": "series to predict a future value in the",
+    "start": 237.519,
+    "duration": 5.36
+  },
+  {
+    "text": "time series. The predicted future value",
+    "start": 240.0,
+    "duration": 5.76
+  },
+  {
+    "text": "is denoted by the red line here.",
+    "start": 242.879,
+    "duration": 5.121
+  },
+  {
+    "text": "Depending on the model design, it could",
+    "start": 245.76,
+    "duration": 5.52
+  },
+  {
+    "text": "use the last n values or just the most",
+    "start": 248.0,
+    "duration": 6.239
+  },
+  {
+    "text": "recent one. In this video, we'll focus",
+    "start": 251.28,
+    "duration": 6.079
+  },
+  {
+    "text": "on the simplest case using only the last",
+    "start": 254.239,
+    "duration": 7.28
+  },
+  {
+    "text": "known value as the feature.",
+    "start": 257.359,
+    "duration": 7.761
+  },
+  {
+    "text": "The model by itself doesn't make money.",
+    "start": 261.519,
+    "duration": 6.161
+  },
+  {
+    "text": "It generates the edge. And this is where",
+    "start": 265.12,
+    "duration": 5.6
+  },
+  {
+    "text": "strategy comes in. Strategy is what",
+    "start": 267.68,
+    "duration": 5.92
+  },
+  {
+    "text": "executes the edge. Both are equally",
+    "start": 270.72,
+    "duration": 5.52
+  },
+  {
+    "text": "important. You can't make money without",
+    "start": 273.6,
+    "duration": 5.68
+  },
+  {
+    "text": "a good model and good execution. The",
+    "start": 276.24,
+    "duration": 5.44
+  },
+  {
+    "text": "strategy takes the model's predictions",
+    "start": 279.28,
+    "duration": 5.6
+  },
+  {
+    "text": "and turns them into orders. Think of",
+    "start": 281.68,
+    "duration": 6.48
+  },
+  {
+    "text": "card counting in blackjack. A system may",
+    "start": 284.88,
+    "duration": 5.599
+  },
+  {
+    "text": "give you an edge, but if you bet your",
+    "start": 288.16,
+    "duration": 4.24
+  },
+  {
+    "text": "entire bankroll on the first hand and",
+    "start": 290.479,
+    "duration": 5.841
+  },
+  {
+    "text": "lose, you execute it poorly. The edge is",
+    "start": 292.4,
+    "duration": 6.96
+  },
+  {
+    "text": "there, but the but bad execution wipes",
+    "start": 296.32,
+    "duration": 6.319
+  },
+  {
+    "text": "it out. Other execution details matter,",
+    "start": 299.36,
+    "duration": 5.6
+  },
+  {
+    "text": "too, like reducing latency to improve",
+    "start": 302.639,
+    "duration": 5.681
+  },
+  {
+    "text": "order book Q position or avoiding stale",
+    "start": 304.96,
+    "duration": 5.679
+  },
+  {
+    "text": "prices, but we'll keep those out of",
+    "start": 308.32,
+    "duration": 4.719
+  },
+  {
+    "text": "scope here. In this video, we'll explore",
+    "start": 310.639,
+    "duration": 4.801
+  },
+  {
+    "text": "both the model and the strategy and see",
+    "start": 313.039,
+    "duration": 4.801
+  },
+  {
+    "text": "how they work to together to form a",
+    "start": 315.44,
+    "duration": 4.4
+  },
+  {
+    "text": "complete trading algorithm. We'll look",
+    "start": 317.84,
+    "duration": 4.32
+  },
+  {
+    "text": "at both market making and market taken",
+    "start": 319.84,
+    "duration": 5.12
+  },
+  {
+    "text": "strategies.",
+    "start": 322.16,
+    "duration": 4.72
+  },
+  {
+    "text": "Now, I will discuss the core skills",
+    "start": 324.96,
+    "duration": 4.079
+  },
+  {
+    "text": "needed for quant trading in my humble",
+    "start": 326.88,
+    "duration": 4.08
+  },
+  {
+    "text": "opinion.",
+    "start": 329.039,
+    "duration": 4.961
+  },
+  {
+    "text": "The first is econometrics. Econometrics",
+    "start": 330.96,
+    "duration": 4.799
+  },
+  {
+    "text": "will give you a very good foundation to",
+    "start": 334.0,
+    "duration": 4.0
+  },
+  {
+    "text": "build upon. It has a rich history of",
+    "start": 335.759,
+    "duration": 5.201
+  },
+  {
+    "text": "analyzing time series data. It teaches",
+    "start": 338.0,
+    "duration": 5.28
+  },
+  {
+    "text": "you how to analyze time series data that",
+    "start": 340.96,
+    "duration": 5.28
+  },
+  {
+    "text": "changes over time like financial data",
+    "start": 343.28,
+    "duration": 5.44
+  },
+  {
+    "text": "and helps you identify key patterns and",
+    "start": 346.24,
+    "duration": 5.44
+  },
+  {
+    "text": "trends in a time series. You'll learn",
+    "start": 348.72,
+    "duration": 4.8
+  },
+  {
+    "text": "essential concepts like auto",
+    "start": 351.68,
+    "duration": 4.56
+  },
+  {
+    "text": "reggression, how past values influence",
+    "start": 353.52,
+    "duration": 5.679
+  },
+  {
+    "text": "the future. Non-stationerity, where the",
+    "start": 356.24,
+    "duration": 5.12
+  },
+  {
+    "text": "mean and variance of a time series are",
+    "start": 359.199,
+    "duration": 5.361
+  },
+  {
+    "text": "not constant over time. co co-",
+    "start": 361.36,
+    "duration": 6.24
+  },
+  {
+    "text": "integration how two non-stationary time",
+    "start": 364.56,
+    "duration": 5.759
+  },
+  {
+    "text": "series might move together in a stable",
+    "start": 367.6,
+    "duration": 4.879
+  },
+  {
+    "text": "predictable way.",
+    "start": 370.319,
+    "duration": 3.6
+  },
+  {
+    "text": "You could get away with skipping",
+    "start": 372.479,
+    "duration": 3.84
+  },
+  {
+    "text": "econometrics but it gives you a rich",
+    "start": 373.919,
+    "duration": 4.56
+  },
+  {
+    "text": "vocabulary for working with time series",
+    "start": 376.319,
+    "duration": 4.72
+  },
+  {
+    "text": "data. The main limitation is that",
+    "start": 378.479,
+    "duration": 4.801
+  },
+  {
+    "text": "classical econometric time series models",
+    "start": 381.039,
+    "duration": 4.561
+  },
+  {
+    "text": "don't scale well to large data sets and",
+    "start": 383.28,
+    "duration": 5.199
+  },
+  {
+    "text": "make strong assumptions about your data.",
+    "start": 385.6,
+    "duration": 4.4
+  },
+  {
+    "text": "And this is where machine learning comes",
+    "start": 388.479,
+    "duration": 4.56
+  },
+  {
+    "text": "in. If there's one skill to focus on,",
+    "start": 390.0,
+    "duration": 5.36
+  },
+  {
+    "text": "it's this. The power of machine learning",
+    "start": 393.039,
+    "duration": 4.16
+  },
+  {
+    "text": "is that it learns statistical patterns",
+    "start": 395.36,
+    "duration": 4.959
+  },
+  {
+    "text": "from historical data without having to",
+    "start": 397.199,
+    "duration": 5.601
+  },
+  {
+    "text": "explicitly write a complex mathematical",
+    "start": 400.319,
+    "duration": 5.281
+  },
+  {
+    "text": "formula for it. Instead of being",
+    "start": 402.8,
+    "duration": 4.8
+  },
+  {
+    "text": "manually programmed with rules, these",
+    "start": 405.6,
+    "duration": 3.84
+  },
+  {
+    "text": "models are trained on datadine",
+    "start": 407.6,
+    "duration": 3.92
+  },
+  {
+    "text": "predictive relationships.",
+    "start": 409.44,
+    "duration": 4.4
+  },
+  {
+    "text": "For example, the most advanced weather",
+    "start": 411.52,
+    "duration": 5.28
+  },
+  {
+    "text": "predictions used to rely on intricate",
+    "start": 413.84,
+    "duration": 5.919
+  },
+  {
+    "text": "hand-coded math formulas. But machine",
+    "start": 416.8,
+    "duration": 4.64
+  },
+  {
+    "text": "learning models surpass them by learning",
+    "start": 419.759,
+    "duration": 3.44
+  },
+  {
+    "text": "the best relationships and patterns",
+    "start": 421.44,
+    "duration": 4.56
+  },
+  {
+    "text": "directly from the data.",
+    "start": 423.199,
+    "duration": 5.921
+  },
+  {
+    "text": "Machine learning also gives two key",
+    "start": 426.0,
+    "duration": 5.84
+  },
+  {
+    "text": "advantages. One, scalability. They can",
+    "start": 429.12,
+    "duration": 5.44
+  },
+  {
+    "text": "scale to large highfrequency data sets",
+    "start": 431.84,
+    "duration": 5.6
+  },
+  {
+    "text": "such as the orderbook data.",
+    "start": 434.56,
+    "duration": 5.6
+  },
+  {
+    "text": "Two, flexibility. It doesn't make any",
+    "start": 437.44,
+    "duration": 4.72
+  },
+  {
+    "text": "assumptions about your data. You can",
+    "start": 440.16,
+    "duration": 4.0
+  },
+  {
+    "text": "easily adapt and tweak a model and",
+    "start": 442.16,
+    "duration": 5.439
+  },
+  {
+    "text": "change what it's optimizing for.",
+    "start": 444.16,
+    "duration": 5.439
+  },
+  {
+    "text": "Now, strong programming skills are a",
+    "start": 447.599,
+    "duration": 4.561
+  },
+  {
+    "text": "huge advantage. The better you can code,",
+    "start": 449.599,
+    "duration": 4.641
+  },
+  {
+    "text": "the less you need to rely on others, and",
+    "start": 452.16,
+    "duration": 4.4
+  },
+  {
+    "text": "the more control you have over your",
+    "start": 454.24,
+    "duration": 5.28
+  },
+  {
+    "text": "strategies. Writing latency sensitive",
+    "start": 456.56,
+    "duration": 4.96
+  },
+  {
+    "text": "algorithms, for example, requires deep",
+    "start": 459.52,
+    "duration": 4.959
+  },
+  {
+    "text": "knowledge of machine codes, CPUs, memory",
+    "start": 461.52,
+    "duration": 5.04
+  },
+  {
+    "text": "allocations, operating systems, and",
+    "start": 464.479,
+    "duration": 4.801
+  },
+  {
+    "text": "networking stacks. But speed isn't",
+    "start": 466.56,
+    "duration": 4.96
+  },
+  {
+    "text": "everything. What's often overlooked is",
+    "start": 469.28,
+    "duration": 5.199
+  },
+  {
+    "text": "systems that run automatically 247 and",
+    "start": 471.52,
+    "duration": 5.2
+  },
+  {
+    "text": "keep going even when hardware or",
+    "start": 474.479,
+    "duration": 4.481
+  },
+  {
+    "text": "software errors occur or without",
+    "start": 476.72,
+    "duration": 4.4
+  },
+  {
+    "text": "performance degrading over time. In",
+    "start": 478.96,
+    "duration": 4.4
+  },
+  {
+    "text": "practice, reliability is just as",
+    "start": 481.12,
+    "duration": 4.96
+  },
+  {
+    "text": "important as raw performance.",
+    "start": 483.36,
+    "duration": 4.399
+  },
+  {
+    "text": "Once you're running multiple trading",
+    "start": 486.08,
+    "duration": 4.799
+  },
+  {
+    "text": "strategy, scalability becomes critical.",
+    "start": 487.759,
+    "duration": 5.12
+  },
+  {
+    "text": "You don't want to duplicate code every",
+    "start": 490.879,
+    "duration": 4.481
+  },
+  {
+    "text": "time you test a new idea. Instead, you",
+    "start": 492.879,
+    "duration": 6.16
+  },
+  {
+    "text": "need a flexible research API that allows",
+    "start": 495.36,
+    "duration": 6.239
+  },
+  {
+    "text": "you to build, back test, and deploy",
+    "start": 499.039,
+    "duration": 4.801
+  },
+  {
+    "text": "strategies without compromising",
+    "start": 501.599,
+    "duration": 4.961
+  },
+  {
+    "text": "performance.",
+    "start": 503.84,
+    "duration": 4.56
+  },
+  {
+    "text": "And the foundation of all this is",
+    "start": 506.56,
+    "duration": 4.479
+  },
+  {
+    "text": "mathematics. But here's the good news.",
+    "start": 508.4,
+    "duration": 4.48
+  },
+  {
+    "text": "You don't need to be a math Olympiad",
+    "start": 511.039,
+    "duration": 4.161
+  },
+  {
+    "text": "winner or a fields medalist to succeed",
+    "start": 512.88,
+    "duration": 5.12
+  },
+  {
+    "text": "as a quant trader. The level of math",
+    "start": 515.2,
+    "duration": 5.279
+  },
+  {
+    "text": "involved isn't earthshattering. What you",
+    "start": 518.0,
+    "duration": 4.32
+  },
+  {
+    "text": "do need is strong mathematical",
+    "start": 520.479,
+    "duration": 3.841
+  },
+  {
+    "text": "reasoning, the ability to think",
+    "start": 522.32,
+    "duration": 4.16
+  },
+  {
+    "text": "logically about problems and understand",
+    "start": 524.32,
+    "duration": 4.72
+  },
+  {
+    "text": "your models on a deeper level, debug",
+    "start": 526.48,
+    "duration": 4.72
+  },
+  {
+    "text": "issues, and refine strategies with",
+    "start": 529.04,
+    "duration": 4.96
+  },
+  {
+    "text": "confidence. The math itself is less",
+    "start": 531.2,
+    "duration": 5.84
+  },
+  {
+    "text": "scary than you might think. You really",
+    "start": 534.0,
+    "duration": 6.32
+  },
+  {
+    "text": "need a solid grasp of three key areas.",
+    "start": 537.04,
+    "duration": 6.32
+  },
+  {
+    "text": "One, linear algebra. Two, multivariable",
+    "start": 540.32,
+    "duration": 4.639
+  },
+  {
+    "text": "calculus.",
+    "start": 543.36,
+    "duration": 4.479
+  },
+  {
+    "text": "Three, probability and statistics. The",
+    "start": 544.959,
+    "duration": 4.801
+  },
+  {
+    "text": "stronger your maths, the more deeply you",
+    "start": 547.839,
+    "duration": 3.921
+  },
+  {
+    "text": "can understand what's going on under the",
+    "start": 549.76,
+    "duration": 4.4
+  },
+  {
+    "text": "hood and the more freedom you'll have to",
+    "start": 551.76,
+    "duration": 5.4
+  },
+  {
+    "text": "innovate.",
+    "start": 554.16,
+    "duration": 3.0
+  },
+  {
+    "text": "Now, we need to quantify the statistical",
+    "start": 559.44,
+    "duration": 4.959
+  },
+  {
+    "text": "edge. The statistical edge is quantified",
+    "start": 561.44,
+    "duration": 6.079
+  },
+  {
+    "text": "as the expected value or EV for short.",
+    "start": 564.399,
+    "duration": 5.041
+  },
+  {
+    "text": "The expected value tells us on average",
+    "start": 567.519,
+    "duration": 5.121
+  },
+  {
+    "text": "how much net P&L we can expect per",
+    "start": 569.44,
+    "duration": 5.68
+  },
+  {
+    "text": "trade. The higher the EV, the more money",
+    "start": 572.64,
+    "duration": 4.879
+  },
+  {
+    "text": "we make over the long run.",
+    "start": 575.12,
+    "duration": 4.159
+  },
+  {
+    "text": "Mathematically, expected value is",
+    "start": 577.519,
+    "duration": 4.961
+  },
+  {
+    "text": "written as E of X where X is a random",
+    "start": 579.279,
+    "duration": 5.361
+  },
+  {
+    "text": "variable. In our case, the net P&L of a",
+    "start": 582.48,
+    "duration": 5.2
+  },
+  {
+    "text": "trade. The net P&L means the profit of a",
+    "start": 584.64,
+    "duration": 5.6
+  },
+  {
+    "text": "trade after accounting for all costs",
+    "start": 587.68,
+    "duration": 5.12
+  },
+  {
+    "text": "like transaction fees.",
+    "start": 590.24,
+    "duration": 4.159
+  },
+  {
+    "text": "Instead of diving straight into the",
+    "start": 592.8,
+    "duration": 3.599
+  },
+  {
+    "text": "formula, let's build some intuition with",
+    "start": 594.399,
+    "duration": 4.641
+  },
+  {
+    "text": "a simple game.",
+    "start": 596.399,
+    "duration": 5.521
+  },
+  {
+    "text": "Imagine a biased coin toss game. You win",
+    "start": 599.04,
+    "duration": 6.799
+  },
+  {
+    "text": "$1 of its heads with a 55% probability.",
+    "start": 601.92,
+    "duration": 7.919
+  },
+  {
+    "text": "You lose $125 if it's tails with a 45%",
+    "start": 605.839,
+    "duration": 7.521
+  },
+  {
+    "text": "probability. Would you play this game?",
+    "start": 609.839,
+    "duration": 5.521
+  },
+  {
+    "text": "At first glance, you might say yes.",
+    "start": 613.36,
+    "duration": 4.0
+  },
+  {
+    "text": "After all, you're winning more often",
+    "start": 615.36,
+    "duration": 4.56
+  },
+  {
+    "text": "than you lose. However, what if I told",
+    "start": 617.36,
+    "duration": 4.8
+  },
+  {
+    "text": "you you shouldn't play this game? You",
+    "start": 619.92,
+    "duration": 4.72
+  },
+  {
+    "text": "might be surprised given that we win",
+    "start": 622.16,
+    "duration": 5.44
+  },
+  {
+    "text": "more than we lose. If we calculate the",
+    "start": 624.64,
+    "duration": 4.8
+  },
+  {
+    "text": "expected value of this game, we will see",
+    "start": 627.6,
+    "duration": 4.08
+  },
+  {
+    "text": "that we lose money on average on each",
+    "start": 629.44,
+    "duration": 4.639
+  },
+  {
+    "text": "coin toss. So, we shouldn't play this",
+    "start": 631.68,
+    "duration": 4.32
+  },
+  {
+    "text": "game.",
+    "start": 634.079,
+    "duration": 3.921
+  },
+  {
+    "text": "Let's calculate the expected value for",
+    "start": 636.0,
+    "duration": 4.8
+  },
+  {
+    "text": "this game. The expected value is",
+    "start": 638.0,
+    "duration": 5.6
+  },
+  {
+    "text": "calculated by the probability of winning",
+    "start": 640.8,
+    "duration": 4.88
+  },
+  {
+    "text": "multiplied by the value of winning plus",
+    "start": 643.6,
+    "duration": 5.28
+  },
+  {
+    "text": "the probability of losing multiplied by",
+    "start": 645.68,
+    "duration": 6.159
+  },
+  {
+    "text": "the value of losing.",
+    "start": 648.88,
+    "duration": 5.92
+  },
+  {
+    "text": "If we know the values for this so we can",
+    "start": 651.839,
+    "duration": 6.401
+  },
+  {
+    "text": "plug them in. So now let's plug these",
+    "start": 654.8,
+    "duration": 5.599
+  },
+  {
+    "text": "values in. And then we see that it",
+    "start": 658.24,
+    "duration": 4.719
+  },
+  {
+    "text": "becomes 0.55",
+    "start": 660.399,
+    "duration": 6.321
+  },
+  {
+    "text": "ultiplied by 1 plus 0.445",
+    "start": 662.959,
+    "duration": 7.401
+  },
+  {
+    "text": "ultiplied by -1.25.",
+    "start": 666.72,
+    "duration": 3.64
+  },
+  {
+    "text": "If we do the calculation we can see that",
+    "start": 670.56,
+    "duration": 5.12
+  },
+  {
+    "text": "the expected value is negative and it's",
+    "start": 673.2,
+    "duration": 6.0
+  },
+  {
+    "text": "roughly -1 cent.",
+    "start": 675.68,
+    "duration": 6.719
+  },
+  {
+    "text": "This means on average we lose",
+    "start": 679.2,
+    "duration": 6.879
+  },
+  {
+    "text": "one and a4 cent per toss. The more you",
+    "start": 682.399,
+    "duration": 6.321
+  },
+  {
+    "text": "play the more you bleed money over time.",
+    "start": 686.079,
+    "duration": 5.2
+  },
+  {
+    "text": "The key lesson, don't focus only on win",
+    "start": 688.72,
+    "duration": 5.92
+  },
+  {
+    "text": "rate. Focus on the expected value. The a",
+    "start": 691.279,
+    "duration": 6.321
+  },
+  {
+    "text": "trading strategy with a 30% win rate can",
+    "start": 694.64,
+    "duration": 4.8
+  },
+  {
+    "text": "still make money if the winners are",
+    "start": 697.6,
+    "duration": 5.44
+  },
+  {
+    "text": "larger than uh are large. And a strategy",
+    "start": 699.44,
+    "duration": 7.04
+  },
+  {
+    "text": "with a 75 70% win rate can still lose",
+    "start": 703.04,
+    "duration": 6.4
+  },
+  {
+    "text": "money if the losses are too big. Now,",
+    "start": 706.48,
+    "duration": 5.359
+  },
+  {
+    "text": "let's look at another game. Another coin",
+    "start": 709.44,
+    "duration": 6.48
+  },
+  {
+    "text": "toss game, but this time you win $35 if",
+    "start": 711.839,
+    "duration": 8.321
+  },
+  {
+    "text": "it's heads with a 25% probability",
+    "start": 715.92,
+    "duration": 7.919
+  },
+  {
+    "text": "or you lose $1 if it's tails with a 75%",
+    "start": 720.16,
+    "duration": 6.16
+  },
+  {
+    "text": "probability. Should you play this game",
+    "start": 723.839,
+    "duration": 4.8
+  },
+  {
+    "text": "or not? If you learned your lesson from",
+    "start": 726.32,
+    "duration": 4.0
+  },
+  {
+    "text": "the previous game, then you know you",
+    "start": 728.639,
+    "duration": 4.401
+  },
+  {
+    "text": "shouldn't focus purely on the win rate.",
+    "start": 730.32,
+    "duration": 4.72
+  },
+  {
+    "text": "You should be f uh focusing on the",
+    "start": 733.04,
+    "duration": 4.88
+  },
+  {
+    "text": "expected value. So, let's do that. Let's",
+    "start": 735.04,
+    "duration": 5.76
+  },
+  {
+    "text": "calculate the expected value.",
+    "start": 737.92,
+    "duration": 4.479
+  },
+  {
+    "text": "Again, we know what the variables are,",
+    "start": 740.8,
+    "duration": 4.08
+  },
+  {
+    "text": "so we can easily plug them in. If we do",
+    "start": 742.399,
+    "duration": 4.081
+  },
+  {
+    "text": "the calculation, it turns out that we",
+    "start": 744.88,
+    "duration": 5.12
+  },
+  {
+    "text": "have a tiny positive expected value of",
+    "start": 746.48,
+    "duration": 7.2
+  },
+  {
+    "text": "roughly 1 and a4 cents. This means that",
+    "start": 750.0,
+    "duration": 5.76
+  },
+  {
+    "text": "we should play this game as many times",
+    "start": 753.68,
+    "duration": 4.959
+  },
+  {
+    "text": "as possible as we'll cumulatively make",
+    "start": 755.76,
+    "duration": 5.199
+  },
+  {
+    "text": "money. This is indicative of quant",
+    "start": 758.639,
+    "duration": 4.561
+  },
+  {
+    "text": "trading strategies. Just a tiny tiny",
+    "start": 760.959,
+    "duration": 5.281
+  },
+  {
+    "text": "edge. where you have a small positive",
+    "start": 763.2,
+    "duration": 6.639
+  },
+  {
+    "text": "expected value and only win maybe 51% of",
+    "start": 766.24,
+    "duration": 5.599
+  },
+  {
+    "text": "your trades. But if you make lots of",
+    "start": 769.839,
+    "duration": 4.0
+  },
+  {
+    "text": "bets, then you can make exceptional",
+    "start": 771.839,
+    "duration": 5.0
+  },
+  {
+    "text": "returns.",
+    "start": 773.839,
+    "duration": 3.0
+  },
+  {
+    "text": "We now need to quantify risk adjusted",
+    "start": 779.36,
+    "duration": 5.36
+  },
+  {
+    "text": "returns. We can informally define it as",
+    "start": 781.68,
+    "duration": 6.48
+  },
+  {
+    "text": "returns over risk. Quantifying returns",
+    "start": 784.72,
+    "duration": 5.44
+  },
+  {
+    "text": "is trivial, but how do you quantify",
+    "start": 788.16,
+    "duration": 5.44
+  },
+  {
+    "text": "risk? The most common measure of risk is",
+    "start": 790.16,
+    "duration": 5.6
+  },
+  {
+    "text": "to use standard deviation. And the",
+    "start": 793.6,
+    "duration": 3.919
+  },
+  {
+    "text": "standard deviation tells you how much",
+    "start": 795.76,
+    "duration": 4.639
+  },
+  {
+    "text": "variance there is in your data which",
+    "start": 797.519,
+    "duration": 5.041
+  },
+  {
+    "text": "essentially measures how stable the",
+    "start": 800.399,
+    "duration": 4.961
+  },
+  {
+    "text": "returns are. The more stable our returns",
+    "start": 802.56,
+    "duration": 5.2
+  },
+  {
+    "text": "are, the less likely we are to have huge",
+    "start": 805.36,
+    "duration": 4.24
+  },
+  {
+    "text": "draw downs.",
+    "start": 807.76,
+    "duration": 4.4
+  },
+  {
+    "text": "We we cannot remove risk to zero, but we",
+    "start": 809.6,
+    "duration": 5.52
+  },
+  {
+    "text": "can reduce it. More specifically, we",
+    "start": 812.16,
+    "duration": 5.28
+  },
+  {
+    "text": "define as the expected returns over the",
+    "start": 815.12,
+    "duration": 5.92
+  },
+  {
+    "text": "standard deviation of returns.",
+    "start": 817.44,
+    "duration": 5.92
+  },
+  {
+    "text": "This turns out to be a very common",
+    "start": 821.04,
+    "duration": 5.44
+  },
+  {
+    "text": "measure called the sharp ratio which is",
+    "start": 823.36,
+    "duration": 4.719
+  },
+  {
+    "text": "the difference between the expected",
+    "start": 826.48,
+    "duration": 4.08
+  },
+  {
+    "text": "returns and the risk-free rate over the",
+    "start": 828.079,
+    "duration": 5.041
+  },
+  {
+    "text": "standard deviation of returns. However,",
+    "start": 830.56,
+    "duration": 4.399
+  },
+  {
+    "text": "because most quant trading strategies",
+    "start": 833.12,
+    "duration": 4.24
+  },
+  {
+    "text": "are intraday where we hold onto",
+    "start": 834.959,
+    "duration": 6.0
+  },
+  {
+    "text": "positions for minutes or hours that we",
+    "start": 837.36,
+    "duration": 5.839
+  },
+  {
+    "text": "remove the risk-free rate term because",
+    "start": 840.959,
+    "duration": 4.161
+  },
+  {
+    "text": "we don't hold positions long enough to",
+    "start": 843.199,
+    "duration": 4.08
+  },
+  {
+    "text": "factor it in.",
+    "start": 845.12,
+    "duration": 4.399
+  },
+  {
+    "text": "And to to develop the intuition behind",
+    "start": 847.279,
+    "duration": 5.36
+  },
+  {
+    "text": "the sharp ratio, I've animated uh some",
+    "start": 849.519,
+    "duration": 7.161
+  },
+  {
+    "text": "simulated sharp ratios.",
+    "start": 852.639,
+    "duration": 4.041
+  },
+  {
+    "text": "The sharp ratio is simply a way of",
+    "start": 857.199,
+    "duration": 5.121
+  },
+  {
+    "text": "measuring return per unit of risk. Here",
+    "start": 859.44,
+    "duration": 6.0
+  },
+  {
+    "text": "our y-axis is cumulative P&L and the",
+    "start": 862.32,
+    "duration": 6.319
+  },
+  {
+    "text": "xaxis is time. What I'm showing is how",
+    "start": 865.44,
+    "duration": 6.16
+  },
+  {
+    "text": "different sharp ratios affect returns.",
+    "start": 868.639,
+    "duration": 6.0
+  },
+  {
+    "text": "As the sharp increases, the equity curve",
+    "start": 871.6,
+    "duration": 6.0
+  },
+  {
+    "text": "smooths out. returns become more stable",
+    "start": 874.639,
+    "duration": 5.841
+  },
+  {
+    "text": "until at very high sharp values it looks",
+    "start": 877.6,
+    "duration": 5.359
+  },
+  {
+    "text": "like a straight line. Why do we care",
+    "start": 880.48,
+    "duration": 5.359
+  },
+  {
+    "text": "about reducing risk? One key motivation",
+    "start": 882.959,
+    "duration": 5.521
+  },
+  {
+    "text": "is leverage. Leverage is multiplying",
+    "start": 885.839,
+    "duration": 5.12
+  },
+  {
+    "text": "your profits or losses. So either",
+    "start": 888.48,
+    "duration": 4.719
+  },
+  {
+    "text": "magnify your losses even bigger if you",
+    "start": 890.959,
+    "duration": 4.641
+  },
+  {
+    "text": "lose more than you win. With a low",
+    "start": 893.199,
+    "duration": 4.961
+  },
+  {
+    "text": "sharp, using leverage can quickly wipe",
+    "start": 895.6,
+    "duration": 4.479
+  },
+  {
+    "text": "you out through liquidations and large",
+    "start": 898.16,
+    "duration": 4.88
+  },
+  {
+    "text": "draw downs. But the higher the sharp,",
+    "start": 900.079,
+    "duration": 4.481
+  },
+  {
+    "text": "the more safely you can increase",
+    "start": 903.04,
+    "duration": 4.88
+  },
+  {
+    "text": "leverage and multiply profits. Now, this",
+    "start": 904.56,
+    "duration": 5.44
+  },
+  {
+    "text": "doesn't mean you can't make money with a",
+    "start": 907.92,
+    "duration": 4.0
+  },
+  {
+    "text": "low sharp ratio. Many profitable",
+    "start": 910.0,
+    "duration": 4.56
+  },
+  {
+    "text": "strategies do, but it does cap how much",
+    "start": 911.92,
+    "duration": 5.359
+  },
+  {
+    "text": "leverage you can safely allocate. For",
+    "start": 914.56,
+    "duration": 5.2
+  },
+  {
+    "text": "example, intraday quant strategies",
+    "start": 917.279,
+    "duration": 4.321
+  },
+  {
+    "text": "holding positions for just seconds or",
+    "start": 919.76,
+    "duration": 4.8
+  },
+  {
+    "text": "minutes often have high sharp ratios in",
+    "start": 921.6,
+    "duration": 6.0
+  },
+  {
+    "text": "the double digits. They may only win 51",
+    "start": 924.56,
+    "duration": 6.24
+  },
+  {
+    "text": "to 53% of their trades, but because they",
+    "start": 927.6,
+    "duration": 5.2
+  },
+  {
+    "text": "make so many small bets with a positive",
+    "start": 930.8,
+    "duration": 4.64
+  },
+  {
+    "text": "edge, the cumulative returns grow",
+    "start": 932.8,
+    "duration": 5.76
+  },
+  {
+    "text": "smoothly. At very high sharp levels, the",
+    "start": 935.44,
+    "duration": 5.44
+  },
+  {
+    "text": "equity curve looks like a straight line,",
+    "start": 938.56,
+    "duration": 4.8
+  },
+  {
+    "text": "practically printing money. Hopefully,",
+    "start": 940.88,
+    "duration": 4.639
+  },
+  {
+    "text": "you can see the motivation for reducing",
+    "start": 943.36,
+    "duration": 5.12
+  },
+  {
+    "text": "risk. Minimize drawd downs, use leverage",
+    "start": 945.519,
+    "duration": 7.481
+  },
+  {
+    "text": "safely, and stable returns.",
+    "start": 948.48,
+    "duration": 4.52
+  },
+  {
+    "text": "We need to discuss simple returns and",
+    "start": 956.72,
+    "duration": 5.84
+  },
+  {
+    "text": "its biggest limitation. The equation for",
+    "start": 959.6,
+    "duration": 5.52
+  },
+  {
+    "text": "simple returns is simple.",
+    "start": 962.56,
+    "duration": 4.16
+  },
+  {
+    "text": "Just take the difference between the",
+    "start": 965.12,
+    "duration": 3.36
+  },
+  {
+    "text": "current price and previous price and",
+    "start": 966.72,
+    "duration": 4.64
+  },
+  {
+    "text": "divide by the previous price. However,",
+    "start": 968.48,
+    "duration": 5.12
+  },
+  {
+    "text": "using simple returns has a limitation in",
+    "start": 971.36,
+    "duration": 4.88
+  },
+  {
+    "text": "that they are not symmetric.",
+    "start": 973.6,
+    "duration": 4.64
+  },
+  {
+    "text": "The limitation is best shown with an",
+    "start": 976.24,
+    "duration": 4.399
+  },
+  {
+    "text": "example. Here is a time series where the",
+    "start": 978.24,
+    "duration": 5.2
+  },
+  {
+    "text": "price increases by $20 and then",
+    "start": 980.639,
+    "duration": 5.841
+  },
+  {
+    "text": "decreases by $20. If we use simple",
+    "start": 983.44,
+    "duration": 7.04
+  },
+  {
+    "text": "returns, then it goes up by 20% but",
+    "start": 986.48,
+    "duration": 7.84
+  },
+  {
+    "text": "decreases by -6.6%.",
+    "start": 990.48,
+    "duration": 6.24
+  },
+  {
+    "text": "So it's asymmetric. We want to make",
+    "start": 994.32,
+    "duration": 4.8
+  },
+  {
+    "text": "return symmetric. So it goes up and down",
+    "start": 996.72,
+    "duration": 4.88
+  },
+  {
+    "text": "by the same amount. This is where log",
+    "start": 999.12,
+    "duration": 5.12
+  },
+  {
+    "text": "returns come in.",
+    "start": 1001.6,
+    "duration": 4.88
+  },
+  {
+    "text": "Log returns is the logarithm of the",
+    "start": 1004.24,
+    "duration": 4.8
+  },
+  {
+    "text": "current price over the previous price.",
+    "start": 1006.48,
+    "duration": 5.52
+  },
+  {
+    "text": "It has a property called time additivity",
+    "start": 1009.04,
+    "duration": 4.88
+  },
+  {
+    "text": "in that you can sum them together to",
+    "start": 1012.0,
+    "duration": 4.72
+  },
+  {
+    "text": "calculate the compound return. So let's",
+    "start": 1013.92,
+    "duration": 5.2
+  },
+  {
+    "text": "go back to the previous example and use",
+    "start": 1016.72,
+    "duration": 4.88
+  },
+  {
+    "text": "log returns instead and see if it solves",
+    "start": 1019.12,
+    "duration": 5.719
+  },
+  {
+    "text": "the problem.",
+    "start": 1021.6,
+    "duration": 3.239
+  },
+  {
+    "text": "Using log returns instead of simple",
+    "start": 1024.88,
+    "duration": 4.959
+  },
+  {
+    "text": "returns makes our return symmetric.",
+    "start": 1027.199,
+    "duration": 5.201
+  },
+  {
+    "text": "Again, it goes up by $20 and goes down",
+    "start": 1029.839,
+    "duration": 6.08
+  },
+  {
+    "text": "by $20. Using log returns instead, it",
+    "start": 1032.4,
+    "duration": 5.919
+  },
+  {
+    "text": "goes up by 18.2%",
+    "start": 1035.919,
+    "duration": 5.52
+  },
+  {
+    "text": "and goes down by 18.2%.",
+    "start": 1038.319,
+    "duration": 5.441
+  },
+  {
+    "text": "As you can see, it's symmetric now,",
+    "start": 1041.439,
+    "duration": 4.161
+  },
+  {
+    "text": "which plays nicely with our machine",
+    "start": 1043.76,
+    "duration": 3.76
+  },
+  {
+    "text": "learning models and it's easier to",
+    "start": 1045.6,
+    "duration": 4.92
+  },
+  {
+    "text": "reason.",
+    "start": 1047.52,
+    "duration": 3.0
+  },
+  {
+    "text": "Before we go into models, we need to",
+    "start": 1053.12,
+    "duration": 4.64
+  },
+  {
+    "text": "discuss time series. Broadly speaking,",
+    "start": 1054.96,
+    "duration": 4.959
+  },
+  {
+    "text": "there are two types. The first and most",
+    "start": 1057.76,
+    "duration": 4.799
+  },
+  {
+    "text": "common is a regular time series where",
+    "start": 1059.919,
+    "duration": 5.441
+  },
+  {
+    "text": "each data point is recorded at evenly",
+    "start": 1062.559,
+    "duration": 6.401
+  },
+  {
+    "text": "spaced intervals marked by fixed time",
+    "start": 1065.36,
+    "duration": 5.199
+  },
+  {
+    "text": "delta.",
+    "start": 1068.96,
+    "duration": 4.16
+  },
+  {
+    "text": "For example, in an hourly time series,",
+    "start": 1070.559,
+    "duration": 5.12
+  },
+  {
+    "text": "every data point represents exactly one",
+    "start": 1073.12,
+    "duration": 5.6
+  },
+  {
+    "text": "business hour. In this setup, when we",
+    "start": 1075.679,
+    "duration": 5.521
+  },
+  {
+    "text": "talk about the next data point, we're",
+    "start": 1078.72,
+    "duration": 4.56
+  },
+  {
+    "text": "simply referring to the value at the",
+    "start": 1081.2,
+    "duration": 5.56
+  },
+  {
+    "text": "following hour.",
+    "start": 1083.28,
+    "duration": 3.48
+  },
+  {
+    "text": "However, in high frequency data that the",
+    "start": 1089.679,
+    "duration": 5.681
+  },
+  {
+    "text": "data comes in as an irregular time",
+    "start": 1093.12,
+    "duration": 4.72
+  },
+  {
+    "text": "series and this essentially means that",
+    "start": 1095.36,
+    "duration": 5.36
+  },
+  {
+    "text": "the the delta t between each data point",
+    "start": 1097.84,
+    "duration": 6.16
+  },
+  {
+    "text": "is of a inconsistent size an arbitrary",
+    "start": 1100.72,
+    "duration": 5.199
+  },
+  {
+    "text": "size. So for example, if this was",
+    "start": 1104.0,
+    "duration": 4.48
+  },
+  {
+    "text": "trades, then",
+    "start": 1105.919,
+    "duration": 4.241
+  },
+  {
+    "text": "the trades could come in in the next",
+    "start": 1108.48,
+    "duration": 4.16
+  },
+  {
+    "text": "second, the next minute, the next hour.",
+    "start": 1110.16,
+    "duration": 4.32
+  },
+  {
+    "text": "And essentially what we're predicting",
+    "start": 1112.64,
+    "duration": 4.48
+  },
+  {
+    "text": "here is rather than say like the the",
+    "start": 1114.48,
+    "duration": 4.8
+  },
+  {
+    "text": "price in the next hour, we're predicting",
+    "start": 1117.12,
+    "duration": 5.04
+  },
+  {
+    "text": "in the next uh data point which we call",
+    "start": 1119.28,
+    "duration": 5.88
+  },
+  {
+    "text": "ticks.",
+    "start": 1122.16,
+    "duration": 3.0
+  },
+  {
+    "text": "Now we need to discuss the concept of",
+    "start": 1126.0,
+    "duration": 5.44
+  },
+  {
+    "text": "auto reggression. Autogression is making",
+    "start": 1128.08,
+    "duration": 5.68
+  },
+  {
+    "text": "predictions of future values from the",
+    "start": 1131.44,
+    "duration": 6.239
+  },
+  {
+    "text": "previous known values which we call lags",
+    "start": 1133.76,
+    "duration": 7.12
+  },
+  {
+    "text": "in ecomtrics. And you probably use auto",
+    "start": 1137.679,
+    "duration": 4.801
+  },
+  {
+    "text": "reggression every day without even",
+    "start": 1140.88,
+    "duration": 3.52
+  },
+  {
+    "text": "noticing. So for example, if you're",
+    "start": 1142.48,
+    "duration": 5.12
+  },
+  {
+    "text": "using chat GPT, this is essentially",
+    "start": 1144.4,
+    "duration": 6.399
+  },
+  {
+    "text": "predicting the the next word from the",
+    "start": 1147.6,
+    "duration": 5.76
+  },
+  {
+    "text": "from the previous words it's generated.",
+    "start": 1150.799,
+    "duration": 5.041
+  },
+  {
+    "text": "And so it this is why it's called an",
+    "start": 1153.36,
+    "duration": 4.16
+  },
+  {
+    "text": "auto reggressive model because it's",
+    "start": 1155.84,
+    "duration": 4.64
+  },
+  {
+    "text": "making predictions from previous values.",
+    "start": 1157.52,
+    "duration": 4.48
+  },
+  {
+    "text": "And it's exactly the same with a time",
+    "start": 1160.48,
+    "duration": 3.199
+  },
+  {
+    "text": "series. We're interested in making",
+    "start": 1162.0,
+    "duration": 4.24
+  },
+  {
+    "text": "predictions from pre previous known",
+    "start": 1163.679,
+    "duration": 5.561
+  },
+  {
+    "text": "values.",
+    "start": 1166.24,
+    "duration": 3.0
+  },
+  {
+    "text": "Now we're moving into my favorite",
+    "start": 1171.76,
+    "duration": 4.24
+  },
+  {
+    "text": "section, models. In this part, we'll",
+    "start": 1173.6,
+    "duration": 4.959
+  },
+  {
+    "text": "focus on the simplest setup, a one",
+    "start": 1176.0,
+    "duration": 5.039
+  },
+  {
+    "text": "input, one output model. More",
+    "start": 1178.559,
+    "duration": 4.161
+  },
+  {
+    "text": "specifically, we'll be using a linear",
+    "start": 1181.039,
+    "duration": 4.0
+  },
+  {
+    "text": "regression. It's one of the most basic",
+    "start": 1182.72,
+    "duration": 3.839
+  },
+  {
+    "text": "machine learning models, but don't let",
+    "start": 1185.039,
+    "duration": 3.601
+  },
+  {
+    "text": "that fool you. There's a lot of power in",
+    "start": 1186.559,
+    "duration": 5.321
+  },
+  {
+    "text": "its simplicity.",
+    "start": 1188.64,
+    "duration": 3.24
+  },
+  {
+    "text": "This linear regression model only has",
+    "start": 1192.08,
+    "duration": 5.76
+  },
+  {
+    "text": "two parameters, the weight and the bias.",
+    "start": 1194.48,
+    "duration": 5.84
+  },
+  {
+    "text": "That's it. It multiplies the input with",
+    "start": 1197.84,
+    "duration": 5.44
+  },
+  {
+    "text": "the weight and adds a bias. And that",
+    "start": 1200.32,
+    "duration": 5.12
+  },
+  {
+    "text": "simplicity is what makes it beautiful",
+    "start": 1203.28,
+    "duration": 4.56
+  },
+  {
+    "text": "and powerful because it only has two",
+    "start": 1205.44,
+    "duration": 4.72
+  },
+  {
+    "text": "parameters. One, it has high",
+    "start": 1207.84,
+    "duration": 4.0
+  },
+  {
+    "text": "interpretability. We can actually",
+    "start": 1210.16,
+    "duration": 5.12
+  },
+  {
+    "text": "understand why it makes each prediction.",
+    "start": 1211.84,
+    "duration": 5.52
+  },
+  {
+    "text": "Two, it tends to generalize well,",
+    "start": 1215.28,
+    "duration": 4.24
+  },
+  {
+    "text": "meaning it's less sensitive to noise.",
+    "start": 1217.36,
+    "duration": 3.84
+  },
+  {
+    "text": "And trust me, there's a lot of noise in",
+    "start": 1219.52,
+    "duration": 4.64
+  },
+  {
+    "text": "trading data. And three, it's calculated",
+    "start": 1221.2,
+    "duration": 5.2
+  },
+  {
+    "text": "very quickly for latency sensitive",
+    "start": 1224.16,
+    "duration": 5.12
+  },
+  {
+    "text": "trading. It only takes three to five CPU",
+    "start": 1226.4,
+    "duration": 6.08
+  },
+  {
+    "text": "cycles to make a prediction.",
+    "start": 1229.28,
+    "duration": 5.36
+  },
+  {
+    "text": "More specifically, we're going to look",
+    "start": 1232.48,
+    "duration": 5.36
+  },
+  {
+    "text": "at an auto reggressive model where we",
+    "start": 1234.64,
+    "duration": 5.12
+  },
+  {
+    "text": "make a prediction from the last known",
+    "start": 1237.84,
+    "duration": 4.8
+  },
+  {
+    "text": "previous value in the time series. In",
+    "start": 1239.76,
+    "duration": 5.44
+  },
+  {
+    "text": "econometrics, this is called an AR1",
+    "start": 1242.64,
+    "duration": 5.2
+  },
+  {
+    "text": "model. The prediction is the future",
+    "start": 1245.2,
+    "duration": 5.44
+  },
+  {
+    "text": "value of the time series. And now we'll",
+    "start": 1247.84,
+    "duration": 7.719
+  },
+  {
+    "text": "show examples of using this model.",
+    "start": 1250.64,
+    "duration": 4.919
+  },
+  {
+    "text": "With this auto reggressive linear",
+    "start": 1256.72,
+    "duration": 3.76
+  },
+  {
+    "text": "regression model, we can model the most",
+    "start": 1258.48,
+    "duration": 4.64
+  },
+  {
+    "text": "two fundamental trading behaviors, mean",
+    "start": 1260.48,
+    "duration": 5.199
+  },
+  {
+    "text": "reversion and momentum. I will now show",
+    "start": 1263.12,
+    "duration": 4.559
+  },
+  {
+    "text": "examples of our model fit into these two",
+    "start": 1265.679,
+    "duration": 4.161
+  },
+  {
+    "text": "trading behaviors. So, let's dive right",
+    "start": 1267.679,
+    "duration": 5.161
+  },
+  {
+    "text": "in.",
+    "start": 1269.84,
+    "duration": 3.0
+  },
+  {
+    "text": "Mean reversion is essentially what comes",
+    "start": 1273.28,
+    "duration": 5.279
+  },
+  {
+    "text": "up must come down and what comes down",
+    "start": 1275.84,
+    "duration": 5.12
+  },
+  {
+    "text": "must come up. It hovers around a central",
+    "start": 1278.559,
+    "duration": 5.281
+  },
+  {
+    "text": "tendency. In this example, it's zero.",
+    "start": 1280.96,
+    "duration": 5.44
+  },
+  {
+    "text": "Here is a log returns time series and",
+    "start": 1283.84,
+    "duration": 4.56
+  },
+  {
+    "text": "you can see it goes from positive to",
+    "start": 1286.4,
+    "duration": 5.12
+  },
+  {
+    "text": "negative and from negative to positive.",
+    "start": 1288.4,
+    "duration": 5.279
+  },
+  {
+    "text": "It's very common to see mean reversion",
+    "start": 1291.52,
+    "duration": 4.08
+  },
+  {
+    "text": "in short time scales like seconds and",
+    "start": 1293.679,
+    "duration": 3.521
+  },
+  {
+    "text": "minutes.",
+    "start": 1295.6,
+    "duration": 4.959
+  },
+  {
+    "text": "So now let's look how we can model mean",
+    "start": 1297.2,
+    "duration": 8.52
+  },
+  {
+    "text": "reversion using our linear regression.",
+    "start": 1300.559,
+    "duration": 5.161
+  },
+  {
+    "text": "Now we need to optimize the weight and",
+    "start": 1308.159,
+    "duration": 3.921
+  },
+  {
+    "text": "the bias to model this mean reversion",
+    "start": 1310.08,
+    "duration": 4.4
+  },
+  {
+    "text": "behavior. We will go into more detail",
+    "start": 1312.08,
+    "duration": 4.32
+  },
+  {
+    "text": "how the parameters are chosen later in",
+    "start": 1314.48,
+    "duration": 4.319
+  },
+  {
+    "text": "the video, but let's just say we've just",
+    "start": 1316.4,
+    "duration": 4.48
+  },
+  {
+    "text": "used a machine learning algorithm to",
+    "start": 1318.799,
+    "duration": 4.641
+  },
+  {
+    "text": "optimize the weight and bias. Here, our",
+    "start": 1320.88,
+    "duration": 4.24
+  },
+  {
+    "text": "machine learning algorithm has",
+    "start": 1323.44,
+    "duration": 3.84
+  },
+  {
+    "text": "calculated a negative weight and a small",
+    "start": 1325.12,
+    "duration": 5.12
+  },
+  {
+    "text": "tiny bias. The most important detail is",
+    "start": 1327.28,
+    "duration": 4.879
+  },
+  {
+    "text": "that the weight is negative. So, it",
+    "start": 1330.24,
+    "duration": 4.24
+  },
+  {
+    "text": "changes the sign of our lag. So, if it's",
+    "start": 1332.159,
+    "duration": 4.4
+  },
+  {
+    "text": "passed a positive log return, it changes",
+    "start": 1334.48,
+    "duration": 4.72
+  },
+  {
+    "text": "it to a negative log return, then adds a",
+    "start": 1336.559,
+    "duration": 5.12
+  },
+  {
+    "text": "small bias. If passed in a negative log",
+    "start": 1339.2,
+    "duration": 4.56
+  },
+  {
+    "text": "return, then it changes the sign to",
+    "start": 1341.679,
+    "duration": 4.401
+  },
+  {
+    "text": "positive. Now let's see how well our",
+    "start": 1343.76,
+    "duration": 5.039
+  },
+  {
+    "text": "model has done to predict future values",
+    "start": 1346.08,
+    "duration": 7.16
+  },
+  {
+    "text": "by plotting them against each other.",
+    "start": 1348.799,
+    "duration": 4.441
+  },
+  {
+    "text": "The blue line here shows the actual",
+    "start": 1353.44,
+    "duration": 4.88
+  },
+  {
+    "text": "values we want to predict and the green",
+    "start": 1356.4,
+    "duration": 4.0
+  },
+  {
+    "text": "line shows the predictive values from",
+    "start": 1358.32,
+    "duration": 4.4
+  },
+  {
+    "text": "our model. With even such a simple",
+    "start": 1360.4,
+    "duration": 3.84
+  },
+  {
+    "text": "model, you can see it's done a really",
+    "start": 1362.72,
+    "duration": 3.199
+  },
+  {
+    "text": "good job of capturing this mean",
+    "start": 1364.24,
+    "duration": 4.08
+  },
+  {
+    "text": "reversion behavior. The directional",
+    "start": 1365.919,
+    "duration": 5.921
+  },
+  {
+    "text": "accuracy is 100% accurate. It gets the",
+    "start": 1368.32,
+    "duration": 6.4
+  },
+  {
+    "text": "sign right at every single point. Notice",
+    "start": 1371.84,
+    "duration": 5.28
+  },
+  {
+    "text": "how the predictor values stay very close",
+    "start": 1374.72,
+    "duration": 5.04
+  },
+  {
+    "text": "to the actual ones. And here's the key",
+    "start": 1377.12,
+    "duration": 4.32
+  },
+  {
+    "text": "takeaway. The negative weight in the",
+    "start": 1379.76,
+    "duration": 3.76
+  },
+  {
+    "text": "model can be interpreted as a mean",
+    "start": 1381.44,
+    "duration": 3.84
+  },
+  {
+    "text": "reversion. Think of it like a rubber",
+    "start": 1383.52,
+    "duration": 4.24
+  },
+  {
+    "text": "band where the price moves away, the",
+    "start": 1385.28,
+    "duration": 4.32
+  },
+  {
+    "text": "negative weight pulls back towards the",
+    "start": 1387.76,
+    "duration": 4.84
+  },
+  {
+    "text": "mean.",
+    "start": 1389.6,
+    "duration": 3.0
+  },
+  {
+    "text": "Now let's see how the same model can",
+    "start": 1395.12,
+    "duration": 4.24
+  },
+  {
+    "text": "also capture the other major trading",
+    "start": 1397.2,
+    "duration": 5.359
+  },
+  {
+    "text": "behavior momentum. This behavior is",
+    "start": 1399.36,
+    "duration": 6.48
+  },
+  {
+    "text": "essentially modeling what goes up stays",
+    "start": 1402.559,
+    "duration": 6.321
+  },
+  {
+    "text": "up and what goes down stays down. As you",
+    "start": 1405.84,
+    "duration": 5.28
+  },
+  {
+    "text": "can see in this log returns time series",
+    "start": 1408.88,
+    "duration": 4.08
+  },
+  {
+    "text": "for the first three data points it",
+    "start": 1411.12,
+    "duration": 4.0
+  },
+  {
+    "text": "remains positive. So it's trending",
+    "start": 1412.96,
+    "duration": 4.48
+  },
+  {
+    "text": "upwards and then the next three values",
+    "start": 1415.12,
+    "duration": 4.08
+  },
+  {
+    "text": "are negative log returns where it's",
+    "start": 1417.44,
+    "duration": 4.32
+  },
+  {
+    "text": "trending downwards. This persistence in",
+    "start": 1419.2,
+    "duration": 5.52
+  },
+  {
+    "text": "direction is the hallmark of momentum.",
+    "start": 1421.76,
+    "duration": 5.2
+  },
+  {
+    "text": "In financial markets, momentum is one of",
+    "start": 1424.72,
+    "duration": 4.24
+  },
+  {
+    "text": "the most widely studied and traded",
+    "start": 1426.96,
+    "duration": 4.56
+  },
+  {
+    "text": "phenomenas, especially at mediumtime",
+    "start": 1428.96,
+    "duration": 4.719
+  },
+  {
+    "text": "horizons. Let's see how we can model",
+    "start": 1431.52,
+    "duration": 5.12
+  },
+  {
+    "text": "this.",
+    "start": 1433.679,
+    "duration": 5.841
+  },
+  {
+    "text": "Again, using our linear model, we apply",
+    "start": 1436.64,
+    "duration": 4.32
+  },
+  {
+    "text": "machine learning to calculate the",
+    "start": 1439.52,
+    "duration": 4.0
+  },
+  {
+    "text": "optimal parameters. The key point here",
+    "start": 1440.96,
+    "duration": 4.88
+  },
+  {
+    "text": "is that the this time the weight is",
+    "start": 1443.52,
+    "duration": 4.56
+  },
+  {
+    "text": "positive. So if the current log return",
+    "start": 1445.84,
+    "duration": 4.64
+  },
+  {
+    "text": "is positive, multiplying by the weight",
+    "start": 1448.08,
+    "duration": 5.12
+  },
+  {
+    "text": "keeps the sign positive and then adds a",
+    "start": 1450.48,
+    "duration": 6.079
+  },
+  {
+    "text": "small negative bias. Conversely, if the",
+    "start": 1453.2,
+    "duration": 5.68
+  },
+  {
+    "text": "input is negative, the weight keeps the",
+    "start": 1456.559,
+    "duration": 4.801
+  },
+  {
+    "text": "sign negative. In other words, a",
+    "start": 1458.88,
+    "duration": 5.44
+  },
+  {
+    "text": "positive weight reinforces the existing",
+    "start": 1461.36,
+    "duration": 5.12
+  },
+  {
+    "text": "direction, which is exactly what",
+    "start": 1464.32,
+    "duration": 5.88
+  },
+  {
+    "text": "momentum is about.",
+    "start": 1466.48,
+    "duration": 3.72
+  },
+  {
+    "text": "Now let's see how well these parameters",
+    "start": 1470.799,
+    "duration": 5.041
+  },
+  {
+    "text": "model momentum. The blue line represents",
+    "start": 1473.36,
+    "duration": 4.799
+  },
+  {
+    "text": "the actual values and the red line shows",
+    "start": 1475.84,
+    "duration": 4.56
+  },
+  {
+    "text": "our predicted values. We can see that",
+    "start": 1478.159,
+    "duration": 5.681
+  },
+  {
+    "text": "the directional accuracy is nearly 100%.",
+    "start": 1480.4,
+    "duration": 5.44
+  },
+  {
+    "text": "And it got the sign wrong at time",
+    "start": 1483.84,
+    "duration": 4.64
+  },
+  {
+    "text": "point.3 where the series transitions",
+    "start": 1485.84,
+    "duration": 5.52
+  },
+  {
+    "text": "from a positive to negative log return.",
+    "start": 1488.48,
+    "duration": 4.799
+  },
+  {
+    "text": "If we look at the distances between the",
+    "start": 1491.36,
+    "duration": 3.919
+  },
+  {
+    "text": "predicted and the actual values, they're",
+    "start": 1493.279,
+    "duration": 5.441
+  },
+  {
+    "text": "minimal. The key point here is that it's",
+    "start": 1495.279,
+    "duration": 5.52
+  },
+  {
+    "text": "the the positive weight doing all the",
+    "start": 1498.72,
+    "duration": 4.72
+  },
+  {
+    "text": "work. It reinforces the direction of the",
+    "start": 1500.799,
+    "duration": 5.201
+  },
+  {
+    "text": "previous return, which is exactly what",
+    "start": 1503.44,
+    "duration": 6.359
+  },
+  {
+    "text": "momentum is about.",
+    "start": 1506.0,
+    "duration": 3.799
+  },
+  {
+    "text": "So, how did we actually calculate the",
+    "start": 1509.919,
+    "duration": 4.64
+  },
+  {
+    "text": "the weight and the bias? That's what",
+    "start": 1512.4,
+    "duration": 4.32
+  },
+  {
+    "text": "we're going to cover next. This opens up",
+    "start": 1514.559,
+    "duration": 4.24
+  },
+  {
+    "text": "a whole new topic called mathematical",
+    "start": 1516.72,
+    "duration": 4.4
+  },
+  {
+    "text": "optimization, which is simply the",
+    "start": 1518.799,
+    "duration": 4.321
+  },
+  {
+    "text": "process of finding the most optimal par",
+    "start": 1521.12,
+    "duration": 4.48
+  },
+  {
+    "text": "parameters for our model. There are many",
+    "start": 1523.12,
+    "duration": 4.32
+  },
+  {
+    "text": "ways to do this, but we'll focus on the",
+    "start": 1525.6,
+    "duration": 5.36
+  },
+  {
+    "text": "two most important ones.",
+    "start": 1527.44,
+    "duration": 6.479
+  },
+  {
+    "text": "The first method is closed form solution",
+    "start": 1530.96,
+    "duration": 5.28
+  },
+  {
+    "text": "which gives us an exact analytical",
+    "start": 1533.919,
+    "duration": 5.12
+  },
+  {
+    "text": "answer. This approach is very common in",
+    "start": 1536.24,
+    "duration": 5.76
+  },
+  {
+    "text": "econometrics. If you ever use scikit",
+    "start": 1539.039,
+    "duration": 4.801
+  },
+  {
+    "text": "learns linear regression model, it's",
+    "start": 1542.0,
+    "duration": 3.52
+  },
+  {
+    "text": "actually using a closed form solution",
+    "start": 1543.84,
+    "duration": 3.92
+  },
+  {
+    "text": "under the hood. You can think of it like",
+    "start": 1545.52,
+    "duration": 4.32
+  },
+  {
+    "text": "optimizing the weights in just one line",
+    "start": 1547.76,
+    "duration": 5.12
+  },
+  {
+    "text": "of code, quick and direct. The second",
+    "start": 1549.84,
+    "duration": 5.439
+  },
+  {
+    "text": "method is gradient descent, an iterative",
+    "start": 1552.88,
+    "duration": 4.0
+  },
+  {
+    "text": "approach widely used in machine",
+    "start": 1555.279,
+    "duration": 3.76
+  },
+  {
+    "text": "learning. Instead of solving everything",
+    "start": 1556.88,
+    "duration": 4.64
+  },
+  {
+    "text": "in one step, it loops over and over,",
+    "start": 1559.039,
+    "duration": 4.801
+  },
+  {
+    "text": "gradually improving the weights until",
+    "start": 1561.52,
+    "duration": 4.56
+  },
+  {
+    "text": "they reach the best values. We'll break",
+    "start": 1563.84,
+    "duration": 6.68
+  },
+  {
+    "text": "each of these down in detail.",
+    "start": 1566.08,
+    "duration": 4.44
+  },
+  {
+    "text": "And here's the mathematics for closed",
+    "start": 1571.44,
+    "duration": 4.239
+  },
+  {
+    "text": "form solution to linear regression, also",
+    "start": 1573.36,
+    "duration": 5.36
+  },
+  {
+    "text": "known as ordinary lease squares. If",
+    "start": 1575.679,
+    "duration": 4.801
+  },
+  {
+    "text": "you've used linear regression in Mat",
+    "start": 1578.72,
+    "duration": 3.839
+  },
+  {
+    "text": "Lab, Mathematica or the linear",
+    "start": 1580.48,
+    "duration": 4.48
+  },
+  {
+    "text": "regression class in Scikitlearn, then",
+    "start": 1582.559,
+    "duration": 4.881
+  },
+  {
+    "text": "this is the exact equation being used to",
+    "start": 1584.96,
+    "duration": 6.48
+  },
+  {
+    "text": "solve the problem. The beauty of of OS",
+    "start": 1587.44,
+    "duration": 6.0
+  },
+  {
+    "text": "is that it can be calculated in just one",
+    "start": 1591.44,
+    "duration": 4.0
+  },
+  {
+    "text": "line of code. It gives very good",
+    "start": 1593.44,
+    "duration": 4.0
+  },
+  {
+    "text": "approximations, but it has one big",
+    "start": 1595.44,
+    "duration": 4.719
+  },
+  {
+    "text": "limitation. It doesn't scare well to",
+    "start": 1597.44,
+    "duration": 5.52
+  },
+  {
+    "text": "large data sets. It works perfectly for",
+    "start": 1600.159,
+    "duration": 4.961
+  },
+  {
+    "text": "small data sets, but when you're dealing",
+    "start": 1602.96,
+    "duration": 4.64
+  },
+  {
+    "text": "with terabytes of data, it becomes",
+    "start": 1605.12,
+    "duration": 4.32
+  },
+  {
+    "text": "inefficient to load everything into",
+    "start": 1607.6,
+    "duration": 3.84
+  },
+  {
+    "text": "memory and perform massive matrix",
+    "start": 1609.44,
+    "duration": 4.88
+  },
+  {
+    "text": "calculations. With high frequency data,",
+    "start": 1611.44,
+    "duration": 5.76
+  },
+  {
+    "text": "we can collect terabytes of data daily.",
+    "start": 1614.32,
+    "duration": 4.959
+  },
+  {
+    "text": "So, it quickly becomes infeasible to",
+    "start": 1617.2,
+    "duration": 5.839
+  },
+  {
+    "text": "rely on ordinary squares alone.",
+    "start": 1619.279,
+    "duration": 6.161
+  },
+  {
+    "text": "And this is where gradient descent comes",
+    "start": 1623.039,
+    "duration": 5.801
+  },
+  {
+    "text": "into play.",
+    "start": 1625.44,
+    "duration": 3.4
+  },
+  {
+    "text": "Instead of solving everything at once,",
+    "start": 1631.919,
+    "duration": 4.64
+  },
+  {
+    "text": "gradient descent loops over the data and",
+    "start": 1634.159,
+    "duration": 4.961
+  },
+  {
+    "text": "incrementally improves the parameters",
+    "start": 1636.559,
+    "duration": 4.801
+  },
+  {
+    "text": "using small batches of training data at",
+    "start": 1639.12,
+    "duration": 4.88
+  },
+  {
+    "text": "a time. The weight update rule is",
+    "start": 1641.36,
+    "duration": 4.799
+  },
+  {
+    "text": "simple. Take the current weight and",
+    "start": 1644.0,
+    "duration": 4.64
+  },
+  {
+    "text": "subtract the partial gradient. The",
+    "start": 1646.159,
+    "duration": 4.241
+  },
+  {
+    "text": "partial gradient is just the derivative",
+    "start": 1648.64,
+    "duration": 3.919
+  },
+  {
+    "text": "of the loss function with respect to the",
+    "start": 1650.4,
+    "duration": 4.0
+  },
+  {
+    "text": "weight. And the loss function is",
+    "start": 1652.559,
+    "duration": 4.321
+  },
+  {
+    "text": "something we as modelers get to choose.",
+    "start": 1654.4,
+    "duration": 4.8
+  },
+  {
+    "text": "It defines how we measure error. An",
+    "start": 1656.88,
+    "duration": 4.56
+  },
+  {
+    "text": "important hyperparameter is the learning",
+    "start": 1659.2,
+    "duration": 4.479
+  },
+  {
+    "text": "rate usually denoted by the Greek letter",
+    "start": 1661.44,
+    "duration": 5.599
+  },
+  {
+    "text": "eta which controls how big each update",
+    "start": 1663.679,
+    "duration": 6.161
+  },
+  {
+    "text": "step is. Too large and you overshoot the",
+    "start": 1667.039,
+    "duration": 5.361
+  },
+  {
+    "text": "optimal solution and too small the",
+    "start": 1669.84,
+    "duration": 5.439
+  },
+  {
+    "text": "training becomes painfully slow. The",
+    "start": 1672.4,
+    "duration": 4.879
+  },
+  {
+    "text": "beauty of gradient descent is in its",
+    "start": 1675.279,
+    "duration": 3.841
+  },
+  {
+    "text": "flexibility. We can choose different",
+    "start": 1677.279,
+    "duration": 3.601
+  },
+  {
+    "text": "loss functions and sometimes there's",
+    "start": 1679.12,
+    "duration": 3.919
+  },
+  {
+    "text": "real alpha in designing new and creative",
+    "start": 1680.88,
+    "duration": 5.519
+  },
+  {
+    "text": "ways to define that loss function.",
+    "start": 1683.039,
+    "duration": 5.52
+  },
+  {
+    "text": "I I will now illustrate how gradient",
+    "start": 1686.399,
+    "duration": 3.601
+  },
+  {
+    "text": "descent works so you have an",
+    "start": 1688.559,
+    "duration": 4.401
+  },
+  {
+    "text": "understanding of its mechanics.",
+    "start": 1690.0,
+    "duration": 5.44
+  },
+  {
+    "text": "And here's gradient descent in action.",
+    "start": 1692.96,
+    "duration": 4.24
+  },
+  {
+    "text": "Here we're looking at the convex loss",
+    "start": 1695.44,
+    "duration": 4.16
+  },
+  {
+    "text": "function like mean squared error. The",
+    "start": 1697.2,
+    "duration": 4.24
+  },
+  {
+    "text": "goal of gradient descent is to find the",
+    "start": 1699.6,
+    "duration": 3.76
+  },
+  {
+    "text": "minimum of this function, the point",
+    "start": 1701.44,
+    "duration": 4.4
+  },
+  {
+    "text": "where the error is small as possible. At",
+    "start": 1703.36,
+    "duration": 4.559
+  },
+  {
+    "text": "each step, the algorithm calculates the",
+    "start": 1705.84,
+    "duration": 4.24
+  },
+  {
+    "text": "gradient, the slope of the function, and",
+    "start": 1707.919,
+    "duration": 3.921
+  },
+  {
+    "text": "then takes a step in the opposite",
+    "start": 1710.08,
+    "duration": 4.64
+  },
+  {
+    "text": "direction of the gradient. Since this",
+    "start": 1711.84,
+    "duration": 4.64
+  },
+  {
+    "text": "function is convex, there's only one",
+    "start": 1714.72,
+    "duration": 4.0
+  },
+  {
+    "text": "global minimum. At that minimum, we",
+    "start": 1716.48,
+    "duration": 6.919
+  },
+  {
+    "text": "found the best parameters for our model.",
+    "start": 1718.72,
+    "duration": 4.679
+  },
+  {
+    "text": "When designing custom loss functions,",
+    "start": 1723.6,
+    "duration": 5.04
+  },
+  {
+    "text": "they are often non-convex.",
+    "start": 1726.24,
+    "duration": 4.319
+  },
+  {
+    "text": "That means instead of one unique",
+    "start": 1728.64,
+    "duration": 4.56
+  },
+  {
+    "text": "minimum, there are many local minima and",
+    "start": 1730.559,
+    "duration": 5.921
+  },
+  {
+    "text": "even saddle points. The optimizer's goal",
+    "start": 1733.2,
+    "duration": 5.04
+  },
+  {
+    "text": "isn't to find the perfect global",
+    "start": 1736.48,
+    "duration": 4.559
+  },
+  {
+    "text": "minimum. That's usually impossible. But",
+    "start": 1738.24,
+    "duration": 5.2
+  },
+  {
+    "text": "to land in a good local minimum that",
+    "start": 1741.039,
+    "duration": 5.281
+  },
+  {
+    "text": "performs well. Sometimes it may converge",
+    "start": 1743.44,
+    "duration": 5.2
+  },
+  {
+    "text": "to a poor region, but techniques like",
+    "start": 1746.32,
+    "duration": 4.719
+  },
+  {
+    "text": "stochastic gradient descent or momentum",
+    "start": 1748.64,
+    "duration": 6.399
+  },
+  {
+    "text": "help uh escape bad spots. In practice,",
+    "start": 1751.039,
+    "duration": 6.24
+  },
+  {
+    "text": "the aim is not perfection, but finding a",
+    "start": 1755.039,
+    "duration": 4.88
+  },
+  {
+    "text": "solution that generalizes well. In this",
+    "start": 1757.279,
+    "duration": 5.201
+  },
+  {
+    "text": "example, it finds a local minima that is",
+    "start": 1759.919,
+    "duration": 4.401
+  },
+  {
+    "text": "a good approximation of the global",
+    "start": 1762.48,
+    "duration": 4.84
+  },
+  {
+    "text": "minima.",
+    "start": 1764.32,
+    "duration": 3.0
+  },
+  {
+    "text": "As we've said before, execution is just",
+    "start": 1768.0,
+    "duration": 5.12
+  },
+  {
+    "text": "as important as the edge itself. If you",
+    "start": 1770.32,
+    "duration": 4.88
+  },
+  {
+    "text": "have a great model but poor execution,",
+    "start": 1773.12,
+    "duration": 4.48
+  },
+  {
+    "text": "there's no real alpha. We're just going",
+    "start": 1775.2,
+    "duration": 4.88
+  },
+  {
+    "text": "to focus on the strategy exclusively.",
+    "start": 1777.6,
+    "duration": 4.48
+  },
+  {
+    "text": "How we take the model's predictions and",
+    "start": 1780.08,
+    "duration": 4.719
+  },
+  {
+    "text": "translate them into actual orders. Of",
+    "start": 1782.08,
+    "duration": 4.16
+  },
+  {
+    "text": "course, in practice, there are many",
+    "start": 1784.799,
+    "duration": 2.961
+  },
+  {
+    "text": "nuances.",
+    "start": 1786.24,
+    "duration": 3.919
+  },
+  {
+    "text": "Things like minimizing latency to get",
+    "start": 1787.76,
+    "duration": 5.039
+  },
+  {
+    "text": "better prices and Q positions, which",
+    "start": 1790.159,
+    "duration": 4.721
+  },
+  {
+    "text": "become critical if you're trading on",
+    "start": 1792.799,
+    "duration": 5.12
+  },
+  {
+    "text": "second or minute time horizons.",
+    "start": 1794.88,
+    "duration": 4.88
+  },
+  {
+    "text": "But since this is just an introduction,",
+    "start": 1797.919,
+    "duration": 3.601
+  },
+  {
+    "text": "we'll set aside those low-level",
+    "start": 1799.76,
+    "duration": 4.72
+  },
+  {
+    "text": "execution details and focus purely on",
+    "start": 1801.52,
+    "duration": 6.12
+  },
+  {
+    "text": "the strategy.",
+    "start": 1804.48,
+    "duration": 3.16
+  },
+  {
+    "text": "The taxonomy of quant trading strategies",
+    "start": 1808.32,
+    "duration": 5.2
+  },
+  {
+    "text": "can be divided into two broad types,",
+    "start": 1810.799,
+    "duration": 5.921
+  },
+  {
+    "text": "making and taking. Making means adding",
+    "start": 1813.52,
+    "duration": 5.36
+  },
+  {
+    "text": "liquidity to the order book. In this",
+    "start": 1816.72,
+    "duration": 4.4
+  },
+  {
+    "text": "case, you're often rewarded either",
+    "start": 1818.88,
+    "duration": 4.72
+  },
+  {
+    "text": "through rebates or with such low",
+    "start": 1821.12,
+    "duration": 4.0
+  },
+  {
+    "text": "transaction fees that it becomes",
+    "start": 1823.6,
+    "duration": 4.959
+  },
+  {
+    "text": "feasible to trade at a second or minute",
+    "start": 1825.12,
+    "duration": 6.159
+  },
+  {
+    "text": "level time horizon.",
+    "start": 1828.559,
+    "duration": 5.36
+  },
+  {
+    "text": "Taking on the other hand is removing",
+    "start": 1831.279,
+    "duration": 5.041
+  },
+  {
+    "text": "liquidity from the order book. Here you",
+    "start": 1833.919,
+    "duration": 4.961
+  },
+  {
+    "text": "typically pay higher transaction fees.",
+    "start": 1836.32,
+    "duration": 4.719
+  },
+  {
+    "text": "That makes very short horizon trading",
+    "start": 1838.88,
+    "duration": 4.48
+  },
+  {
+    "text": "less attractive because even if your",
+    "start": 1841.039,
+    "duration": 5.201
+  },
+  {
+    "text": "back test shows strong gross P&L, those",
+    "start": 1843.36,
+    "duration": 6.24
+  },
+  {
+    "text": "fees can push your net P&L negative. Of",
+    "start": 1846.24,
+    "duration": 5.679
+  },
+  {
+    "text": "course, this is just a loose taxonomy.",
+    "start": 1849.6,
+    "duration": 4.559
+  },
+  {
+    "text": "In practice, many strategies combine",
+    "start": 1851.919,
+    "duration": 5.12
+  },
+  {
+    "text": "both making and taking depending on the",
+    "start": 1854.159,
+    "duration": 5.76
+  },
+  {
+    "text": "situation. We'll dig into each more",
+    "start": 1857.039,
+    "duration": 6.36
+  },
+  {
+    "text": "detail next.",
+    "start": 1859.919,
+    "duration": 3.48
+  },
+  {
+    "text": "Before we jump into strategies, we need",
+    "start": 1864.72,
+    "duration": 4.559
+  },
+  {
+    "text": "to cover the fundamentals of the order",
+    "start": 1866.88,
+    "duration": 5.039
+  },
+  {
+    "text": "book. The order book is the heart of a",
+    "start": 1869.279,
+    "duration": 4.961
+  },
+  {
+    "text": "financial market. It represents the",
+    "start": 1871.919,
+    "duration": 5.441
+  },
+  {
+    "text": "global supply and demand. Market makers",
+    "start": 1874.24,
+    "duration": 6.4
+  },
+  {
+    "text": "add limit orders to provide liquidity.",
+    "start": 1877.36,
+    "duration": 5.6
+  },
+  {
+    "text": "Market orders remove liquidity from the",
+    "start": 1880.64,
+    "duration": 4.8
+  },
+  {
+    "text": "book. Having access to the order book",
+    "start": 1882.96,
+    "duration": 4.8
+  },
+  {
+    "text": "can give you a predictive edge. The book",
+    "start": 1885.44,
+    "duration": 5.599
+  },
+  {
+    "text": "itself contains two sides. bids, which",
+    "start": 1887.76,
+    "duration": 6.159
+  },
+  {
+    "text": "are buy orders and asks, sell orders.",
+    "start": 1891.039,
+    "duration": 4.961
+  },
+  {
+    "text": "These are organized into levels. At the",
+    "start": 1893.919,
+    "duration": 4.401
+  },
+  {
+    "text": "very top of the book, you always see the",
+    "start": 1896.0,
+    "duration": 5.2
+  },
+  {
+    "text": "best bid and best ask, the highest price",
+    "start": 1898.32,
+    "duration": 5.199
+  },
+  {
+    "text": "someone is willing to buy and the lowest",
+    "start": 1901.2,
+    "duration": 4.479
+  },
+  {
+    "text": "price someone is willing to sell, along",
+    "start": 1903.519,
+    "duration": 4.241
+  },
+  {
+    "text": "with the available quantities at those",
+    "start": 1905.679,
+    "duration": 4.961
+  },
+  {
+    "text": "levels. And this isn't static. Prices",
+    "start": 1907.76,
+    "duration": 5.279
+  },
+  {
+    "text": "and quantities are constantly shifting",
+    "start": 1910.64,
+    "duration": 5.279
+  },
+  {
+    "text": "as trades happen and orders flow in. The",
+    "start": 1913.039,
+    "duration": 4.801
+  },
+  {
+    "text": "order book is a live reflection of the",
+    "start": 1915.919,
+    "duration": 6.76
+  },
+  {
+    "text": "market micro structure in real time.",
+    "start": 1917.84,
+    "duration": 4.839
+  },
+  {
+    "text": "An important measure of the order book",
+    "start": 1923.44,
+    "duration": 3.599
+  },
+  {
+    "text": "is the spread. The difference between",
+    "start": 1925.36,
+    "duration": 4.96
+  },
+  {
+    "text": "the best bid and the best ask. As a rule",
+    "start": 1927.039,
+    "duration": 5.921
+  },
+  {
+    "text": "of thumb, less liquid markets have wider",
+    "start": 1930.32,
+    "duration": 5.12
+  },
+  {
+    "text": "spreads while highly liquid markets",
+    "start": 1932.96,
+    "duration": 5.36
+  },
+  {
+    "text": "usually have narrower spreads. The",
+    "start": 1935.44,
+    "duration": 5.2
+  },
+  {
+    "text": "spread is also a hidden cost for taking",
+    "start": 1938.32,
+    "duration": 5.04
+  },
+  {
+    "text": "strategies. If you buy at the ask and",
+    "start": 1940.64,
+    "duration": 5.36
+  },
+  {
+    "text": "immediately sell at the bid, you lose",
+    "start": 1943.36,
+    "duration": 5.28
+  },
+  {
+    "text": "the spread. That's why market makers,",
+    "start": 1946.0,
+    "duration": 5.2
+  },
+  {
+    "text": "also called liquidity providers, earn",
+    "start": 1948.64,
+    "duration": 4.639
+  },
+  {
+    "text": "money by continuously buying at the bid",
+    "start": 1951.2,
+    "duration": 4.88
+  },
+  {
+    "text": "and selling at the ask. Spreads can also",
+    "start": 1953.279,
+    "duration": 5.441
+  },
+  {
+    "text": "widen during volatile or uncertain",
+    "start": 1956.08,
+    "duration": 5.36
+  },
+  {
+    "text": "conditions as liquidity providers demand",
+    "start": 1958.72,
+    "duration": 5.679
+  },
+  {
+    "text": "more compensation for risk. In short,",
+    "start": 1961.44,
+    "duration": 5.2
+  },
+  {
+    "text": "the spread is the gap between supply and",
+    "start": 1964.399,
+    "duration": 5.921
+  },
+  {
+    "text": "demand. It reflects liquidity costs and",
+    "start": 1966.64,
+    "duration": 6.72
+  },
+  {
+    "text": "risk. In this example, the spread is 3",
+    "start": 1970.32,
+    "duration": 6.32
+  },
+  {
+    "text": "cents as it's the difference between 115",
+    "start": 1973.36,
+    "duration": 6.48
+  },
+  {
+    "text": "and 113.",
+    "start": 1976.64,
+    "duration": 5.36
+  },
+  {
+    "text": "An important measure to predict from the",
+    "start": 1979.84,
+    "duration": 4.959
+  },
+  {
+    "text": "order book is the mid price. The mid",
+    "start": 1982.0,
+    "duration": 5.039
+  },
+  {
+    "text": "price is simply the average of the best",
+    "start": 1984.799,
+    "duration": 5.12
+  },
+  {
+    "text": "bid and the best ask. It's very",
+    "start": 1987.039,
+    "duration": 4.961
+  },
+  {
+    "text": "important for making strategies because",
+    "start": 1989.919,
+    "duration": 4.401
+  },
+  {
+    "text": "you need to know where the mid price is",
+    "start": 1992.0,
+    "duration": 4.559
+  },
+  {
+    "text": "moving in order to bias your quotes",
+    "start": 1994.32,
+    "duration": 4.8
+  },
+  {
+    "text": "accordingly. You might wonder why not",
+    "start": 1996.559,
+    "duration": 5.281
+  },
+  {
+    "text": "just use the last trade price. The",
+    "start": 1999.12,
+    "duration": 6.08
+  },
+  {
+    "text": "reason is because of the bid ask bounce.",
+    "start": 2001.84,
+    "duration": 6.48
+  },
+  {
+    "text": "Trades tend to alternate between the bid",
+    "start": 2005.2,
+    "duration": 5.359
+  },
+  {
+    "text": "and the ask which adds unnecessary noise",
+    "start": 2008.32,
+    "duration": 4.8
+  },
+  {
+    "text": "to the time series. That's why the mid",
+    "start": 2010.559,
+    "duration": 5.12
+  },
+  {
+    "text": "price gives a cleaner signal. The mid",
+    "start": 2013.12,
+    "duration": 5.76
+  },
+  {
+    "text": "price for this order book is 113 12",
+    "start": 2015.679,
+    "duration": 5.84
+  },
+  {
+    "text": "cents and the bid ask bounce is more",
+    "start": 2018.88,
+    "duration": 4.96
+  },
+  {
+    "text": "apparent when it's visualized. So let's",
+    "start": 2021.519,
+    "duration": 5.481
+  },
+  {
+    "text": "do that.",
+    "start": 2023.84,
+    "duration": 3.16
+  },
+  {
+    "text": "Here we have a time series of last",
+    "start": 2027.919,
+    "duration": 5.281
+  },
+  {
+    "text": "traded prices. And notice how it bounces",
+    "start": 2030.24,
+    "duration": 5.36
+  },
+  {
+    "text": "back and forth between the bid and the",
+    "start": 2033.2,
+    "duration": 5.359
+  },
+  {
+    "text": "ask. This back and forth creates extra",
+    "start": 2035.6,
+    "duration": 5.12
+  },
+  {
+    "text": "variance in the series. Nor is that",
+    "start": 2038.559,
+    "duration": 3.921
+  },
+  {
+    "text": "doesn't really reflect true market",
+    "start": 2040.72,
+    "duration": 5.28
+  },
+  {
+    "text": "movement. Now, if instead we plot the",
+    "start": 2042.48,
+    "duration": 5.679
+  },
+  {
+    "text": "mid price for each point in time, the",
+    "start": 2046.0,
+    "duration": 4.72
+  },
+  {
+    "text": "picture changes. The mid price stays",
+    "start": 2048.159,
+    "duration": 4.881
+  },
+  {
+    "text": "stable between trades. No artificial",
+    "start": 2050.72,
+    "duration": 5.119
+  },
+  {
+    "text": "noise from the spread. That's why the",
+    "start": 2053.04,
+    "duration": 4.72
+  },
+  {
+    "text": "mid price is usually preferred in",
+    "start": 2055.839,
+    "duration": 4.0
+  },
+  {
+    "text": "modeling because it gives a cleaner,",
+    "start": 2057.76,
+    "duration": 6.04
+  },
+  {
+    "text": "less noisy signal.",
+    "start": 2059.839,
+    "duration": 3.961
+  },
+  {
+    "text": "Let's walk through what happens when a",
+    "start": 2064.639,
+    "duration": 4.161
+  },
+  {
+    "text": "market order comes in and how it affects",
+    "start": 2066.639,
+    "duration": 5.2
+  },
+  {
+    "text": "the order book. Suppose we send a buy",
+    "start": 2068.8,
+    "duration": 6.319
+  },
+  {
+    "text": "market order for two contracts. Since",
+    "start": 2071.839,
+    "duration": 5.681
+  },
+  {
+    "text": "this is a buy, we need a seller. So, the",
+    "start": 2075.119,
+    "duration": 6.0
+  },
+  {
+    "text": "order crosses the ask side of the book.",
+    "start": 2077.52,
+    "duration": 5.52
+  },
+  {
+    "text": "Market orders are always filled against",
+    "start": 2081.119,
+    "duration": 4.881
+  },
+  {
+    "text": "the opposite side. So here the order is",
+    "start": 2083.04,
+    "duration": 5.68
+  },
+  {
+    "text": "matched against the best ask price. Once",
+    "start": 2086.0,
+    "duration": 4.56
+  },
+  {
+    "text": "it's filled, the quantity at that price",
+    "start": 2088.72,
+    "duration": 3.52
+  },
+  {
+    "text": "level is reduced to reflect the",
+    "start": 2090.56,
+    "duration": 4.64
+  },
+  {
+    "text": "liquidity has been taken away. That's",
+    "start": 2092.24,
+    "duration": 4.96
+  },
+  {
+    "text": "why market orders are called taken while",
+    "start": 2095.2,
+    "duration": 4.32
+  },
+  {
+    "text": "limit orders are called making. For",
+    "start": 2097.2,
+    "duration": 4.48
+  },
+  {
+    "text": "example, if the top of the book is shown",
+    "start": 2099.52,
+    "duration": 5.2
+  },
+  {
+    "text": "115 with three contracts available and",
+    "start": 2101.68,
+    "duration": 5.36
+  },
+  {
+    "text": "we buy two with a market order, the",
+    "start": 2104.72,
+    "duration": 5.119
+  },
+  {
+    "text": "order book updates to show just one",
+    "start": 2107.04,
+    "duration": 5.68
+  },
+  {
+    "text": "contract left at that price. Sometimes",
+    "start": 2109.839,
+    "duration": 5.201
+  },
+  {
+    "text": "if the market orders larger than what's",
+    "start": 2112.72,
+    "duration": 4.96
+  },
+  {
+    "text": "available at the best price eats through",
+    "start": 2115.04,
+    "duration": 5.36
+  },
+  {
+    "text": "multiple levels of the book that effect",
+    "start": 2117.68,
+    "duration": 5.2
+  },
+  {
+    "text": "is called slippage.",
+    "start": 2120.4,
+    "duration": 4.32
+  },
+  {
+    "text": "Now let's see what happens when we send",
+    "start": 2122.88,
+    "duration": 5.12
+  },
+  {
+    "text": "a larger market order say 10 contracts",
+    "start": 2124.72,
+    "duration": 7.2
+  },
+  {
+    "text": "at the best best ask price 115 there",
+    "start": 2128.0,
+    "duration": 6.16
+  },
+  {
+    "text": "only three contracts available. Our",
+    "start": 2131.92,
+    "duration": 4.64
+  },
+  {
+    "text": "order takes those out but we still have",
+    "start": 2134.16,
+    "duration": 5.28
+  },
+  {
+    "text": "seven left to fill. So the order walks",
+    "start": 2136.56,
+    "duration": 5.76
+  },
+  {
+    "text": "the book and crosses into the next level",
+    "start": 2139.44,
+    "duration": 6.8
+  },
+  {
+    "text": "at 116. This is called slippage where we",
+    "start": 2142.32,
+    "duration": 6.08
+  },
+  {
+    "text": "aren't able to buy everything at the",
+    "start": 2146.24,
+    "duration": 4.64
+  },
+  {
+    "text": "best ask. So part of the order got",
+    "start": 2148.4,
+    "duration": 5.28
+  },
+  {
+    "text": "filled at worst prices. In this case,",
+    "start": 2150.88,
+    "duration": 5.6
+  },
+  {
+    "text": "we've bought three contracts at 115 and",
+    "start": 2153.68,
+    "duration": 5.36
+  },
+  {
+    "text": "the rest at higher levels. Notice what",
+    "start": 2156.48,
+    "duration": 4.4
+  },
+  {
+    "text": "happens next. The mid price shifts",
+    "start": 2159.04,
+    "duration": 5.039
+  },
+  {
+    "text": "upward. Since the best ask has moved",
+    "start": 2160.88,
+    "duration": 7.36
+  },
+  {
+    "text": "from 115 to 117, that also means the",
+    "start": 2164.079,
+    "duration": 6.961
+  },
+  {
+    "text": "spread has widened. When this happens in",
+    "start": 2168.24,
+    "duration": 6.0
+  },
+  {
+    "text": "real markets, market makers react. They",
+    "start": 2171.04,
+    "duration": 5.68
+  },
+  {
+    "text": "might raise their best bids to follow",
+    "start": 2174.24,
+    "duration": 5.68
+  },
+  {
+    "text": "the move or refill liquidity at the old",
+    "start": 2176.72,
+    "duration": 6.08
+  },
+  {
+    "text": "price levels. And this purely depends on",
+    "start": 2179.92,
+    "duration": 6.76
+  },
+  {
+    "text": "models and algorithms.",
+    "start": 2182.8,
+    "duration": 3.88
+  },
+  {
+    "text": "A taken strategy uses market orders,",
+    "start": 2189.52,
+    "duration": 5.12
+  },
+  {
+    "text": "which means you're guaranteed execution,",
+    "start": 2192.32,
+    "duration": 4.32
+  },
+  {
+    "text": "but not the exact price. They're",
+    "start": 2194.64,
+    "duration": 3.6
+  },
+  {
+    "text": "typically deployed for longer time",
+    "start": 2196.64,
+    "duration": 4.56
+  },
+  {
+    "text": "frames from hours to days or even weeks.",
+    "start": 2198.24,
+    "duration": 4.96
+  },
+  {
+    "text": "Because the net P&L is usually negative",
+    "start": 2201.2,
+    "duration": 4.639
+  },
+  {
+    "text": "on a second or minute level time frame",
+    "start": 2203.2,
+    "duration": 4.639
+  },
+  {
+    "text": "because of the high transaction fees and",
+    "start": 2205.839,
+    "duration": 4.721
+  },
+  {
+    "text": "spread. When building a taken strategy,",
+    "start": 2207.839,
+    "duration": 5.921
+  },
+  {
+    "text": "there's two key decisions. timing, when",
+    "start": 2210.56,
+    "duration": 6.24
+  },
+  {
+    "text": "to enter an exit trade, and sizing, how",
+    "start": 2213.76,
+    "duration": 5.52
+  },
+  {
+    "text": "much to trade each time. We'll break",
+    "start": 2216.8,
+    "duration": 6.6
+  },
+  {
+    "text": "down both of these next.",
+    "start": 2219.28,
+    "duration": 4.12
+  },
+  {
+    "text": "The timing of a taken strategy can be",
+    "start": 2223.44,
+    "duration": 5.28
+  },
+  {
+    "text": "loosely grouped into two approaches.",
+    "start": 2225.68,
+    "duration": 5.439
+  },
+  {
+    "text": "Timebased timing, where trades are",
+    "start": 2228.72,
+    "duration": 4.879
+  },
+  {
+    "text": "entered or exited strictly at set",
+    "start": 2231.119,
+    "duration": 5.041
+  },
+  {
+    "text": "intervals. This pairs naturally with",
+    "start": 2233.599,
+    "duration": 5.041
+  },
+  {
+    "text": "time series models since they generate",
+    "start": 2236.16,
+    "duration": 5.76
+  },
+  {
+    "text": "predictions at fixed horizons.",
+    "start": 2238.64,
+    "duration": 5.92
+  },
+  {
+    "text": "predicate based timing where trades are",
+    "start": 2241.92,
+    "duration": 4.8
+  },
+  {
+    "text": "triggered only when a specific condition",
+    "start": 2244.56,
+    "duration": 5.039
+  },
+  {
+    "text": "is met. For example, if our model",
+    "start": 2246.72,
+    "duration": 5.28
+  },
+  {
+    "text": "predicts a value above or below a",
+    "start": 2249.599,
+    "duration": 4.641
+  },
+  {
+    "text": "certain threshold, that predicate",
+    "start": 2252.0,
+    "duration": 4.96
+  },
+  {
+    "text": "determines the entry. We'll dive deeper",
+    "start": 2254.24,
+    "duration": 7.32
+  },
+  {
+    "text": "into both of these approaches next.",
+    "start": 2256.96,
+    "duration": 4.6
+  },
+  {
+    "text": "Timebased timing means opening and",
+    "start": 2264.0,
+    "duration": 4.4
+  },
+  {
+    "text": "closing trades on a fixed schedule. For",
+    "start": 2266.56,
+    "duration": 4.559
+  },
+  {
+    "text": "example, in a daily time series, the",
+    "start": 2268.4,
+    "duration": 5.28
+  },
+  {
+    "text": "model makes a prediction each day. Based",
+    "start": 2271.119,
+    "duration": 4.801
+  },
+  {
+    "text": "on that prediction, we open a position,",
+    "start": 2273.68,
+    "duration": 4.88
+  },
+  {
+    "text": "then close it the next day. If the model",
+    "start": 2275.92,
+    "duration": 4.32
+  },
+  {
+    "text": "predicts the same direction on the",
+    "start": 2278.56,
+    "duration": 4.32
+  },
+  {
+    "text": "consecutive days, we don't always close",
+    "start": 2280.24,
+    "duration": 5.599
+  },
+  {
+    "text": "the the position. Instead, we could hold",
+    "start": 2282.88,
+    "duration": 4.959
+  },
+  {
+    "text": "the position and scale it up depending",
+    "start": 2285.839,
+    "duration": 4.481
+  },
+  {
+    "text": "on the risk profile of the strategy.",
+    "start": 2287.839,
+    "duration": 4.721
+  },
+  {
+    "text": "This approach fits naturally with time",
+    "start": 2290.32,
+    "duration": 4.799
+  },
+  {
+    "text": "series models since every data point",
+    "start": 2292.56,
+    "duration": 5.44
+  },
+  {
+    "text": "corresponds to a specific time interval.",
+    "start": 2295.119,
+    "duration": 5.281
+  },
+  {
+    "text": "Now you might be asking what about stop",
+    "start": 2298.0,
+    "duration": 5.44
+  },
+  {
+    "text": "losses or take profit levels.",
+    "start": 2300.4,
+    "duration": 5.439
+  },
+  {
+    "text": "These can be added but only if they",
+    "start": 2303.44,
+    "duration": 4.639
+  },
+  {
+    "text": "increase expected value. Always back",
+    "start": 2305.839,
+    "duration": 4.24
+  },
+  {
+    "text": "test first. For example, in a mean",
+    "start": 2308.079,
+    "duration": 4.161
+  },
+  {
+    "text": "reversion model, adding a stop-loss",
+    "start": 2310.079,
+    "duration": 4.0
+  },
+  {
+    "text": "could actually reduce performance since",
+    "start": 2312.24,
+    "duration": 6.44
+  },
+  {
+    "text": "we expect prices to bounce back.",
+    "start": 2314.079,
+    "duration": 4.601
+  },
+  {
+    "text": "Now let's induce the idea of frequency",
+    "start": 2319.44,
+    "duration": 5.52
+  },
+  {
+    "text": "scaling. Suppose we open and close",
+    "start": 2322.4,
+    "duration": 5.04
+  },
+  {
+    "text": "positions every 12 hours. That's only",
+    "start": 2324.96,
+    "duration": 5.52
+  },
+  {
+    "text": "two trades a day, one to open and one to",
+    "start": 2327.44,
+    "duration": 5.6
+  },
+  {
+    "text": "close. If our edge is small, that's not",
+    "start": 2330.48,
+    "duration": 5.28
+  },
+  {
+    "text": "much opportunity to really exploit a",
+    "start": 2333.04,
+    "duration": 5.12
+  },
+  {
+    "text": "tiny edge. We want to maximize the",
+    "start": 2335.76,
+    "duration": 5.04
+  },
+  {
+    "text": "number of bets. One way to do that is by",
+    "start": 2338.16,
+    "duration": 4.72
+  },
+  {
+    "text": "increasing the resolution of the time",
+    "start": 2340.8,
+    "duration": 4.72
+  },
+  {
+    "text": "series. For example, instead of 12-hour",
+    "start": 2342.88,
+    "duration": 6.479
+  },
+  {
+    "text": "intervals, we move to 1 hour intervals.",
+    "start": 2345.52,
+    "duration": 7.36
+  },
+  {
+    "text": "Now, each data point represents an hour.",
+    "start": 2349.359,
+    "duration": 6.48
+  },
+  {
+    "text": "We still hold trades for 12 hours, but",
+    "start": 2352.88,
+    "duration": 5.12
+  },
+  {
+    "text": "within that window, we're making many",
+    "start": 2355.839,
+    "duration": 5.76
+  },
+  {
+    "text": "smaller trades over 12 hours. That's 24",
+    "start": 2358.0,
+    "duration": 6.16
+  },
+  {
+    "text": "trades. Every hour, we adjust by opening",
+    "start": 2361.599,
+    "duration": 5.281
+  },
+  {
+    "text": "or scaling up and then reducing or",
+    "start": 2364.16,
+    "duration": 5.679
+  },
+  {
+    "text": "closing. Because everything happens at",
+    "start": 2366.88,
+    "duration": 6.16
+  },
+  {
+    "text": "fixed intervals, we can control risk and",
+    "start": 2369.839,
+    "duration": 5.601
+  },
+  {
+    "text": "make sure our position size never",
+    "start": 2373.04,
+    "duration": 6.319
+  },
+  {
+    "text": "exceeds a cap. Now, what if the model",
+    "start": 2375.44,
+    "duration": 6.399
+  },
+  {
+    "text": "predicts long one hour and short the",
+    "start": 2379.359,
+    "duration": 5.521
+  },
+  {
+    "text": "next? In that case, you'd need positions",
+    "start": 2381.839,
+    "duration": 5.121
+  },
+  {
+    "text": "in both directions. Some brokers and",
+    "start": 2384.88,
+    "duration": 4.56
+  },
+  {
+    "text": "exchanges support this through hedge",
+    "start": 2386.96,
+    "duration": 4.8
+  },
+  {
+    "text": "mode, while others require you to set up",
+    "start": 2389.44,
+    "duration": 4.96
+  },
+  {
+    "text": "a sub account to run long and short",
+    "start": 2391.76,
+    "duration": 5.64
+  },
+  {
+    "text": "simultaneously.",
+    "start": 2394.4,
+    "duration": 3.0
+  },
+  {
+    "text": "As you can see in this example, the",
+    "start": 2399.76,
+    "duration": 4.24
+  },
+  {
+    "text": "model is predicting where the price will",
+    "start": 2402.16,
+    "duration": 4.88
+  },
+  {
+    "text": "be 12 hours into the future. But instead",
+    "start": 2404.0,
+    "duration": 5.839
+  },
+  {
+    "text": "of waiting the full 12 hours to act, we",
+    "start": 2407.04,
+    "duration": 6.079
+  },
+  {
+    "text": "place bets every hour. Each hour, we",
+    "start": 2409.839,
+    "duration": 5.76
+  },
+  {
+    "text": "adjust either increasing or decreasing",
+    "start": 2413.119,
+    "duration": 5.441
+  },
+  {
+    "text": "our position size in each direction",
+    "start": 2415.599,
+    "duration": 5.76
+  },
+  {
+    "text": "while still anchoring everything to that",
+    "start": 2418.56,
+    "duration": 6.44
+  },
+  {
+    "text": "12-hour forecast.",
+    "start": 2421.359,
+    "duration": 3.641
+  },
+  {
+    "text": "predicate based timing means we don't",
+    "start": 2436.56,
+    "duration": 4.559
+  },
+  {
+    "text": "trade on every single prediction.",
+    "start": 2438.8,
+    "duration": 4.72
+  },
+  {
+    "text": "Instead, we filter the model's output",
+    "start": 2441.119,
+    "duration": 4.881
+  },
+  {
+    "text": "and only place trades when a specific",
+    "start": 2443.52,
+    "duration": 5.68
+  },
+  {
+    "text": "condition, a predicate, is satisfied.",
+    "start": 2446.0,
+    "duration": 5.599
+  },
+  {
+    "text": "For example, let's say we only go long",
+    "start": 2449.2,
+    "duration": 4.399
+  },
+  {
+    "text": "if the model's predicted future log",
+    "start": 2451.599,
+    "duration": 5.841
+  },
+  {
+    "text": "return is greater than or equal to 0.01",
+    "start": 2453.599,
+    "duration": 6.24
+  },
+  {
+    "text": "and only go short if it's less than or",
+    "start": 2457.44,
+    "duration": 5.6
+  },
+  {
+    "text": "equal to minus0.01.",
+    "start": 2459.839,
+    "duration": 5.361
+  },
+  {
+    "text": "If the prediction falls in between, we",
+    "start": 2463.04,
+    "duration": 4.799
+  },
+  {
+    "text": "simply don't trade. For example, for a",
+    "start": 2465.2,
+    "duration": 5.04
+  },
+  {
+    "text": "binary classification model, we might",
+    "start": 2467.839,
+    "duration": 4.0
+  },
+  {
+    "text": "only want to trade long if the",
+    "start": 2470.24,
+    "duration": 5.599
+  },
+  {
+    "text": "probability is greater or equal to 60%",
+    "start": 2471.839,
+    "duration": 6.641
+  },
+  {
+    "text": "and only trade short if it's lower than",
+    "start": 2475.839,
+    "duration": 5.52
+  },
+  {
+    "text": "or equal to 40%.",
+    "start": 2478.48,
+    "duration": 5.119
+  },
+  {
+    "text": "The idea here is to boost the expected",
+    "start": 2481.359,
+    "duration": 4.321
+  },
+  {
+    "text": "value of the strategy by ignoring weak",
+    "start": 2483.599,
+    "duration": 5.201
+  },
+  {
+    "text": "or noisy predictions and only acting on",
+    "start": 2485.68,
+    "duration": 5.439
+  },
+  {
+    "text": "stronger signals. But remember, you have",
+    "start": 2488.8,
+    "duration": 4.559
+  },
+  {
+    "text": "to back test. Sometimes filtering too",
+    "start": 2491.119,
+    "duration": 4.48
+  },
+  {
+    "text": "aggressively can reduce opportunities",
+    "start": 2493.359,
+    "duration": 6.521
+  },
+  {
+    "text": "and actually hurt EV.",
+    "start": 2495.599,
+    "duration": 4.281
+  },
+  {
+    "text": "The other important detail of a taking",
+    "start": 2501.52,
+    "duration": 5.92
+  },
+  {
+    "text": "strat is trade size. If we oversize our",
+    "start": 2503.839,
+    "duration": 6.801
+  },
+  {
+    "text": "trades, we risk severe draw downs,",
+    "start": 2507.44,
+    "duration": 6.0
+  },
+  {
+    "text": "liquidation, or even bankruptcy. The",
+    "start": 2510.64,
+    "duration": 5.76
+  },
+  {
+    "text": "intuition is simple. Bet small, bet",
+    "start": 2513.44,
+    "duration": 5.76
+  },
+  {
+    "text": "often. With high frequency strategies,",
+    "start": 2516.4,
+    "duration": 5.28
+  },
+  {
+    "text": "losing a single trade shouldn't derail",
+    "start": 2519.2,
+    "duration": 4.72
+  },
+  {
+    "text": "the system. In fact, some of the best",
+    "start": 2521.68,
+    "duration": 6.639
+  },
+  {
+    "text": "quant strategies only win 51 to 53% of",
+    "start": 2523.92,
+    "duration": 7.36
+  },
+  {
+    "text": "the trades. If your edge is that small,",
+    "start": 2528.319,
+    "duration": 5.361
+  },
+  {
+    "text": "oversizing is a guaranteed way to blow",
+    "start": 2531.28,
+    "duration": 4.88
+  },
+  {
+    "text": "up. Now, in practice, you would also",
+    "start": 2533.68,
+    "duration": 4.96
+  },
+  {
+    "text": "account for market impact, how your own",
+    "start": 2536.16,
+    "duration": 5.12
+  },
+  {
+    "text": "trades move the price, but that's",
+    "start": 2538.64,
+    "duration": 5.76
+  },
+  {
+    "text": "outside the scope of this intro.",
+    "start": 2541.28,
+    "duration": 4.88
+  },
+  {
+    "text": "There are classical methods like the",
+    "start": 2544.4,
+    "duration": 5.04
+  },
+  {
+    "text": "Kelly criterion, but those don't adapt",
+    "start": 2546.16,
+    "duration": 6.24
+  },
+  {
+    "text": "to your model's predicted edge. For our",
+    "start": 2549.44,
+    "duration": 5.2
+  },
+  {
+    "text": "purposes, we'll keep things simple and",
+    "start": 2552.4,
+    "duration": 4.88
+  },
+  {
+    "text": "focus on trade sizes that scale directly",
+    "start": 2554.64,
+    "duration": 5.439
+  },
+  {
+    "text": "with models predictions.",
+    "start": 2557.28,
+    "duration": 5.12
+  },
+  {
+    "text": "We can roughly group sizing methods into",
+    "start": 2560.079,
+    "duration": 5.441
+  },
+  {
+    "text": "three categories. Constant, where the",
+    "start": 2562.4,
+    "duration": 6.4
+  },
+  {
+    "text": "trade size is always the same. peacewise",
+    "start": 2565.52,
+    "duration": 5.52
+  },
+  {
+    "text": "linear that scale trade size",
+    "start": 2568.8,
+    "duration": 4.319
+  },
+  {
+    "text": "proportionally linearly with the model's",
+    "start": 2571.04,
+    "duration": 5.44
+  },
+  {
+    "text": "prediction and then nonlinear",
+    "start": 2573.119,
+    "duration": 8.121
+  },
+  {
+    "text": "and we'll go into detail for each one.",
+    "start": 2576.48,
+    "duration": 4.76
+  },
+  {
+    "text": "Constant trade size means we always",
+    "start": 2582.56,
+    "duration": 4.559
+  },
+  {
+    "text": "trade the same size no matter what the",
+    "start": 2584.4,
+    "duration": 4.959
+  },
+  {
+    "text": "model predicts. It's a great baseline",
+    "start": 2587.119,
+    "duration": 4.801
+  },
+  {
+    "text": "especially for timebased strategies. For",
+    "start": 2589.359,
+    "duration": 4.72
+  },
+  {
+    "text": "example, if we're trading every hour and",
+    "start": 2591.92,
+    "duration": 4.64
+  },
+  {
+    "text": "holding each position for 20 hour 24",
+    "start": 2594.079,
+    "duration": 5.121
+  },
+  {
+    "text": "hours, we could have up to 24 concurrent",
+    "start": 2596.56,
+    "duration": 5.12
+  },
+  {
+    "text": "trades, we'll divide our allocated",
+    "start": 2599.2,
+    "duration": 5.68
+  },
+  {
+    "text": "capital across those 24 slots. If we",
+    "start": 2601.68,
+    "duration": 4.8
+  },
+  {
+    "text": "want, we can also apply a leverage",
+    "start": 2604.88,
+    "duration": 4.32
+  },
+  {
+    "text": "factor on top. In practice, our signed",
+    "start": 2606.48,
+    "duration": 4.96
+  },
+  {
+    "text": "trade size is just the sign of our",
+    "start": 2609.2,
+    "duration": 4.879
+  },
+  {
+    "text": "model's prediction multiplied by that",
+    "start": 2611.44,
+    "duration": 4.639
+  },
+  {
+    "text": "constant. I recommend starting with",
+    "start": 2614.079,
+    "duration": 4.161
+  },
+  {
+    "text": "constant sizing when back testing. It's",
+    "start": 2616.079,
+    "duration": 4.321
+  },
+  {
+    "text": "simple, easy to interpret, and gives you",
+    "start": 2618.24,
+    "duration": 4.079
+  },
+  {
+    "text": "a clean benchmark. Once you've tested",
+    "start": 2620.4,
+    "duration": 3.679
+  },
+  {
+    "text": "that, you can explore more advanced",
+    "start": 2622.319,
+    "duration": 4.081
+  },
+  {
+    "text": "sizing methods to see if they increase",
+    "start": 2624.079,
+    "duration": 5.601
+  },
+  {
+    "text": "your expected value.",
+    "start": 2626.4,
+    "duration": 5.6
+  },
+  {
+    "text": "Here's an example of a peace-wise linear",
+    "start": 2629.68,
+    "duration": 4.8
+  },
+  {
+    "text": "sizing method. Instead of always trading",
+    "start": 2632.0,
+    "duration": 4.72
+  },
+  {
+    "text": "the same size, we scale our trade size",
+    "start": 2634.48,
+    "duration": 3.76
+  },
+  {
+    "text": "with the strength of the model's",
+    "start": 2636.72,
+    "duration": 4.16
+  },
+  {
+    "text": "prediction. We don't want position sizes",
+    "start": 2638.24,
+    "duration": 5.2
+  },
+  {
+    "text": "to blow up, so we keep them bounded. A",
+    "start": 2640.88,
+    "duration": 4.479
+  },
+  {
+    "text": "simple way to do this is with the hard",
+    "start": 2643.44,
+    "duration": 3.76
+  },
+  {
+    "text": "tangent function borrowed from deep",
+    "start": 2645.359,
+    "duration": 4.161
+  },
+  {
+    "text": "learning. It acts like a linear function",
+    "start": 2647.2,
+    "duration": 4.96
+  },
+  {
+    "text": "in the middle but clips the values at an",
+    "start": 2649.52,
+    "duration": 5.2
+  },
+  {
+    "text": "upper and lower limit. In trading terms,",
+    "start": 2652.16,
+    "duration": 4.8
+  },
+  {
+    "text": "our sign trade size is just the maximum",
+    "start": 2654.72,
+    "duration": 4.639
+  },
+  {
+    "text": "trade size multiplied by the hard",
+    "start": 2656.96,
+    "duration": 5.04
+  },
+  {
+    "text": "tangent of the model's prediction. That",
+    "start": 2659.359,
+    "duration": 4.48
+  },
+  {
+    "text": "way, the stronger predictions get bigger",
+    "start": 2662.0,
+    "duration": 3.52
+  },
+  {
+    "text": "trades and weaker predictions get",
+    "start": 2663.839,
+    "duration": 4.081
+  },
+  {
+    "text": "smaller trades. And nothing ever exceeds",
+    "start": 2665.52,
+    "duration": 5.96
+  },
+  {
+    "text": "our set bounds.",
+    "start": 2667.92,
+    "duration": 3.56
+  },
+  {
+    "text": "Now let's look at nonlinear sizing",
+    "start": 2672.4,
+    "duration": 5.04
+  },
+  {
+    "text": "methods. Here the signed trade size is",
+    "start": 2674.64,
+    "duration": 5.6
+  },
+  {
+    "text": "the maximum trade size multiplied by the",
+    "start": 2677.44,
+    "duration": 5.12
+  },
+  {
+    "text": "tangent of the model's prediction. It",
+    "start": 2680.24,
+    "duration": 4.4
+  },
+  {
+    "text": "works a lot like hard tangent but",
+    "start": 2682.56,
+    "duration": 4.72
+  },
+  {
+    "text": "instead of sharp cutffs the tangent",
+    "start": 2684.64,
+    "duration": 4.479
+  },
+  {
+    "text": "function gives us a smoother more",
+    "start": 2687.28,
+    "duration": 4.72
+  },
+  {
+    "text": "gradual scaling of trade sizes as the",
+    "start": 2689.119,
+    "duration": 5.601
+  },
+  {
+    "text": "predictions increase or decrease. That",
+    "start": 2692.0,
+    "duration": 5.2
+  },
+  {
+    "text": "smoothness makes it more sensitive to",
+    "start": 2694.72,
+    "duration": 5.44
+  },
+  {
+    "text": "small changes in prediction strength",
+    "start": 2697.2,
+    "duration": 5.119
+  },
+  {
+    "text": "while keeping trade sizes naturally",
+    "start": 2700.16,
+    "duration": 4.72
+  },
+  {
+    "text": "bounded. And since tangent is a",
+    "start": 2702.319,
+    "duration": 5.28
+  },
+  {
+    "text": "differentiable everywhere in its range,",
+    "start": 2704.88,
+    "duration": 4.4
+  },
+  {
+    "text": "it also plays nicely if you're",
+    "start": 2707.599,
+    "duration": 3.201
+  },
+  {
+    "text": "optimizing parameters with",
+    "start": 2709.28,
+    "duration": 5.4
+  },
+  {
+    "text": "gradient-based methods.",
+    "start": 2710.8,
+    "duration": 3.88
+  },
+  {
+    "text": "This animation shows our nonlinear trade",
+    "start": 2715.04,
+    "duration": 5.84
+  },
+  {
+    "text": "sizing using tanh. Here the maximum",
+    "start": 2717.76,
+    "duration": 5.68
+  },
+  {
+    "text": "trade size is 100 and you can see it's",
+    "start": 2720.88,
+    "duration": 4.88
+  },
+  {
+    "text": "smoothly bounded between minus 100 and",
+    "start": 2723.44,
+    "duration": 5.36
+  },
+  {
+    "text": "100. For making strategies there are two",
+    "start": 2725.76,
+    "duration": 6.559
+  },
+  {
+    "text": "key parameters spread and bias. The",
+    "start": 2728.8,
+    "duration": 5.76
+  },
+  {
+    "text": "spread is the difference between our bid",
+    "start": 2732.319,
+    "duration": 4.881
+  },
+  {
+    "text": "and ask price. Essentially how much",
+    "start": 2734.56,
+    "duration": 5.92
+  },
+  {
+    "text": "profit we expect to capture per trade.",
+    "start": 2737.2,
+    "duration": 6.72
+  },
+  {
+    "text": "The bias also called skew adjusts our",
+    "start": 2740.48,
+    "duration": 6.0
+  },
+  {
+    "text": "prices to make our bid or ask more",
+    "start": 2743.92,
+    "duration": 4.96
+  },
+  {
+    "text": "likely to be filled. This ensures we",
+    "start": 2746.48,
+    "duration": 4.16
+  },
+  {
+    "text": "have a position in the right direction",
+    "start": 2748.88,
+    "duration": 4.8
+  },
+  {
+    "text": "of our model. Spread is the profit we",
+    "start": 2750.64,
+    "duration": 5.199
+  },
+  {
+    "text": "aim to capture between our bid and ask",
+    "start": 2753.68,
+    "duration": 4.639
+  },
+  {
+    "text": "price. For example, if the mid price is",
+    "start": 2755.839,
+    "duration": 6.161
+  },
+  {
+    "text": "$5 and want a $2 spread, you place a",
+    "start": 2758.319,
+    "duration": 6.481
+  },
+  {
+    "text": "limit order to buy at $4 and a limit",
+    "start": 2762.0,
+    "duration": 6.079
+  },
+  {
+    "text": "order to sell at $6. This means we buy",
+    "start": 2764.8,
+    "duration": 6.0
+  },
+  {
+    "text": "at four and sell at $6. So, make a $2",
+    "start": 2768.079,
+    "duration": 5.601
+  },
+  {
+    "text": "profit. When a limit order is executed,",
+    "start": 2770.8,
+    "duration": 5.519
+  },
+  {
+    "text": "we say it is filled. making strategies",
+    "start": 2773.68,
+    "duration": 4.399
+  },
+  {
+    "text": "are harder to back test because of how",
+    "start": 2776.319,
+    "duration": 4.081
+  },
+  {
+    "text": "you simulate how limit orders are filled",
+    "start": 2778.079,
+    "duration": 4.24
+  },
+  {
+    "text": "or not, which is out of the scope of",
+    "start": 2780.4,
+    "duration": 4.4
+  },
+  {
+    "text": "this introduction. For example, if the",
+    "start": 2782.319,
+    "duration": 4.8
+  },
+  {
+    "text": "price is at $4, how do you know the bid",
+    "start": 2784.8,
+    "duration": 4.799
+  },
+  {
+    "text": "is filled or not?",
+    "start": 2787.119,
+    "duration": 4.161
+  },
+  {
+    "text": "There's a trade-off when setting the",
+    "start": 2789.599,
+    "duration": 4.081
+  },
+  {
+    "text": "spread. If the spread is too wide, you",
+    "start": 2791.28,
+    "duration": 5.12
+  },
+  {
+    "text": "maximize your potential profit but risk",
+    "start": 2793.68,
+    "duration": 4.96
+  },
+  {
+    "text": "never getting filled. For example, if",
+    "start": 2796.4,
+    "duration": 5.12
+  },
+  {
+    "text": "you set a $4 spread with a bid at three",
+    "start": 2798.64,
+    "duration": 6.08
+  },
+  {
+    "text": "and uh an ask at seven, you're aiming",
+    "start": 2801.52,
+    "duration": 5.52
+  },
+  {
+    "text": "for a big margin. But if no one trades",
+    "start": 2804.72,
+    "duration": 4.08
+  },
+  {
+    "text": "at those prices, your profits stay",
+    "start": 2807.04,
+    "duration": 4.72
+  },
+  {
+    "text": "unrealized, effectively zero. If the",
+    "start": 2808.8,
+    "duration": 4.96
+  },
+  {
+    "text": "spread is too narrow, you have more",
+    "start": 2811.76,
+    "duration": 4.96
+  },
+  {
+    "text": "fills but risk adverse selection, taking",
+    "start": 2813.76,
+    "duration": 5.44
+  },
+  {
+    "text": "positions in the wrong direction. This",
+    "start": 2816.72,
+    "duration": 4.8
+  },
+  {
+    "text": "can negatively impact our expected",
+    "start": 2819.2,
+    "duration": 5.36
+  },
+  {
+    "text": "value. For example, if we drop if the",
+    "start": 2821.52,
+    "duration": 5.52
+  },
+  {
+    "text": "price drops down to $3 and a half and",
+    "start": 2824.56,
+    "duration": 5.68
+  },
+  {
+    "text": "our bid is filled at $4.75,",
+    "start": 2827.04,
+    "duration": 5.76
+  },
+  {
+    "text": "we we so we have a long position in the",
+    "start": 2830.24,
+    "duration": 4.72
+  },
+  {
+    "text": "wrong direction. This is adverse",
+    "start": 2832.8,
+    "duration": 4.72
+  },
+  {
+    "text": "selection. A way to fix adverse",
+    "start": 2834.96,
+    "duration": 4.879
+  },
+  {
+    "text": "selection is by biasing your prices.",
+    "start": 2837.52,
+    "duration": 4.96
+  },
+  {
+    "text": "Biasing is adjusting prices to tilt your",
+    "start": 2839.839,
+    "duration": 5.52
+  },
+  {
+    "text": "position in a certain direction. This is",
+    "start": 2842.48,
+    "duration": 5.68
+  },
+  {
+    "text": "where the alpha lies, how you skew your",
+    "start": 2845.359,
+    "duration": 5.441
+  },
+  {
+    "text": "quotes based on your model's prediction.",
+    "start": 2848.16,
+    "duration": 5.36
+  },
+  {
+    "text": "Importantly, biasing doesn't change the",
+    "start": 2850.8,
+    "duration": 4.799
+  },
+  {
+    "text": "spread size, only the placement of the",
+    "start": 2853.52,
+    "duration": 5.36
+  },
+  {
+    "text": "bid and ask relative to the mid price.",
+    "start": 2855.599,
+    "duration": 5.601
+  },
+  {
+    "text": "For example, suppose we quote a $20",
+    "start": 2858.88,
+    "duration": 5.84
+  },
+  {
+    "text": "spread with a bid at 90 and ask at 110.",
+    "start": 2861.2,
+    "duration": 5.68
+  },
+  {
+    "text": "If our model predicts the mid price will",
+    "start": 2864.72,
+    "duration": 5.84
+  },
+  {
+    "text": "rise, we bias upward, shift both quotes",
+    "start": 2866.88,
+    "duration": 6.479
+  },
+  {
+    "text": "higher while keeping the $20 spread",
+    "start": 2870.56,
+    "duration": 6.0
+  },
+  {
+    "text": "intact. Now our bid is more likely to be",
+    "start": 2873.359,
+    "duration": 6.0
+  },
+  {
+    "text": "hit, giving us a long position aligned",
+    "start": 2876.56,
+    "duration": 5.039
+  },
+  {
+    "text": "with our prediction.",
+    "start": 2879.359,
+    "duration": 4.401
+  },
+  {
+    "text": "In practice, this is where the edge",
+    "start": 2881.599,
+    "duration": 4.561
+  },
+  {
+    "text": "comes from. Systematically biasing",
+    "start": 2883.76,
+    "duration": 5.04
+  },
+  {
+    "text": "quotes in line with a model's prediction",
+    "start": 2886.16,
+    "duration": 5.12
+  },
+  {
+    "text": "where the mid price is moving and is",
+    "start": 2888.8,
+    "duration": 6.24
+  },
+  {
+    "text": "often driven by order book imbalances.",
+    "start": 2891.28,
+    "duration": 6.24
+  },
+  {
+    "text": "We can bias more aggressively by moving",
+    "start": 2895.04,
+    "duration": 5.44
+  },
+  {
+    "text": "the bid closer to the mid price and the",
+    "start": 2897.52,
+    "duration": 5.12
+  },
+  {
+    "text": "ask further away, making it more likely",
+    "start": 2900.48,
+    "duration": 5.44
+  },
+  {
+    "text": "to accumulate a long position. You might",
+    "start": 2902.64,
+    "duration": 5.84
+  },
+  {
+    "text": "want to shift by a constant size or",
+    "start": 2905.92,
+    "duration": 4.56
+  },
+  {
+    "text": "proportional to the model's predicted",
+    "start": 2908.48,
+    "duration": 4.639
+  },
+  {
+    "text": "value. There's no right or wrong answer",
+    "start": 2910.48,
+    "duration": 5.68
+  },
+  {
+    "text": "here. Only back testing will tell. If",
+    "start": 2913.119,
+    "duration": 5.361
+  },
+  {
+    "text": "your model has a tiny edge, which is",
+    "start": 2916.16,
+    "duration": 4.399
+  },
+  {
+    "text": "common for predictions in the second or",
+    "start": 2918.48,
+    "duration": 4.4
+  },
+  {
+    "text": "minutes, then you want to ensure you",
+    "start": 2920.559,
+    "duration": 4.56
+  },
+  {
+    "text": "trade as much as possible. So you might",
+    "start": 2922.88,
+    "duration": 6.239
+  },
+  {
+    "text": "want to aggressively bias your prices.",
+    "start": 2925.119,
+    "duration": 6.0
+  },
+  {
+    "text": "If the model predicts the mid price will",
+    "start": 2929.119,
+    "duration": 5.281
+  },
+  {
+    "text": "fall, we bias in the opposite direction,",
+    "start": 2931.119,
+    "duration": 6.401
+  },
+  {
+    "text": "shifting both bid and ask lower. Again,",
+    "start": 2934.4,
+    "duration": 6.32
+  },
+  {
+    "text": "the spread size is unchanged, but we're",
+    "start": 2937.52,
+    "duration": 5.76
+  },
+  {
+    "text": "we're skewing fills towards the short",
+    "start": 2940.72,
+    "duration": 5.76
+  },
+  {
+    "text": "side. Here we're quoting our bid at 85",
+    "start": 2943.28,
+    "duration": 6.799
+  },
+  {
+    "text": "and our ask at 105. Our spread hasn't",
+    "start": 2946.48,
+    "duration": 6.56
+  },
+  {
+    "text": "changed. Just it's more likely for ask",
+    "start": 2950.079,
+    "duration": 6.641
+  },
+  {
+    "text": "to be lifted. Also, we can aggressively",
+    "start": 2953.04,
+    "duration": 6.16
+  },
+  {
+    "text": "bias the other way. So, it's more likely",
+    "start": 2956.72,
+    "duration": 5.68
+  },
+  {
+    "text": "to accumulate a short position.",
+    "start": 2959.2,
+    "duration": 5.6
+  },
+  {
+    "text": "The bias is dynamically changing based",
+    "start": 2962.4,
+    "duration": 5.04
+  },
+  {
+    "text": "on the model's prediction. And also, the",
+    "start": 2964.8,
+    "duration": 4.4
+  },
+  {
+    "text": "spread could be dynamically adjusting",
+    "start": 2967.44,
+    "duration": 4.56
+  },
+  {
+    "text": "based on the volatility or inventory",
+    "start": 2969.2,
+    "duration": 6.32
+  },
+  {
+    "text": "risk. The model is typically predicting",
+    "start": 2972.0,
+    "duration": 5.76
+  },
+  {
+    "text": "the midpric delta, how much the mid",
+    "start": 2975.52,
+    "duration": 6.36
+  },
+  {
+    "text": "price is going to move by.",
+    "start": 2977.76,
+    "duration": 4.12
+  },
+  {
+    "text": "That wraps everything up. Hopefully, you",
+    "start": 2983.599,
+    "duration": 4.801
+  },
+  {
+    "text": "found this educational. You should now",
+    "start": 2986.319,
+    "duration": 4.561
+  },
+  {
+    "text": "understand how a statistical edge is",
+    "start": 2988.4,
+    "duration": 5.36
+  },
+  {
+    "text": "both created and executed with the model",
+    "start": 2990.88,
+    "duration": 5.28
+  },
+  {
+    "text": "generating the edge and the strategy",
+    "start": 2993.76,
+    "duration": 4.799
+  },
+  {
+    "text": "executing it in the market. Of course,",
+    "start": 2996.16,
+    "duration": 4.56
+  },
+  {
+    "text": "this was just an introduction. There's a",
+    "start": 2998.559,
+    "duration": 4.481
+  },
+  {
+    "text": "lot more depth to explore, more advanced",
+    "start": 3000.72,
+    "duration": 5.28
+  },
+  {
+    "text": "models, more sophisticated execution,",
+    "start": 3003.04,
+    "duration": 4.64
+  },
+  {
+    "text": "and even strategies that combine",
+    "start": 3006.0,
+    "duration": 4.96
+  },
+  {
+    "text": "multiple models into portfolios.",
+    "start": 3007.68,
+    "duration": 4.96
+  },
+  {
+    "text": "I'd love to hear your feedback, so",
+    "start": 3010.96,
+    "duration": 3.76
+  },
+  {
+    "text": "please leave a comment. It really helps",
+    "start": 3012.64,
+    "duration": 4.88
+  },
+  {
+    "text": "me to improve and shape future videos.",
+    "start": 3014.72,
+    "duration": 5.359
+  },
+  {
+    "text": "And and if there's any specific topic",
+    "start": 3017.52,
+    "duration": 4.4
+  },
+  {
+    "text": "you'd like me to cover next, let me",
+    "start": 3020.079,
+    "duration": 4.081
+  },
+  {
+    "text": "know. Thanks for watching, and please",
+    "start": 3021.92,
+    "duration": 5.8
+  },
+  {
+    "text": "like and subscribe.",
+    "start": 3024.16,
+    "duration": 3.56
+  }
+]

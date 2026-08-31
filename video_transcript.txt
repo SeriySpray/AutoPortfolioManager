@@ -1,0 +1,1148 @@
+[00:00] This video is an introduction to
+[00:02] quantitive trading. I'll show how quant
+[00:05] firms use models to build a statistical
+[00:07] edge and how they turn that edge into
+[00:10] strategies like market making and market
+[00:12] taking. Along the way, we'll also cover
+[00:15] some key ideas for market
+[00:16] microstructure.
+[00:18] To keep it accessible, I'll use simple
+[00:20] animations instead of heavy math. I hope
+[00:23] you find it useful and I'd love to hear
+[00:24] your thoughts in the comments.
+[00:28] Defining quant trading in one one
+[00:30] sentence would be creating a statistical
+[00:33] edge and executing it to create risk
+[00:35] adjusted returns. In this video, we will
+[00:38] quantify the edge and also risk adjusted
+[00:42] returns. We're going to into detail how
+[00:45] the edge is created and how the edge is
+[00:47] executed.
+[00:49] A more modern version of of this would
+[00:52] be applying machine learning to to
+[00:54] create a statistical edge.
+[00:56] And just need to emphasize as well that
+[00:59] the execution is equally as important as
+[01:02] the the edge itself.
+[01:07] At the heart of quant trading is the
+[01:09] model typically a machine learning
+[01:11] model. It has both an input and an
+[01:13] output. The output is a prediction of a
+[01:16] future quantity and is denoted by yhat
+[01:19] and the input is denoted by x.
+[01:23] There are two types of models,
+[01:25] regression and classification.
+[01:28] A regression model is a model that
+[01:30] predicts a real valued number. It could
+[01:33] be predicting the future price, but it
+[01:36] could also be trying to predict the the
+[01:39] future price difference, which is also
+[01:41] called a price delta. For example, here
+[01:43] it is predicting it's going down by $5.
+[01:47] or it could be trying to predict the
+[01:49] future return represented as a
+[01:51] percentage. Returns are unitless and so
+[01:54] you're able to compare a model across
+[01:56] multiple assets.
+[01:58] The other form of model is a
+[02:01] classification model which classifies
+[02:03] into categories. For example, we could
+[02:06] predict if the price is going to go up
+[02:08] or down. It also provides an associated
+[02:10] probability too. So here it predicts
+[02:13] it's going up with a 75% probability.
+[02:21] We call the inputs to a model features
+[02:23] and the output it predicts the target.
+[02:26] If there's only one feature that's a
+[02:28] univaric model
+[02:31] can of course use multiple features.
+[02:34] Several factors may influence the
+[02:36] target, but here's a rule of thumb. The
+[02:40] more features you add, the more
+[02:41] complexity you introduce. And with
+[02:44] complexity comes a higher risk of
+[02:46] overfitting to noise and weaker
+[02:48] generalization.
+[02:50] That's why in this video we'll focus on
+[02:52] univariatic models. They're simple,
+[02:55] robust, and less prone to overfitting
+[02:58] noise. Advanced models like neuronet
+[03:00] networks can even produce multiple
+[03:02] outputs. For instance, they might
+[03:05] predict returns at several time
+[03:07] horizons,
+[03:08] the next minute, the next two minutes,
+[03:11] and so on, or generate signals for
+[03:13] multiple tradable instruments at once.
+[03:17] We won't be covering neural networks
+[03:19] here. Think of them like driving a
+[03:21] Ferrari. Incredibly powerful, but easy
+[03:24] to crash if you don't have experience.
+[03:26] They often overfit to noise unless
+[03:29] carefully managed. In practice, it's
+[03:32] often better to choose simpler models
+[03:34] with fewer parameters rather than
+[03:36] complex ones. This principle is known as
+[03:40] OKAM's Razer.
+[03:42] So, what actually goes into a model and
+[03:45] what comes out?
+[03:47] Typically, the input is a time series,
+[03:51] values ordered over time.
+[03:54] The model uses past values of the time
+[03:57] series to predict a future value in the
+[04:00] time series. The predicted future value
+[04:02] is denoted by the red line here.
+[04:05] Depending on the model design, it could
+[04:08] use the last n values or just the most
+[04:11] recent one. In this video, we'll focus
+[04:14] on the simplest case using only the last
+[04:17] known value as the feature.
+[04:21] The model by itself doesn't make money.
+[04:25] It generates the edge. And this is where
+[04:27] strategy comes in. Strategy is what
+[04:30] executes the edge. Both are equally
+[04:33] important. You can't make money without
+[04:36] a good model and good execution. The
+[04:39] strategy takes the model's predictions
+[04:41] and turns them into orders. Think of
+[04:44] card counting in blackjack. A system may
+[04:48] give you an edge, but if you bet your
+[04:50] entire bankroll on the first hand and
+[04:52] lose, you execute it poorly. The edge is
+[04:56] there, but the but bad execution wipes
+[04:59] it out. Other execution details matter,
+[05:02] too, like reducing latency to improve
+[05:04] order book Q position or avoiding stale
+[05:08] prices, but we'll keep those out of
+[05:10] scope here. In this video, we'll explore
+[05:13] both the model and the strategy and see
+[05:15] how they work to together to form a
+[05:17] complete trading algorithm. We'll look
+[05:19] at both market making and market taken
+[05:22] strategies.
+[05:24] Now, I will discuss the core skills
+[05:26] needed for quant trading in my humble
+[05:29] opinion.
+[05:30] The first is econometrics. Econometrics
+[05:34] will give you a very good foundation to
+[05:35] build upon. It has a rich history of
+[05:38] analyzing time series data. It teaches
+[05:40] you how to analyze time series data that
+[05:43] changes over time like financial data
+[05:46] and helps you identify key patterns and
+[05:48] trends in a time series. You'll learn
+[05:51] essential concepts like auto
+[05:53] reggression, how past values influence
+[05:56] the future. Non-stationerity, where the
+[05:59] mean and variance of a time series are
+[06:01] not constant over time. co co-
+[06:04] integration how two non-stationary time
+[06:07] series might move together in a stable
+[06:10] predictable way.
+[06:12] You could get away with skipping
+[06:13] econometrics but it gives you a rich
+[06:16] vocabulary for working with time series
+[06:18] data. The main limitation is that
+[06:21] classical econometric time series models
+[06:23] don't scale well to large data sets and
+[06:25] make strong assumptions about your data.
+[06:28] And this is where machine learning comes
+[06:30] in. If there's one skill to focus on,
+[06:33] it's this. The power of machine learning
+[06:35] is that it learns statistical patterns
+[06:37] from historical data without having to
+[06:40] explicitly write a complex mathematical
+[06:42] formula for it. Instead of being
+[06:45] manually programmed with rules, these
+[06:47] models are trained on datadine
+[06:49] predictive relationships.
+[06:51] For example, the most advanced weather
+[06:53] predictions used to rely on intricate
+[06:56] hand-coded math formulas. But machine
+[06:59] learning models surpass them by learning
+[07:01] the best relationships and patterns
+[07:03] directly from the data.
+[07:06] Machine learning also gives two key
+[07:09] advantages. One, scalability. They can
+[07:11] scale to large highfrequency data sets
+[07:14] such as the orderbook data.
+[07:17] Two, flexibility. It doesn't make any
+[07:20] assumptions about your data. You can
+[07:22] easily adapt and tweak a model and
+[07:24] change what it's optimizing for.
+[07:27] Now, strong programming skills are a
+[07:29] huge advantage. The better you can code,
+[07:32] the less you need to rely on others, and
+[07:34] the more control you have over your
+[07:36] strategies. Writing latency sensitive
+[07:39] algorithms, for example, requires deep
+[07:41] knowledge of machine codes, CPUs, memory
+[07:44] allocations, operating systems, and
+[07:46] networking stacks. But speed isn't
+[07:49] everything. What's often overlooked is
+[07:51] systems that run automatically 247 and
+[07:54] keep going even when hardware or
+[07:56] software errors occur or without
+[07:58] performance degrading over time. In
+[08:01] practice, reliability is just as
+[08:03] important as raw performance.
+[08:06] Once you're running multiple trading
+[08:07] strategy, scalability becomes critical.
+[08:10] You don't want to duplicate code every
+[08:12] time you test a new idea. Instead, you
+[08:15] need a flexible research API that allows
+[08:19] you to build, back test, and deploy
+[08:21] strategies without compromising
+[08:23] performance.
+[08:26] And the foundation of all this is
+[08:28] mathematics. But here's the good news.
+[08:31] You don't need to be a math Olympiad
+[08:32] winner or a fields medalist to succeed
+[08:35] as a quant trader. The level of math
+[08:38] involved isn't earthshattering. What you
+[08:40] do need is strong mathematical
+[08:42] reasoning, the ability to think
+[08:44] logically about problems and understand
+[08:46] your models on a deeper level, debug
+[08:49] issues, and refine strategies with
+[08:51] confidence. The math itself is less
+[08:54] scary than you might think. You really
+[08:57] need a solid grasp of three key areas.
+[09:00] One, linear algebra. Two, multivariable
+[09:03] calculus.
+[09:04] Three, probability and statistics. The
+[09:07] stronger your maths, the more deeply you
+[09:09] can understand what's going on under the
+[09:11] hood and the more freedom you'll have to
+[09:14] innovate.
+[09:19] Now, we need to quantify the statistical
+[09:21] edge. The statistical edge is quantified
+[09:24] as the expected value or EV for short.
+[09:27] The expected value tells us on average
+[09:29] how much net P&L we can expect per
+[09:32] trade. The higher the EV, the more money
+[09:35] we make over the long run.
+[09:37] Mathematically, expected value is
+[09:39] written as E of X where X is a random
+[09:42] variable. In our case, the net P&L of a
+[09:44] trade. The net P&L means the profit of a
+[09:47] trade after accounting for all costs
+[09:50] like transaction fees.
+[09:52] Instead of diving straight into the
+[09:54] formula, let's build some intuition with
+[09:56] a simple game.
+[09:59] Imagine a biased coin toss game. You win
+[10:01] $1 of its heads with a 55% probability.
+[10:05] You lose $125 if it's tails with a 45%
+[10:09] probability. Would you play this game?
+[10:13] At first glance, you might say yes.
+[10:15] After all, you're winning more often
+[10:17] than you lose. However, what if I told
+[10:19] you you shouldn't play this game? You
+[10:22] might be surprised given that we win
+[10:24] more than we lose. If we calculate the
+[10:27] expected value of this game, we will see
+[10:29] that we lose money on average on each
+[10:31] coin toss. So, we shouldn't play this
+[10:34] game.
+[10:36] Let's calculate the expected value for
+[10:38] this game. The expected value is
+[10:40] calculated by the probability of winning
+[10:43] multiplied by the value of winning plus
+[10:45] the probability of losing multiplied by
+[10:48] the value of losing.
+[10:51] If we know the values for this so we can
+[10:54] plug them in. So now let's plug these
+[10:58] values in. And then we see that it
+[11:00] becomes 0.55
+[11:02] ultiplied by 1 plus 0.445
+[11:06] ultiplied by -1.25.
+[11:10] If we do the calculation we can see that
+[11:13] the expected value is negative and it's
+[11:15] roughly -1 cent.
+[11:19] This means on average we lose
+[11:22] one and a4 cent per toss. The more you
+[11:26] play the more you bleed money over time.
+[11:28] The key lesson, don't focus only on win
+[11:31] rate. Focus on the expected value. The a
+[11:34] trading strategy with a 30% win rate can
+[11:37] still make money if the winners are
+[11:39] larger than uh are large. And a strategy
+[11:43] with a 75 70% win rate can still lose
+[11:46] money if the losses are too big. Now,
+[11:49] let's look at another game. Another coin
+[11:51] toss game, but this time you win $35 if
+[11:55] it's heads with a 25% probability
+[12:00] or you lose $1 if it's tails with a 75%
+[12:03] probability. Should you play this game
+[12:06] or not? If you learned your lesson from
+[12:08] the previous game, then you know you
+[12:10] shouldn't focus purely on the win rate.
+[12:13] You should be f uh focusing on the
+[12:15] expected value. So, let's do that. Let's
+[12:17] calculate the expected value.
+[12:20] Again, we know what the variables are,
+[12:22] so we can easily plug them in. If we do
+[12:24] the calculation, it turns out that we
+[12:26] have a tiny positive expected value of
+[12:30] roughly 1 and a4 cents. This means that
+[12:33] we should play this game as many times
+[12:35] as possible as we'll cumulatively make
+[12:38] money. This is indicative of quant
+[12:40] trading strategies. Just a tiny tiny
+[12:43] edge. where you have a small positive
+[12:46] expected value and only win maybe 51% of
+[12:49] your trades. But if you make lots of
+[12:51] bets, then you can make exceptional
+[12:53] returns.
+[12:59] We now need to quantify risk adjusted
+[13:01] returns. We can informally define it as
+[13:04] returns over risk. Quantifying returns
+[13:08] is trivial, but how do you quantify
+[13:10] risk? The most common measure of risk is
+[13:13] to use standard deviation. And the
+[13:15] standard deviation tells you how much
+[13:17] variance there is in your data which
+[13:20] essentially measures how stable the
+[13:22] returns are. The more stable our returns
+[13:25] are, the less likely we are to have huge
+[13:27] draw downs.
+[13:29] We we cannot remove risk to zero, but we
+[13:32] can reduce it. More specifically, we
+[13:35] define as the expected returns over the
+[13:37] standard deviation of returns.
+[13:41] This turns out to be a very common
+[13:43] measure called the sharp ratio which is
+[13:46] the difference between the expected
+[13:48] returns and the risk-free rate over the
+[13:50] standard deviation of returns. However,
+[13:53] because most quant trading strategies
+[13:54] are intraday where we hold onto
+[13:57] positions for minutes or hours that we
+[14:00] remove the risk-free rate term because
+[14:03] we don't hold positions long enough to
+[14:05] factor it in.
+[14:07] And to to develop the intuition behind
+[14:09] the sharp ratio, I've animated uh some
+[14:12] simulated sharp ratios.
+[14:17] The sharp ratio is simply a way of
+[14:19] measuring return per unit of risk. Here
+[14:22] our y-axis is cumulative P&L and the
+[14:25] xaxis is time. What I'm showing is how
+[14:28] different sharp ratios affect returns.
+[14:31] As the sharp increases, the equity curve
+[14:34] smooths out. returns become more stable
+[14:37] until at very high sharp values it looks
+[14:40] like a straight line. Why do we care
+[14:42] about reducing risk? One key motivation
+[14:45] is leverage. Leverage is multiplying
+[14:48] your profits or losses. So either
+[14:50] magnify your losses even bigger if you
+[14:53] lose more than you win. With a low
+[14:55] sharp, using leverage can quickly wipe
+[14:58] you out through liquidations and large
+[15:00] draw downs. But the higher the sharp,
+[15:03] the more safely you can increase
+[15:04] leverage and multiply profits. Now, this
+[15:07] doesn't mean you can't make money with a
+[15:10] low sharp ratio. Many profitable
+[15:11] strategies do, but it does cap how much
+[15:14] leverage you can safely allocate. For
+[15:17] example, intraday quant strategies
+[15:19] holding positions for just seconds or
+[15:21] minutes often have high sharp ratios in
+[15:24] the double digits. They may only win 51
+[15:27] to 53% of their trades, but because they
+[15:30] make so many small bets with a positive
+[15:32] edge, the cumulative returns grow
+[15:35] smoothly. At very high sharp levels, the
+[15:38] equity curve looks like a straight line,
+[15:40] practically printing money. Hopefully,
+[15:43] you can see the motivation for reducing
+[15:45] risk. Minimize drawd downs, use leverage
+[15:48] safely, and stable returns.
+[15:56] We need to discuss simple returns and
+[15:59] its biggest limitation. The equation for
+[16:02] simple returns is simple.
+[16:05] Just take the difference between the
+[16:06] current price and previous price and
+[16:08] divide by the previous price. However,
+[16:11] using simple returns has a limitation in
+[16:13] that they are not symmetric.
+[16:16] The limitation is best shown with an
+[16:18] example. Here is a time series where the
+[16:20] price increases by $20 and then
+[16:23] decreases by $20. If we use simple
+[16:26] returns, then it goes up by 20% but
+[16:30] decreases by -6.6%.
+[16:34] So it's asymmetric. We want to make
+[16:36] return symmetric. So it goes up and down
+[16:39] by the same amount. This is where log
+[16:41] returns come in.
+[16:44] Log returns is the logarithm of the
+[16:46] current price over the previous price.
+[16:49] It has a property called time additivity
+[16:52] in that you can sum them together to
+[16:53] calculate the compound return. So let's
+[16:56] go back to the previous example and use
+[16:59] log returns instead and see if it solves
+[17:01] the problem.
+[17:04] Using log returns instead of simple
+[17:07] returns makes our return symmetric.
+[17:09] Again, it goes up by $20 and goes down
+[17:12] by $20. Using log returns instead, it
+[17:15] goes up by 18.2%
+[17:18] and goes down by 18.2%.
+[17:21] As you can see, it's symmetric now,
+[17:23] which plays nicely with our machine
+[17:25] learning models and it's easier to
+[17:27] reason.
+[17:33] Before we go into models, we need to
+[17:34] discuss time series. Broadly speaking,
+[17:37] there are two types. The first and most
+[17:39] common is a regular time series where
+[17:42] each data point is recorded at evenly
+[17:45] spaced intervals marked by fixed time
+[17:48] delta.
+[17:50] For example, in an hourly time series,
+[17:53] every data point represents exactly one
+[17:55] business hour. In this setup, when we
+[17:58] talk about the next data point, we're
+[18:01] simply referring to the value at the
+[18:03] following hour.
+[18:09] However, in high frequency data that the
+[18:13] data comes in as an irregular time
+[18:15] series and this essentially means that
+[18:17] the the delta t between each data point
+[18:20] is of a inconsistent size an arbitrary
+[18:24] size. So for example, if this was
+[18:25] trades, then
+[18:28] the trades could come in in the next
+[18:30] second, the next minute, the next hour.
+[18:32] And essentially what we're predicting
+[18:34] here is rather than say like the the
+[18:37] price in the next hour, we're predicting
+[18:39] in the next uh data point which we call
+[18:42] ticks.
+[18:46] Now we need to discuss the concept of
+[18:48] auto reggression. Autogression is making
+[18:51] predictions of future values from the
+[18:53] previous known values which we call lags
+[18:57] in ecomtrics. And you probably use auto
+[19:00] reggression every day without even
+[19:02] noticing. So for example, if you're
+[19:04] using chat GPT, this is essentially
+[19:07] predicting the the next word from the
+[19:10] from the previous words it's generated.
+[19:13] And so it this is why it's called an
+[19:15] auto reggressive model because it's
+[19:17] making predictions from previous values.
+[19:20] And it's exactly the same with a time
+[19:22] series. We're interested in making
+[19:23] predictions from pre previous known
+[19:26] values.
+[19:31] Now we're moving into my favorite
+[19:33] section, models. In this part, we'll
+[19:36] focus on the simplest setup, a one
+[19:38] input, one output model. More
+[19:41] specifically, we'll be using a linear
+[19:42] regression. It's one of the most basic
+[19:45] machine learning models, but don't let
+[19:46] that fool you. There's a lot of power in
+[19:48] its simplicity.
+[19:52] This linear regression model only has
+[19:54] two parameters, the weight and the bias.
+[19:57] That's it. It multiplies the input with
+[20:00] the weight and adds a bias. And that
+[20:03] simplicity is what makes it beautiful
+[20:05] and powerful because it only has two
+[20:07] parameters. One, it has high
+[20:10] interpretability. We can actually
+[20:11] understand why it makes each prediction.
+[20:15] Two, it tends to generalize well,
+[20:17] meaning it's less sensitive to noise.
+[20:19] And trust me, there's a lot of noise in
+[20:21] trading data. And three, it's calculated
+[20:24] very quickly for latency sensitive
+[20:26] trading. It only takes three to five CPU
+[20:29] cycles to make a prediction.
+[20:32] More specifically, we're going to look
+[20:34] at an auto reggressive model where we
+[20:37] make a prediction from the last known
+[20:39] previous value in the time series. In
+[20:42] econometrics, this is called an AR1
+[20:45] model. The prediction is the future
+[20:47] value of the time series. And now we'll
+[20:50] show examples of using this model.
+[20:56] With this auto reggressive linear
+[20:58] regression model, we can model the most
+[21:00] two fundamental trading behaviors, mean
+[21:03] reversion and momentum. I will now show
+[21:05] examples of our model fit into these two
+[21:07] trading behaviors. So, let's dive right
+[21:09] in.
+[21:13] Mean reversion is essentially what comes
+[21:15] up must come down and what comes down
+[21:18] must come up. It hovers around a central
+[21:20] tendency. In this example, it's zero.
+[21:23] Here is a log returns time series and
+[21:26] you can see it goes from positive to
+[21:28] negative and from negative to positive.
+[21:31] It's very common to see mean reversion
+[21:33] in short time scales like seconds and
+[21:35] minutes.
+[21:37] So now let's look how we can model mean
+[21:40] reversion using our linear regression.
+[21:48] Now we need to optimize the weight and
+[21:50] the bias to model this mean reversion
+[21:52] behavior. We will go into more detail
+[21:54] how the parameters are chosen later in
+[21:56] the video, but let's just say we've just
+[21:58] used a machine learning algorithm to
+[22:00] optimize the weight and bias. Here, our
+[22:03] machine learning algorithm has
+[22:05] calculated a negative weight and a small
+[22:07] tiny bias. The most important detail is
+[22:10] that the weight is negative. So, it
+[22:12] changes the sign of our lag. So, if it's
+[22:14] passed a positive log return, it changes
+[22:16] it to a negative log return, then adds a
+[22:19] small bias. If passed in a negative log
+[22:21] return, then it changes the sign to
+[22:23] positive. Now let's see how well our
+[22:26] model has done to predict future values
+[22:28] by plotting them against each other.
+[22:33] The blue line here shows the actual
+[22:36] values we want to predict and the green
+[22:38] line shows the predictive values from
+[22:40] our model. With even such a simple
+[22:42] model, you can see it's done a really
+[22:44] good job of capturing this mean
+[22:45] reversion behavior. The directional
+[22:48] accuracy is 100% accurate. It gets the
+[22:51] sign right at every single point. Notice
+[22:54] how the predictor values stay very close
+[22:57] to the actual ones. And here's the key
+[22:59] takeaway. The negative weight in the
+[23:01] model can be interpreted as a mean
+[23:03] reversion. Think of it like a rubber
+[23:05] band where the price moves away, the
+[23:07] negative weight pulls back towards the
+[23:09] mean.
+[23:15] Now let's see how the same model can
+[23:17] also capture the other major trading
+[23:19] behavior momentum. This behavior is
+[23:22] essentially modeling what goes up stays
+[23:25] up and what goes down stays down. As you
+[23:28] can see in this log returns time series
+[23:31] for the first three data points it
+[23:32] remains positive. So it's trending
+[23:35] upwards and then the next three values
+[23:37] are negative log returns where it's
+[23:39] trending downwards. This persistence in
+[23:41] direction is the hallmark of momentum.
+[23:44] In financial markets, momentum is one of
+[23:46] the most widely studied and traded
+[23:48] phenomenas, especially at mediumtime
+[23:51] horizons. Let's see how we can model
+[23:53] this.
+[23:56] Again, using our linear model, we apply
+[23:59] machine learning to calculate the
+[24:00] optimal parameters. The key point here
+[24:03] is that the this time the weight is
+[24:05] positive. So if the current log return
+[24:08] is positive, multiplying by the weight
+[24:10] keeps the sign positive and then adds a
+[24:13] small negative bias. Conversely, if the
+[24:16] input is negative, the weight keeps the
+[24:18] sign negative. In other words, a
+[24:21] positive weight reinforces the existing
+[24:24] direction, which is exactly what
+[24:26] momentum is about.
+[24:30] Now let's see how well these parameters
+[24:33] model momentum. The blue line represents
+[24:35] the actual values and the red line shows
+[24:38] our predicted values. We can see that
+[24:40] the directional accuracy is nearly 100%.
+[24:43] And it got the sign wrong at time
+[24:45] point.3 where the series transitions
+[24:48] from a positive to negative log return.
+[24:51] If we look at the distances between the
+[24:53] predicted and the actual values, they're
+[24:55] minimal. The key point here is that it's
+[24:58] the the positive weight doing all the
+[25:00] work. It reinforces the direction of the
+[25:03] previous return, which is exactly what
+[25:06] momentum is about.
+[25:09] So, how did we actually calculate the
+[25:12] the weight and the bias? That's what
+[25:14] we're going to cover next. This opens up
+[25:16] a whole new topic called mathematical
+[25:18] optimization, which is simply the
+[25:21] process of finding the most optimal par
+[25:23] parameters for our model. There are many
+[25:25] ways to do this, but we'll focus on the
+[25:27] two most important ones.
+[25:30] The first method is closed form solution
+[25:33] which gives us an exact analytical
+[25:36] answer. This approach is very common in
+[25:39] econometrics. If you ever use scikit
+[25:42] learns linear regression model, it's
+[25:43] actually using a closed form solution
+[25:45] under the hood. You can think of it like
+[25:47] optimizing the weights in just one line
+[25:49] of code, quick and direct. The second
+[25:52] method is gradient descent, an iterative
+[25:55] approach widely used in machine
+[25:56] learning. Instead of solving everything
+[25:59] in one step, it loops over and over,
+[26:01] gradually improving the weights until
+[26:03] they reach the best values. We'll break
+[26:06] each of these down in detail.
+[26:11] And here's the mathematics for closed
+[26:13] form solution to linear regression, also
+[26:15] known as ordinary lease squares. If
+[26:18] you've used linear regression in Mat
+[26:20] Lab, Mathematica or the linear
+[26:22] regression class in Scikitlearn, then
+[26:24] this is the exact equation being used to
+[26:27] solve the problem. The beauty of of OS
+[26:31] is that it can be calculated in just one
+[26:33] line of code. It gives very good
+[26:35] approximations, but it has one big
+[26:37] limitation. It doesn't scare well to
+[26:40] large data sets. It works perfectly for
+[26:42] small data sets, but when you're dealing
+[26:45] with terabytes of data, it becomes
+[26:47] inefficient to load everything into
+[26:49] memory and perform massive matrix
+[26:51] calculations. With high frequency data,
+[26:54] we can collect terabytes of data daily.
+[26:57] So, it quickly becomes infeasible to
+[26:59] rely on ordinary squares alone.
+[27:03] And this is where gradient descent comes
+[27:05] into play.
+[27:11] Instead of solving everything at once,
+[27:14] gradient descent loops over the data and
+[27:16] incrementally improves the parameters
+[27:19] using small batches of training data at
+[27:21] a time. The weight update rule is
+[27:24] simple. Take the current weight and
+[27:26] subtract the partial gradient. The
+[27:28] partial gradient is just the derivative
+[27:30] of the loss function with respect to the
+[27:32] weight. And the loss function is
+[27:34] something we as modelers get to choose.
+[27:36] It defines how we measure error. An
+[27:39] important hyperparameter is the learning
+[27:41] rate usually denoted by the Greek letter
+[27:43] eta which controls how big each update
+[27:47] step is. Too large and you overshoot the
+[27:49] optimal solution and too small the
+[27:52] training becomes painfully slow. The
+[27:55] beauty of gradient descent is in its
+[27:57] flexibility. We can choose different
+[27:59] loss functions and sometimes there's
+[28:00] real alpha in designing new and creative
+[28:03] ways to define that loss function.
+[28:06] I I will now illustrate how gradient
+[28:08] descent works so you have an
+[28:10] understanding of its mechanics.
+[28:12] And here's gradient descent in action.
+[28:15] Here we're looking at the convex loss
+[28:17] function like mean squared error. The
+[28:19] goal of gradient descent is to find the
+[28:21] minimum of this function, the point
+[28:23] where the error is small as possible. At
+[28:25] each step, the algorithm calculates the
+[28:27] gradient, the slope of the function, and
+[28:30] then takes a step in the opposite
+[28:31] direction of the gradient. Since this
+[28:34] function is convex, there's only one
+[28:36] global minimum. At that minimum, we
+[28:38] found the best parameters for our model.
+[28:43] When designing custom loss functions,
+[28:46] they are often non-convex.
+[28:48] That means instead of one unique
+[28:50] minimum, there are many local minima and
+[28:53] even saddle points. The optimizer's goal
+[28:56] isn't to find the perfect global
+[28:58] minimum. That's usually impossible. But
+[29:01] to land in a good local minimum that
+[29:03] performs well. Sometimes it may converge
+[29:06] to a poor region, but techniques like
+[29:08] stochastic gradient descent or momentum
+[29:11] help uh escape bad spots. In practice,
+[29:15] the aim is not perfection, but finding a
+[29:17] solution that generalizes well. In this
+[29:19] example, it finds a local minima that is
+[29:22] a good approximation of the global
+[29:24] minima.
+[29:28] As we've said before, execution is just
+[29:30] as important as the edge itself. If you
+[29:33] have a great model but poor execution,
+[29:35] there's no real alpha. We're just going
+[29:37] to focus on the strategy exclusively.
+[29:40] How we take the model's predictions and
+[29:42] translate them into actual orders. Of
+[29:44] course, in practice, there are many
+[29:46] nuances.
+[29:47] Things like minimizing latency to get
+[29:50] better prices and Q positions, which
+[29:52] become critical if you're trading on
+[29:54] second or minute time horizons.
+[29:57] But since this is just an introduction,
+[29:59] we'll set aside those low-level
+[30:01] execution details and focus purely on
+[30:04] the strategy.
+[30:08] The taxonomy of quant trading strategies
+[30:10] can be divided into two broad types,
+[30:13] making and taking. Making means adding
+[30:16] liquidity to the order book. In this
+[30:18] case, you're often rewarded either
+[30:21] through rebates or with such low
+[30:23] transaction fees that it becomes
+[30:25] feasible to trade at a second or minute
+[30:28] level time horizon.
+[30:31] Taking on the other hand is removing
+[30:33] liquidity from the order book. Here you
+[30:36] typically pay higher transaction fees.
+[30:38] That makes very short horizon trading
+[30:41] less attractive because even if your
+[30:43] back test shows strong gross P&L, those
+[30:46] fees can push your net P&L negative. Of
+[30:49] course, this is just a loose taxonomy.
+[30:51] In practice, many strategies combine
+[30:54] both making and taking depending on the
+[30:57] situation. We'll dig into each more
+[30:59] detail next.
+[31:04] Before we jump into strategies, we need
+[31:06] to cover the fundamentals of the order
+[31:09] book. The order book is the heart of a
+[31:11] financial market. It represents the
+[31:14] global supply and demand. Market makers
+[31:17] add limit orders to provide liquidity.
+[31:20] Market orders remove liquidity from the
+[31:22] book. Having access to the order book
+[31:25] can give you a predictive edge. The book
+[31:27] itself contains two sides. bids, which
+[31:31] are buy orders and asks, sell orders.
+[31:33] These are organized into levels. At the
+[31:36] very top of the book, you always see the
+[31:38] best bid and best ask, the highest price
+[31:41] someone is willing to buy and the lowest
+[31:43] price someone is willing to sell, along
+[31:45] with the available quantities at those
+[31:47] levels. And this isn't static. Prices
+[31:50] and quantities are constantly shifting
+[31:53] as trades happen and orders flow in. The
+[31:55] order book is a live reflection of the
+[31:57] market micro structure in real time.
+[32:03] An important measure of the order book
+[32:05] is the spread. The difference between
+[32:07] the best bid and the best ask. As a rule
+[32:10] of thumb, less liquid markets have wider
+[32:12] spreads while highly liquid markets
+[32:15] usually have narrower spreads. The
+[32:18] spread is also a hidden cost for taking
+[32:20] strategies. If you buy at the ask and
+[32:23] immediately sell at the bid, you lose
+[32:26] the spread. That's why market makers,
+[32:28] also called liquidity providers, earn
+[32:31] money by continuously buying at the bid
+[32:33] and selling at the ask. Spreads can also
+[32:36] widen during volatile or uncertain
+[32:38] conditions as liquidity providers demand
+[32:41] more compensation for risk. In short,
+[32:44] the spread is the gap between supply and
+[32:46] demand. It reflects liquidity costs and
+[32:50] risk. In this example, the spread is 3
+[32:53] cents as it's the difference between 115
+[32:56] and 113.
+[32:59] An important measure to predict from the
+[33:02] order book is the mid price. The mid
+[33:04] price is simply the average of the best
+[33:07] bid and the best ask. It's very
+[33:09] important for making strategies because
+[33:12] you need to know where the mid price is
+[33:14] moving in order to bias your quotes
+[33:16] accordingly. You might wonder why not
+[33:19] just use the last trade price. The
+[33:21] reason is because of the bid ask bounce.
+[33:25] Trades tend to alternate between the bid
+[33:28] and the ask which adds unnecessary noise
+[33:30] to the time series. That's why the mid
+[33:33] price gives a cleaner signal. The mid
+[33:35] price for this order book is 113 12
+[33:38] cents and the bid ask bounce is more
+[33:41] apparent when it's visualized. So let's
+[33:43] do that.
+[33:47] Here we have a time series of last
+[33:50] traded prices. And notice how it bounces
+[33:53] back and forth between the bid and the
+[33:55] ask. This back and forth creates extra
+[33:58] variance in the series. Nor is that
+[34:00] doesn't really reflect true market
+[34:02] movement. Now, if instead we plot the
+[34:06] mid price for each point in time, the
+[34:08] picture changes. The mid price stays
+[34:10] stable between trades. No artificial
+[34:13] noise from the spread. That's why the
+[34:15] mid price is usually preferred in
+[34:17] modeling because it gives a cleaner,
+[34:19] less noisy signal.
+[34:24] Let's walk through what happens when a
+[34:26] market order comes in and how it affects
+[34:28] the order book. Suppose we send a buy
+[34:31] market order for two contracts. Since
+[34:35] this is a buy, we need a seller. So, the
+[34:37] order crosses the ask side of the book.
+[34:41] Market orders are always filled against
+[34:43] the opposite side. So here the order is
+[34:46] matched against the best ask price. Once
+[34:48] it's filled, the quantity at that price
+[34:50] level is reduced to reflect the
+[34:52] liquidity has been taken away. That's
+[34:55] why market orders are called taken while
+[34:57] limit orders are called making. For
+[34:59] example, if the top of the book is shown
+[35:01] 115 with three contracts available and
+[35:04] we buy two with a market order, the
+[35:07] order book updates to show just one
+[35:09] contract left at that price. Sometimes
+[35:12] if the market orders larger than what's
+[35:15] available at the best price eats through
+[35:17] multiple levels of the book that effect
+[35:20] is called slippage.
+[35:22] Now let's see what happens when we send
+[35:24] a larger market order say 10 contracts
+[35:28] at the best best ask price 115 there
+[35:31] only three contracts available. Our
+[35:34] order takes those out but we still have
+[35:36] seven left to fill. So the order walks
+[35:39] the book and crosses into the next level
+[35:42] at 116. This is called slippage where we
+[35:46] aren't able to buy everything at the
+[35:48] best ask. So part of the order got
+[35:50] filled at worst prices. In this case,
+[35:53] we've bought three contracts at 115 and
+[35:56] the rest at higher levels. Notice what
+[35:59] happens next. The mid price shifts
+[36:00] upward. Since the best ask has moved
+[36:04] from 115 to 117, that also means the
+[36:08] spread has widened. When this happens in
+[36:11] real markets, market makers react. They
+[36:14] might raise their best bids to follow
+[36:16] the move or refill liquidity at the old
+[36:19] price levels. And this purely depends on
+[36:22] models and algorithms.
+[36:29] A taken strategy uses market orders,
+[36:32] which means you're guaranteed execution,
+[36:34] but not the exact price. They're
+[36:36] typically deployed for longer time
+[36:38] frames from hours to days or even weeks.
+[36:41] Because the net P&L is usually negative
+[36:43] on a second or minute level time frame
+[36:45] because of the high transaction fees and
+[36:47] spread. When building a taken strategy,
+[36:50] there's two key decisions. timing, when
+[36:53] to enter an exit trade, and sizing, how
+[36:56] much to trade each time. We'll break
+[36:59] down both of these next.
+[37:03] The timing of a taken strategy can be
+[37:05] loosely grouped into two approaches.
+[37:08] Timebased timing, where trades are
+[37:11] entered or exited strictly at set
+[37:13] intervals. This pairs naturally with
+[37:16] time series models since they generate
+[37:18] predictions at fixed horizons.
+[37:21] predicate based timing where trades are
+[37:24] triggered only when a specific condition
+[37:26] is met. For example, if our model
+[37:29] predicts a value above or below a
+[37:32] certain threshold, that predicate
+[37:34] determines the entry. We'll dive deeper
+[37:36] into both of these approaches next.
+[37:44] Timebased timing means opening and
+[37:46] closing trades on a fixed schedule. For
+[37:48] example, in a daily time series, the
+[37:51] model makes a prediction each day. Based
+[37:53] on that prediction, we open a position,
+[37:55] then close it the next day. If the model
+[37:58] predicts the same direction on the
+[38:00] consecutive days, we don't always close
+[38:02] the the position. Instead, we could hold
+[38:05] the position and scale it up depending
+[38:07] on the risk profile of the strategy.
+[38:10] This approach fits naturally with time
+[38:12] series models since every data point
+[38:15] corresponds to a specific time interval.
+[38:18] Now you might be asking what about stop
+[38:20] losses or take profit levels.
+[38:23] These can be added but only if they
+[38:25] increase expected value. Always back
+[38:28] test first. For example, in a mean
+[38:30] reversion model, adding a stop-loss
+[38:32] could actually reduce performance since
+[38:34] we expect prices to bounce back.
+[38:39] Now let's induce the idea of frequency
+[38:42] scaling. Suppose we open and close
+[38:44] positions every 12 hours. That's only
+[38:47] two trades a day, one to open and one to
+[38:50] close. If our edge is small, that's not
+[38:53] much opportunity to really exploit a
+[38:55] tiny edge. We want to maximize the
+[38:58] number of bets. One way to do that is by
+[39:00] increasing the resolution of the time
+[39:02] series. For example, instead of 12-hour
+[39:05] intervals, we move to 1 hour intervals.
+[39:09] Now, each data point represents an hour.
+[39:12] We still hold trades for 12 hours, but
+[39:15] within that window, we're making many
+[39:18] smaller trades over 12 hours. That's 24
+[39:21] trades. Every hour, we adjust by opening
+[39:24] or scaling up and then reducing or
+[39:26] closing. Because everything happens at
+[39:29] fixed intervals, we can control risk and
+[39:33] make sure our position size never
+[39:35] exceeds a cap. Now, what if the model
+[39:39] predicts long one hour and short the
+[39:41] next? In that case, you'd need positions
+[39:44] in both directions. Some brokers and
+[39:46] exchanges support this through hedge
+[39:49] mode, while others require you to set up
+[39:51] a sub account to run long and short
+[39:54] simultaneously.
+[39:59] As you can see in this example, the
+[40:02] model is predicting where the price will
+[40:04] be 12 hours into the future. But instead
+[40:07] of waiting the full 12 hours to act, we
+[40:09] place bets every hour. Each hour, we
+[40:13] adjust either increasing or decreasing
+[40:15] our position size in each direction
+[40:18] while still anchoring everything to that
+[40:21] 12-hour forecast.
+[40:36] predicate based timing means we don't
+[40:38] trade on every single prediction.
+[40:41] Instead, we filter the model's output
+[40:43] and only place trades when a specific
+[40:46] condition, a predicate, is satisfied.
+[40:49] For example, let's say we only go long
+[40:51] if the model's predicted future log
+[40:53] return is greater than or equal to 0.01
+[40:57] and only go short if it's less than or
+[40:59] equal to minus0.01.
+[41:03] If the prediction falls in between, we
+[41:05] simply don't trade. For example, for a
+[41:07] binary classification model, we might
+[41:10] only want to trade long if the
+[41:11] probability is greater or equal to 60%
+[41:15] and only trade short if it's lower than
+[41:18] or equal to 40%.
+[41:21] The idea here is to boost the expected
+[41:23] value of the strategy by ignoring weak
+[41:25] or noisy predictions and only acting on
+[41:28] stronger signals. But remember, you have
+[41:31] to back test. Sometimes filtering too
+[41:33] aggressively can reduce opportunities
+[41:35] and actually hurt EV.
+[41:41] The other important detail of a taking
+[41:43] strat is trade size. If we oversize our
+[41:47] trades, we risk severe draw downs,
+[41:50] liquidation, or even bankruptcy. The
+[41:53] intuition is simple. Bet small, bet
+[41:56] often. With high frequency strategies,
+[41:59] losing a single trade shouldn't derail
+[42:01] the system. In fact, some of the best
+[42:03] quant strategies only win 51 to 53% of
+[42:08] the trades. If your edge is that small,
+[42:11] oversizing is a guaranteed way to blow
+[42:13] up. Now, in practice, you would also
+[42:16] account for market impact, how your own
+[42:18] trades move the price, but that's
+[42:21] outside the scope of this intro.
+[42:24] There are classical methods like the
+[42:26] Kelly criterion, but those don't adapt
+[42:29] to your model's predicted edge. For our
+[42:32] purposes, we'll keep things simple and
+[42:34] focus on trade sizes that scale directly
+[42:37] with models predictions.
+[42:40] We can roughly group sizing methods into
+[42:42] three categories. Constant, where the
+[42:45] trade size is always the same. peacewise
+[42:48] linear that scale trade size
+[42:51] proportionally linearly with the model's
+[42:53] prediction and then nonlinear
+[42:56] and we'll go into detail for each one.
+[43:02] Constant trade size means we always
+[43:04] trade the same size no matter what the
+[43:07] model predicts. It's a great baseline
+[43:09] especially for timebased strategies. For
+[43:11] example, if we're trading every hour and
+[43:14] holding each position for 20 hour 24
+[43:16] hours, we could have up to 24 concurrent
+[43:19] trades, we'll divide our allocated
+[43:21] capital across those 24 slots. If we
+[43:24] want, we can also apply a leverage
+[43:26] factor on top. In practice, our signed
+[43:29] trade size is just the sign of our
+[43:31] model's prediction multiplied by that
+[43:34] constant. I recommend starting with
+[43:36] constant sizing when back testing. It's
+[43:38] simple, easy to interpret, and gives you
+[43:40] a clean benchmark. Once you've tested
+[43:42] that, you can explore more advanced
+[43:44] sizing methods to see if they increase
+[43:46] your expected value.
+[43:49] Here's an example of a peace-wise linear
+[43:52] sizing method. Instead of always trading
+[43:54] the same size, we scale our trade size
+[43:56] with the strength of the model's
+[43:58] prediction. We don't want position sizes
+[44:00] to blow up, so we keep them bounded. A
+[44:03] simple way to do this is with the hard
+[44:05] tangent function borrowed from deep
+[44:07] learning. It acts like a linear function
+[44:09] in the middle but clips the values at an
+[44:12] upper and lower limit. In trading terms,
+[44:14] our sign trade size is just the maximum
+[44:16] trade size multiplied by the hard
+[44:19] tangent of the model's prediction. That
+[44:22] way, the stronger predictions get bigger
+[44:23] trades and weaker predictions get
+[44:25] smaller trades. And nothing ever exceeds
+[44:27] our set bounds.
+[44:32] Now let's look at nonlinear sizing
+[44:34] methods. Here the signed trade size is
+[44:37] the maximum trade size multiplied by the
+[44:40] tangent of the model's prediction. It
+[44:42] works a lot like hard tangent but
+[44:44] instead of sharp cutffs the tangent
+[44:47] function gives us a smoother more
+[44:49] gradual scaling of trade sizes as the
+[44:52] predictions increase or decrease. That
+[44:54] smoothness makes it more sensitive to
+[44:57] small changes in prediction strength
+[45:00] while keeping trade sizes naturally
+[45:02] bounded. And since tangent is a
+[45:04] differentiable everywhere in its range,
+[45:07] it also plays nicely if you're
+[45:09] optimizing parameters with
+[45:10] gradient-based methods.
+[45:15] This animation shows our nonlinear trade
+[45:17] sizing using tanh. Here the maximum
+[45:20] trade size is 100 and you can see it's
+[45:23] smoothly bounded between minus 100 and
+[45:25] 100. For making strategies there are two
+[45:28] key parameters spread and bias. The
+[45:32] spread is the difference between our bid
+[45:34] and ask price. Essentially how much
+[45:37] profit we expect to capture per trade.
+[45:40] The bias also called skew adjusts our
+[45:43] prices to make our bid or ask more
+[45:46] likely to be filled. This ensures we
+[45:48] have a position in the right direction
+[45:50] of our model. Spread is the profit we
+[45:53] aim to capture between our bid and ask
+[45:55] price. For example, if the mid price is
+[45:58] $5 and want a $2 spread, you place a
+[46:02] limit order to buy at $4 and a limit
+[46:04] order to sell at $6. This means we buy
+[46:08] at four and sell at $6. So, make a $2
+[46:10] profit. When a limit order is executed,
+[46:13] we say it is filled. making strategies
+[46:16] are harder to back test because of how
+[46:18] you simulate how limit orders are filled
+[46:20] or not, which is out of the scope of
+[46:22] this introduction. For example, if the
+[46:24] price is at $4, how do you know the bid
+[46:27] is filled or not?
+[46:29] There's a trade-off when setting the
+[46:31] spread. If the spread is too wide, you
+[46:33] maximize your potential profit but risk
+[46:36] never getting filled. For example, if
+[46:38] you set a $4 spread with a bid at three
+[46:41] and uh an ask at seven, you're aiming
+[46:44] for a big margin. But if no one trades
+[46:47] at those prices, your profits stay
+[46:48] unrealized, effectively zero. If the
+[46:51] spread is too narrow, you have more
+[46:53] fills but risk adverse selection, taking
+[46:56] positions in the wrong direction. This
+[46:59] can negatively impact our expected
+[47:01] value. For example, if we drop if the
+[47:04] price drops down to $3 and a half and
+[47:07] our bid is filled at $4.75,
+[47:10] we we so we have a long position in the
+[47:12] wrong direction. This is adverse
+[47:14] selection. A way to fix adverse
+[47:17] selection is by biasing your prices.
+[47:19] Biasing is adjusting prices to tilt your
+[47:22] position in a certain direction. This is
+[47:25] where the alpha lies, how you skew your
+[47:28] quotes based on your model's prediction.
+[47:30] Importantly, biasing doesn't change the
+[47:33] spread size, only the placement of the
+[47:35] bid and ask relative to the mid price.
+[47:38] For example, suppose we quote a $20
+[47:41] spread with a bid at 90 and ask at 110.
+[47:44] If our model predicts the mid price will
+[47:46] rise, we bias upward, shift both quotes
+[47:50] higher while keeping the $20 spread
+[47:53] intact. Now our bid is more likely to be
+[47:56] hit, giving us a long position aligned
+[47:59] with our prediction.
+[48:01] In practice, this is where the edge
+[48:03] comes from. Systematically biasing
+[48:06] quotes in line with a model's prediction
+[48:08] where the mid price is moving and is
+[48:11] often driven by order book imbalances.
+[48:15] We can bias more aggressively by moving
+[48:17] the bid closer to the mid price and the
+[48:20] ask further away, making it more likely
+[48:22] to accumulate a long position. You might
+[48:25] want to shift by a constant size or
+[48:28] proportional to the model's predicted
+[48:30] value. There's no right or wrong answer
+[48:33] here. Only back testing will tell. If
+[48:36] your model has a tiny edge, which is
+[48:38] common for predictions in the second or
+[48:40] minutes, then you want to ensure you
+[48:42] trade as much as possible. So you might
+[48:45] want to aggressively bias your prices.
+[48:49] If the model predicts the mid price will
+[48:51] fall, we bias in the opposite direction,
+[48:54] shifting both bid and ask lower. Again,
+[48:57] the spread size is unchanged, but we're
+[49:00] we're skewing fills towards the short
+[49:03] side. Here we're quoting our bid at 85
+[49:06] and our ask at 105. Our spread hasn't
+[49:10] changed. Just it's more likely for ask
+[49:13] to be lifted. Also, we can aggressively
+[49:16] bias the other way. So, it's more likely
+[49:19] to accumulate a short position.
+[49:22] The bias is dynamically changing based
+[49:24] on the model's prediction. And also, the
+[49:27] spread could be dynamically adjusting
+[49:29] based on the volatility or inventory
+[49:32] risk. The model is typically predicting
+[49:35] the midpric delta, how much the mid
+[49:37] price is going to move by.
+[49:43] That wraps everything up. Hopefully, you
+[49:46] found this educational. You should now
+[49:48] understand how a statistical edge is
+[49:50] both created and executed with the model
+[49:53] generating the edge and the strategy
+[49:56] executing it in the market. Of course,
+[49:58] this was just an introduction. There's a
+[50:00] lot more depth to explore, more advanced
+[50:03] models, more sophisticated execution,
+[50:06] and even strategies that combine
+[50:07] multiple models into portfolios.
+[50:10] I'd love to hear your feedback, so
+[50:12] please leave a comment. It really helps
+[50:14] me to improve and shape future videos.
+[50:17] And and if there's any specific topic
+[50:20] you'd like me to cover next, let me
+[50:21] know. Thanks for watching, and please
+[50:24] like and subscribe.

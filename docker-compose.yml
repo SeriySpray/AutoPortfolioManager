@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  quant-platform:
+    build: .
+    container_name: autoportfolio_quant
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data_cache:/app/data_cache
+      - ./live_portfolio.db:/app/live_portfolio.db
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
