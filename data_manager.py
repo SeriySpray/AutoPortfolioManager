@@ -19,6 +19,22 @@ class DataManager:
         clean = ticker.upper().strip().replace(".", "-")
         return os.path.join(self.cache_dir, f"{clean}.parquet")
 
+    def bootstrap_core_universe(self, tickers: Optional[List[str]] = None) -> int:
+        """Preloads and caches historical OHLCV data for the default stock universe."""
+        default_list = ["AAPL", "NVDA", "MSFT", "AMZN", "TSLA", "QQQ", "META", "GOOGL"]
+        targets = tickers or default_list
+        loaded = 0
+        for t in targets:
+            fp = self._get_file_path(t)
+            if not os.path.exists(fp) or os.path.getsize(fp) == 0:
+                succ, _, _ = self.download_all_history(t)
+                if succ:
+                    loaded += 1
+            else:
+                loaded += 1
+        return loaded
+
+
     def download_all_history(self, ticker: str) -> Tuple[bool, str, int]:
         """
         Downloads the complete historical Daily OHLCV data for a ticker using yfinance

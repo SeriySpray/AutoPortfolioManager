@@ -34,8 +34,10 @@ class LiveQuantDaemon:
         self.tg_chat_id = telegram_chat_id or os.getenv("TELEGRAM_CHAT_ID")
         self.db_path = db_path
         self.dm = DataManager()
+        self.dm.bootstrap_core_universe(self.tickers)
         self.is_running = False
         self._init_db()
+
 
     def _init_db(self):
         """Initializes SQLite database for tracking live positions and trade logs."""

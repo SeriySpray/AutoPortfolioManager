@@ -32,9 +32,13 @@ def get_math_variables():
 
 @app.route("/api/cached-tickers", methods=["GET"])
 def get_cached_tickers():
-    """Returns list of downloaded tickers with date ranges."""
+    """Returns list of downloaded tickers with date ranges. Auto-seeds if empty."""
     tickers = data_mgr.list_cached_tickers()
+    if not tickers:
+        data_mgr.bootstrap_core_universe()
+        tickers = data_mgr.list_cached_tickers()
     return jsonify(tickers)
+
 
 
 @app.route("/api/download-all", methods=["POST"])
