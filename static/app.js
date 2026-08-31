@@ -1,4 +1,4 @@
-// AutoPortfolioManager Quantitative & Portfolio Engine Frontend
+// AutoPortfolioManager Real-Time Quant Engine & Live Bot Frontend
 
 let cachedTickersList = [];
 let sliceChartInstance = null;
@@ -6,12 +6,17 @@ let mfEquityChartInstance = null;
 let portfolioEquityChartInstance = null;
 let lastMfResult = null;
 let activeConditionInput = "conditionUp";
+let livePollingInterval = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     initTabs();
     loadCachedTickers();
     loadMathVariables();
     bindEvents();
+    
+    // Initial live bot fetch and start 4-second auto-polling
+    fetchLiveBotStatus();
+    livePollingInterval = setInterval(fetchLiveBotStatus, 4000);
 });
 
 function showAlert(message, isError = false, durationMs = 4000) {
@@ -42,11 +47,23 @@ function initTabs() {
             const targetId = tab.getAttribute("data-tab");
             const targetElem = document.getElementById(targetId);
             if (targetElem) targetElem.classList.add("active");
+
+            // If switching to live tab, refresh immediately
+            if (targetId === "tab-live") {
+                fetchLiveBotStatus();
+            }
         });
     });
 }
 
 function bindEvents() {
+    // Live Tab actions
+    const btnTick = document.getElementById("btnTriggerLiveTick");
+    if (btnTick) btnTick.addEventListener("click", triggerManualLiveTick);
+
+    const btnRefreshLive = document.getElementById("btnRefreshLiveStatus");
+    if (btnRefreshLive) btnRefreshLive.addEventListener("click", fetchLiveBotStatus);
+
     document.getElementById("btnDownloadAll").addEventListener("click", downloadAllData);
     document.getElementById("btnRefreshTickers").addEventListener("click", loadCachedTickers);
 
@@ -85,6 +102,172 @@ function bindEvents() {
     document.getElementById("btnRunPortfolioBacktest").addEventListener("click", runPortfolioBacktest);
     document.getElementById("btnRunCustomBacktest").addEventListener("click", runCustomBacktest);
 }
+
+// ----------------------------------------------------
+// ⚡ LIVE BOT STATUS & SCANNER LOGIC
+// ----------------------------------------------------
+
+async function fetchLiveBotStatus() {
+    try {
+        const res = await fetch("/api/live/status");
+        if (!res.ok) return;
+        const data = await res.json();
+        renderLiveBotDashboard(data);
+    } catch (err) {
+        console.error("Live fetch error:", err);
+    }
+}
+
+function renderLiveBotDashboard(data) {
+    // 1. Header & Badges
+    const statusText = data.status || "IDLE";
+    const hbText = data.last_heartbeat ? new Date(data.last_heartbeat).toLocaleTimeString() : "Немає даних";
+
+    const badgeEl = document.getElementById("liveBotStatusBadge");
+    if (badgeEl) {
+        badgeEl.textContent = `🟢 ${statusText} 24/7`;
+    }
+
+    const hbEl = document.getElementById("liveLastHeartbeat");
+    if (hbEl) {
+        hbEl.textContent = `Останній такт: ${hbText}`;
+    }
+
+    // 2. Metrics Cards
+    const countEl = document.getElementById("liveActivePosCount");
+    if (countEl) countEl.textContent = data.active_positions_count || 0;
+
+    const pnlEl = document.getElementById("liveTotalUnrealizedPnl");
+    if (pnlEl) {
+        const pnl = data.unrealized_total_pnl_pct || 0.0;
+        pnlEl.textContent = `${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}%`;
+        pnlEl.style.color = pnl > 0 ? "#86efac" : (pnl < 0 ? "#fca5a5" : "#f4f4f5");
+    }
+
+    const histCountEl = document.getElementById("liveClosedTradesCount");
+    if (histCountEl) histCountEl.textContent = (data.history ? data.history.length : 0);
+
+    const posBadge = document.getElementById("livePositionsBadge");
+    if (posBadge) posBadge.textContent = `${data.active_positions_count || 0} відкритих`;
+
+    // 3. Render Open Positions Table
+    const posTbody = document.querySelector("#livePositionsTable tbody");
+    if (posTbody) {
+        if (!data.positions || data.positions.length === 0) {
+            posTbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted">Немає відкритих позицій. Бот сканує ринок...</td></tr>`;
+        } else {
+            posTbody.innerHTML = data.positions.map(p => {
+                const dirBadge = p.direction === 1
+                    ? `<span class="badge badge-success">BUY / LONG</span>`
+                    : `<span class="badge badge-fail">SELL / SHORT</span>`;
+
+                const pnlSign = p.unrealized_pnl_pct >= 0 ? "+" : "";
+                const pnlColor = p.unrealized_pnl_pct > 0 ? "color:#86efac;" : (p.unrealized_pnl_pct < 0 ? "color:#fca5a5;" : "");
+                const slText = p.atr_sl_price ? `$${p.atr_sl_price}` : "-";
+                const targetText = p.target_price ? `$${p.target_price}` : "-";
+
+                return `
+                    <tr>
+                        <td><strong>${p.ticker}</strong></td>
+                        <td>${dirBadge}</td>
+                        <td>S = ${p.size}</td>
+                        <td>$${p.entry_price}</td>
+                        <td>$${p.current_price}</td>
+                        <td style="font-weight:bold; ${pnlColor}">${pnlSign}${p.unrealized_pnl_pct}%</td>
+                        <td><span class="badge badge-neutral" style="color:#fca5a5;">SL: ${slText}</span></td>
+                        <td>${targetText}</td>
+                        <td>Score: ${p.composite_score}</td>
+                        <td>${p.entry_date}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+    }
+
+    // 4. Render Market Scanner Table
+    const scanTbody = document.querySelector("#liveScannerTable tbody");
+    if (scanTbody) {
+        if (!data.scanner || data.scanner.length === 0) {
+            scanTbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">Очікування сканера...</td></tr>`;
+        } else {
+            scanTbody.innerHTML = data.scanner.map(s => {
+                let sigBadge = `<span class="badge badge-neutral">HOLD</span>`;
+                if (s.signal === "LONG") sigBadge = `<span class="badge badge-success">&uarr; BUY SIGNAL</span>`;
+                if (s.signal === "SHORT") sigBadge = `<span class="badge badge-fail">&darr; SELL SIGNAL</span>`;
+
+                let statusBadge = `<span class="badge badge-neutral">${s.status}</span>`;
+                if (s.status === "У ПОЗИЦІЇ") statusBadge = `<span class="badge badge-up" style="background:#22c55e; color:#000;">У ПОЗИЦІЇ</span>`;
+
+                return `
+                    <tr>
+                        <td><strong>${s.ticker}</strong></td>
+                        <td>$${s.price}</td>
+                        <td><strong>${s.composite_score >= 0 ? '+' : ''}${s.composite_score.toFixed(3)}</strong></td>
+                        <td>${sigBadge}</td>
+                        <td>H = ${s.hurst.toFixed(2)}</td>
+                        <td>${s.slope >= 0 ? '+' : ''}${s.slope.toFixed(2)}%</td>
+                        <td>${s.atr_pct.toFixed(2)}%</td>
+                        <td>CHOP: ${s.chop_index.toFixed(1)}</td>
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+    }
+
+    // 5. Render Trade History Table
+    const histTbody = document.querySelector("#liveHistoryTable tbody");
+    if (histTbody) {
+        if (!data.history || data.history.length === 0) {
+            histTbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Історія угод порожня</td></tr>`;
+        } else {
+            histTbody.innerHTML = data.history.map(h => {
+                const dirBadge = h.direction === "LONG"
+                    ? `<span class="badge badge-success">LONG</span>`
+                    : `<span class="badge badge-fail">SHORT</span>`;
+
+                const pnlSign = h.pnl_pct >= 0 ? "+" : "";
+                const pnlColor = h.pnl_pct > 0 ? "color:#86efac;" : (h.pnl_pct < 0 ? "color:#fca5a5;" : "");
+
+                return `
+                    <tr>
+                        <td><strong>${h.ticker}</strong></td>
+                        <td>${dirBadge}</td>
+                        <td>S = ${h.size}</td>
+                        <td>$${h.entry_price} &rarr; $${h.exit_price}</td>
+                        <td>${h.entry_date} &rarr; ${h.exit_date}</td>
+                        <td style="font-weight:bold; ${pnlColor}">${pnlSign}${h.pnl_pct}%</td>
+                        <td>${h.exit_reason}</td>
+                        <td style="font-size:11px; color:#71717a;">${h.created_at ? h.created_at.replace("T", " ").substring(0, 19) : "-"}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+    }
+}
+
+async function triggerManualLiveTick() {
+    const btn = document.getElementById("btnTriggerLiveTick");
+    const orig = btn.textContent;
+    btn.textContent = "Обробка ринку...";
+    btn.disabled = true;
+
+    try {
+        const res = await fetch("/api/live/trigger-tick", { method: "POST" });
+        const data = await res.json();
+        showAlert(data.message || "Біржовий такт виконано!");
+        await fetchLiveBotStatus();
+    } catch (err) {
+        showAlert("Помилка виконання такту: " + err.message, true);
+    } finally {
+        btn.textContent = orig;
+        btn.disabled = false;
+    }
+}
+
+// ----------------------------------------------------
+// TABS 2-6 UTILITIES
+// ----------------------------------------------------
 
 async function loadMathVariables() {
     try {
@@ -128,6 +311,7 @@ async function loadCachedTickers() {
 
 function renderCachedTable(tickers) {
     const tbody = document.querySelector("#cachedTickersTable tbody");
+    if (!tbody) return;
     if (!tickers || tickers.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Немає збережених даних. Введіть тікер та натисніть "Завантажити".</td></tr>`;
         return;
@@ -288,6 +472,7 @@ function renderSliceStats(data) {
 
 function renderSliceTable(records) {
     const tbody = document.querySelector("#sliceDataTable tbody");
+    if (!tbody) return;
     if (!records || records.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Дані відсутні</td></tr>`;
         return;
@@ -377,7 +562,7 @@ function renderSliceChart(ticker, records) {
     });
 }
 
-// Tab 3: Multi-Factor Backtest with ATR Stop Loss
+// Tab 4: Multi-Factor Backtest with ATR Stop Loss
 async function runMultiFactorBacktest() {
     const ticker = document.getElementById("mfTickerSelect").value;
     const startDate = document.getElementById("mfStartDate").value;
@@ -392,8 +577,6 @@ async function runMultiFactorBacktest() {
     const wMom = parseFloat(document.getElementById("mfWMomentum").value) || 0.60;
     const wAr1 = parseFloat(document.getElementById("mfWAR1").value) || 0.15;
     const wCurv = parseFloat(document.getElementById("mfWCurv").value) || 0.10;
-    const threshUp = parseFloat(document.getElementById("mfThreshUp").value) || 0.18;
-    const threshDown = parseFloat(document.getElementById("mfThreshDown").value) || -0.18;
 
     if (!ticker) {
         showAlert("Оберіть збережену компанію для бектесту", true);
@@ -420,8 +603,8 @@ async function runMultiFactorBacktest() {
                 w_momentum: wMom,
                 w_ar1: wAr1,
                 w_curv: wCurv,
-                threshold_up: threshUp,
-                threshold_down: threshDown,
+                threshold_up: 0.18,
+                threshold_down: -0.18,
                 sizing_mode: sizingMode,
                 atr_stop_loss_mult: atrSl,
                 use_v_reversal_breaker: vBreaker
@@ -457,8 +640,6 @@ async function generateLiveForecast() {
     const wMom = parseFloat(document.getElementById("mfWMomentum").value) || 0.60;
     const wAr1 = parseFloat(document.getElementById("mfWAR1").value) || 0.15;
     const wCurv = parseFloat(document.getElementById("mfWCurv").value) || 0.10;
-    const threshUp = parseFloat(document.getElementById("mfThreshUp").value) || 0.18;
-    const threshDown = parseFloat(document.getElementById("mfThreshDown").value) || -0.18;
 
     if (!ticker) {
         showAlert("Оберіть збережену компанію", true);
@@ -482,8 +663,8 @@ async function generateLiveForecast() {
                 w_momentum: wMom,
                 w_ar1: wAr1,
                 w_curv: wCurv,
-                threshold_up: threshUp,
-                threshold_down: threshDown,
+                threshold_up: 0.18,
+                threshold_down: -0.18,
                 sizing_mode: sizingMode,
                 atr_stop_loss_mult: atrSl
             })
@@ -539,7 +720,7 @@ function renderMfResults(res) {
     document.getElementById("mfResWinLossRate").textContent = `Win: ${res.win_rate_pct}% | Loss: ${res.loss_rate_pct}% | Payoff: ${res.win_loss_payoff}`;
 
     document.getElementById("mfResSharpe").textContent = `${res.sharpe_ratio}`;
-    document.getElementById("mfResSortino").textContent = `Sortino: ${res.sortino_ratio} | Calmar: ${res.calmar_ratio}`;
+    document.getElementById("mfResSortino").textContent = `Sortino: ${res.sortino_ratio}`;
 
     const retElem = document.getElementById("mfResReturn");
     retElem.textContent = `${res.total_return_pct >= 0 ? "+" : ""}${res.total_return_pct}%`;
@@ -614,6 +795,7 @@ function renderMfEquityChart(curve) {
 
 function renderMfPredictionsTable(predictions) {
     const tbody = document.querySelector("#mfPredictionsTable tbody");
+    if (!tbody) return;
     if (!predictions || predictions.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">Немає даних</td></tr>`;
         return;
@@ -650,7 +832,7 @@ function renderMfPredictionsTable(predictions) {
     }).join("");
 }
 
-// Tab 4: Multi-Asset Portfolio Ensemble Backtest
+// Tab 5: Multi-Asset Portfolio Ensemble Backtest
 async function runPortfolioBacktest() {
     const checked = Array.from(document.querySelectorAll("input[name='portTicker']:checked")).map(el => el.value);
     if (!checked || checked.length === 0) {
@@ -816,7 +998,7 @@ function exportMfCsv() {
     document.body.removeChild(link);
 }
 
-// Tab 5: Run Custom Backtest
+// Tab 6: Run Custom Backtest
 async function runCustomBacktest() {
     const ticker = document.getElementById("customTickerSelect").value;
     const startDate = document.getElementById("customStartDate").value;

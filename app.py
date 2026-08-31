@@ -320,14 +320,22 @@ def generate_live_forecast():
 
 @app.route("/api/live/status", methods=["GET"])
 def get_live_status():
-    """Returns real-time state of the Live Quant Daemon."""
+    """Returns real-time state of the Live Quant Daemon, open positions, scanner, and trade history."""
     import sqlite3
     db_path = "live_portfolio.db"
+    
+    # Tracked tickers list
+    tracked_tickers = ["AAPL", "NVDA", "MSFT", "AMZN", "TSLA", "QQQ", "META", "GOOGL"]
+
     if not os.path.exists(db_path):
         return jsonify({
-            "status": "IDLE / NOT_INITIALIZED",
+            "status": "INITIALIZING",
+            "last_heartbeat": None,
             "active_positions_count": 0,
+            "unrealized_total_pnl_pct": 0.0,
+            "monitored_tickers": tracked_tickers,
             "positions": [],
+            "scanner": [],
             "history": []
         })
 
@@ -335,32 +343,80 @@ def get_live_status():
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
         
-        # Status
+        # Status & Heartbeat
         cur.execute("SELECT value, updated_at FROM live_system_status WHERE key='status'")
         status_row = cur.fetchone()
         status = status_row[0] if status_row else "IDLE"
-        last_heartbeat = status_row[1] if status_row else None
 
-        # Open Positions
+        cur.execute("SELECT value, updated_at FROM live_system_status WHERE key='last_heartbeat'")
+        hb_row = cur.fetchone()
+        last_heartbeat = hb_row[0] if hb_row else None
+
+        # Open Positions with live price calculation
         cur.execute("SELECT ticker, direction, size, entry_price, entry_date, atr_sl_price, target_price, composite_score, unrealized_pnl_pct, updated_at FROM positions")
         pos_rows = cur.fetchall()
         positions = []
+        tot_unrealized_pnl = 0.0
+
         for r in pos_rows:
+            ticker = r[0]
+            direction = r[1]
+            size = r[2]
+            entry_p = r[3]
+            
+            # Fetch latest close price from data cache
+            df = data_mgr.get_data_slice(ticker)
+            curr_p = float(df["Close"].iloc[-1]) if (df is not None and not df.empty) else entry_p
+
+            pnl_pct = ((curr_p - entry_p) / entry_p * 100.0) if direction == 1 else ((entry_p - curr_p) / entry_p * 100.0)
+            sized_pnl_pct = round(pnl_pct * abs(size), 2)
+            tot_unrealized_pnl += sized_pnl_pct
+
             positions.append({
-                "ticker": r[0],
-                "direction": r[1],
-                "direction_label": "LONG" if r[1] == 1 else ("SHORT" if r[1] == -1 else "FLAT"),
-                "size": r[2],
-                "entry_price": r[3],
+                "ticker": ticker,
+                "direction": direction,
+                "direction_label": "BUY / LONG" if direction == 1 else ("SELL / SHORT" if direction == -1 else "FLAT"),
+                "size": size,
+                "entry_price": round(entry_p, 2),
+                "current_price": round(curr_p, 2),
                 "entry_date": r[4],
-                "atr_sl_price": r[5],
-                "target_price": r[6],
-                "composite_score": r[7],
-                "unrealized_pnl_pct": r[8],
+                "atr_sl_price": round(r[5], 2) if r[5] else None,
+                "target_price": round(r[6], 2) if r[6] else None,
+                "composite_score": round(r[7], 3) if r[7] else 0.0,
+                "unrealized_pnl_pct": sized_pnl_pct,
                 "updated_at": r[9]
             })
 
-        # History
+        # Scanner metrics across monitored assets
+        scanner_list = []
+        for t in tracked_tickers:
+            df = data_mgr.get_data_slice(t)
+            if df is not None and len(df) >= 30:
+                eval_res = MathEngine.evaluate_multi_factor_window(
+                    train_df=df.iloc[-60:],
+                    w_mean_revert=0.15,
+                    w_momentum=0.60,
+                    w_ar1=0.15,
+                    w_curv=0.10,
+                    threshold_up=0.18,
+                    threshold_down=-0.18,
+                    sizing_mode="kelly"
+                )
+                m = eval_res.get("metrics", {})
+                is_held = any(p["ticker"] == t for p in positions)
+                scanner_list.append({
+                    "ticker": t,
+                    "price": round(float(df["Close"].iloc[-1]), 2),
+                    "composite_score": eval_res.get("composite_score", 0.0),
+                    "signal": "LONG" if eval_res.get("direction") == 1 else ("SHORT" if eval_res.get("direction") == -1 else "NEUTRAL"),
+                    "hurst": m.get("hurst", 0.5),
+                    "slope": m.get("slope", 0.0),
+                    "atr_pct": m.get("atr_pct", 0.0),
+                    "chop_index": m.get("chop_index", 50.0),
+                    "status": "У ПОЗИЦІЇ" if is_held else "МОНІТОРИНГ"
+                })
+
+        # History (Last 50 closed trades)
         cur.execute("SELECT ticker, direction, size, entry_price, exit_price, entry_date, exit_date, pnl_pct, exit_reason, created_at FROM trade_history ORDER BY id DESC LIMIT 50")
         hist_rows = cur.fetchall()
         history = []
@@ -369,11 +425,11 @@ def get_live_status():
                 "ticker": r[0],
                 "direction": "LONG" if r[1] == 1 else "SHORT",
                 "size": r[2],
-                "entry_price": r[3],
-                "exit_price": r[4],
+                "entry_price": round(r[3], 2),
+                "exit_price": round(r[4], 2),
                 "entry_date": r[5],
                 "exit_date": r[6],
-                "pnl_pct": r[7],
+                "pnl_pct": round(r[7], 2),
                 "exit_reason": r[8],
                 "created_at": r[9]
             })
@@ -383,7 +439,10 @@ def get_live_status():
             "status": status,
             "last_heartbeat": last_heartbeat,
             "active_positions_count": len(positions),
+            "unrealized_total_pnl_pct": round(tot_unrealized_pnl, 2),
+            "monitored_tickers": tracked_tickers,
             "positions": positions,
+            "scanner": scanner_list,
             "history": history
         })
     except Exception as e:
@@ -392,15 +451,17 @@ def get_live_status():
 
 @app.route("/api/live/trigger-tick", methods=["POST"])
 def trigger_live_tick():
-    """Manually triggers a single live market tick cycle."""
+    """Manually triggers an immediate live market tick cycle."""
     try:
         from live_trader_daemon import LiveQuantDaemon
         daemon = LiveQuantDaemon(poll_interval_seconds=60)
+        daemon.update_system_status("RUNNING", 0)
         for t in daemon.tickers:
             daemon.process_ticker_live_tick(t)
-        return jsonify({"success": True, "message": "Live tick executed successfully across all assets"})
+        return jsonify({"success": True, "message": "Live такт успішно виконано по всіх активах"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
 
 
 if __name__ == "__main__":

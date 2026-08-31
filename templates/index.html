@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoPortfolioManager | Advanced Quant & Portfolio Engine</title>
+    <title>AutoPortfolioManager | Real-Time Live Quant Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -12,28 +12,169 @@
         <!-- Header -->
         <header class="app-header">
             <div class="header-left">
-                <h1 class="logo-title">AUTOPORTFOLIO // ADVANCED QUANT LAB</h1>
-                <span class="logo-sub">Мультифакторний аналіз, динамічний ATR-захист, V-Reversal Circuit Breaker та портфельний ансамбль</span>
+                <h1 class="logo-title">AUTOPORTFOLIO // LIVE QUANT ENGINE</h1>
+                <span class="logo-sub">Цілодобовий моніторинг ринку 24/7, живі позиції, ATR-стоплоси та бектести</span>
             </div>
             <div class="header-status" id="headerStatus">
-                <span class="status-indicator"></span> СИСТЕМА АКТИВНА
+                <span class="status-indicator"></span> <span id="globalDaemonStatus">БОТ АКТИВНИЙ (24/7)</span>
             </div>
         </header>
 
         <!-- Navigation Tabs -->
         <nav class="nav-tabs">
-            <button class="nav-tab active" data-tab="tab-data">1. Завантаження даних</button>
-            <button class="nav-tab" data-tab="tab-slice">2. Перегляд зрізу</button>
-            <button class="nav-tab" data-tab="tab-multifactor">3. Мультифактор & Сліпий Прогноз</button>
-            <button class="nav-tab" data-tab="tab-portfolio">4. Портфельний Ансамбль</button>
-            <button class="nav-tab" data-tab="tab-custom">5. Конструктор правил</button>
+            <button class="nav-tab active" data-tab="tab-live">⚡ 1. LIVE МОНІТОРИНГ БОТА</button>
+            <button class="nav-tab" data-tab="tab-data">2. Завантаження даних</button>
+            <button class="nav-tab" data-tab="tab-slice">3. Перегляд зрізу</button>
+            <button class="nav-tab" data-tab="tab-multifactor">4. Мультифактор & Сліпий Прогноз</button>
+            <button class="nav-tab" data-tab="tab-portfolio">5. Портфельний Ансамбль</button>
+            <button class="nav-tab" data-tab="tab-custom">6. Конструктор правил</button>
         </nav>
 
         <!-- Notification Toast -->
         <div id="alertBox" class="alert-box hidden"></div>
 
-        <!-- TAB 1: DATA DOWNLOAD & CACHE -->
-        <section id="tab-data" class="tab-content active">
+        <!-- TAB 1: LIVE BOT MONITORING (24/7) -->
+        <section id="tab-live" class="tab-content active">
+            <!-- Top Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Стан робота (Daemon Status)</div>
+                    <div class="metric-value" id="liveBotStatusBadge">🟢 RUNNING 24/7</div>
+                    <div class="metric-sub" id="liveLastHeartbeat">Останній такт: щойно</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Відкриті позиції</div>
+                    <div class="metric-value" id="liveActivePosCount">0</div>
+                    <div class="metric-sub" id="liveTrackedAssets">Моніторинг: AAPL, NVDA, MSFT, AMZN, TSLA, QQQ</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Поточний незафіксований P&L</div>
+                    <div class="metric-value" id="liveTotalUnrealizedPnl">0.00%</div>
+                    <div class="metric-sub">З урахуванням Fractional Kelly</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Закриті угоди / Історія</div>
+                    <div class="metric-value" id="liveClosedTradesCount">0</div>
+                    <div class="metric-sub">У базі SQLite на сервері</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-body" style="padding:12px 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-family:var(--font-mono); font-size:12px; color:var(--text-secondary);">
+                        <span>🔄 Авто-синхронізація з сервером кожні 4 сек</span>
+                    </div>
+                    <div style="display:flex; gap:12px;">
+                        <button id="btnTriggerLiveTick" class="btn btn-secondary" style="width:auto; padding:8px 16px;">
+                            ⚡ Виконати біржовий такт зараз
+                        </button>
+                        <button id="btnRefreshLiveStatus" class="btn btn-primary" style="width:auto; padding:8px 16px;">
+                            Оновити стан
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Positions Table -->
+            <div class="card">
+                <div class="card-header flex-between">
+                    <h2>🟢 Активні позиції у реальному часі (Open Live Positions)</h2>
+                    <span class="badge badge-neutral" id="livePositionsBadge">0 відкритих</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table" id="livePositionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Тікер</th>
+                                    <th>Напрямок</th>
+                                    <th>Сайзинг (S)</th>
+                                    <th>Ціна входу</th>
+                                    <th>Поточна ціна</th>
+                                    <th>P&L (%)</th>
+                                    <th>ATR Stop-Loss</th>
+                                    <th>Цільова ціна</th>
+                                    <th>Score</th>
+                                    <th>Дата входу</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="10" class="text-center text-muted">Немає відкритих позицій. Бот сканує ринок...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Market Scanner Table -->
+            <div class="card">
+                <div class="card-header flex-between">
+                    <h2>📡 Сканер квантових сигналів у прямому ефірі (Market Alpha Scanner)</h2>
+                    <span class="badge badge-neutral">Оновлюється автоматично</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table" id="liveScannerTable">
+                            <thead>
+                                <tr>
+                                    <th>Тікер</th>
+                                    <th>Поточна ціна</th>
+                                    <th>Composite Alpha</th>
+                                    <th>Квантовий сигнал</th>
+                                    <th>Режим Херста (H)</th>
+                                    <th>Кут тренду (Slope)</th>
+                                    <th>ATR (%)</th>
+                                    <th>CHOP Index</th>
+                                    <th>Статус бота</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">Завантаження сканера...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Closed Trade History Table -->
+            <div class="card">
+                <div class="card-header flex-between">
+                    <h2>📜 Історія закритих угод бота (Trade History Log)</h2>
+                    <span class="badge badge-neutral" id="liveHistoryBadge">Останні 50 угод</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table" id="liveHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Тікер</th>
+                                    <th>Напрямок</th>
+                                    <th>Сайзинг</th>
+                                    <th>Вхід &rarr; Вихід ($)</th>
+                                    <th>Період утримання</th>
+                                    <th>Фінальний P&L (%)</th>
+                                    <th>Причина виходу</th>
+                                    <th>Час закриття</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">Історія угод порожня</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: DATA DOWNLOAD & CACHE -->
+        <section id="tab-data" class="tab-content">
             <div class="grid-2col">
                 <div class="card">
                     <div class="card-header">
@@ -100,7 +241,7 @@
             </div>
         </section>
 
-        <!-- TAB 2: DATA SLICE VIEWER -->
+        <!-- TAB 3: DATA SLICE VIEWER -->
         <section id="tab-slice" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -165,7 +306,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: MULTI-FACTOR WALK-FORWARD & LIVE FORECAST -->
+        <!-- TAB 4: MULTI-FACTOR WALK-FORWARD & LIVE FORECAST -->
         <section id="tab-multifactor" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -173,7 +314,6 @@
                 </div>
                 <div class="card-body">
                     <div class="config-grid">
-                        <!-- Col 1: Asset & Sizing -->
                         <div class="config-col">
                             <h3>1. Актив та сайзинг</h3>
                             <div class="form-group">
@@ -199,31 +339,30 @@
                             </div>
                         </div>
 
-                        <!-- Col 2: Windows & Risk Barriers -->
                         <div class="config-col">
                             <h3>2. Вікна та захисні бар'єри</h3>
-                            <div class="form-group">
-                                <label for="mfTrainBars">Вікно навчання (T_train, свічок):</label>
-                                <input type="number" id="mfTrainBars" value="60" min="5" max="1000" class="mono-input">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="mfTrainBars">T_train (свічок):</label>
+                                    <input type="number" id="mfTrainBars" value="60" class="mono-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mfPredictBars">T_predict (свічок):</label>
+                                    <input type="number" id="mfPredictBars" value="15" class="mono-input">
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="mfPredictBars">Вікно перевірки (T_predict, свічок):</label>
-                                <input type="number" id="mfPredictBars" value="15" min="1" max="500" class="mono-input">
-                            </div>
-                            <div class="form-group">
-                                <label for="mfAtrSl">Динамічний ATR Stop-Loss (множник k_SL):</label>
+                                <label for="mfAtrSl">Динамічний ATR Stop-Loss (k_SL):</label>
                                 <input type="number" step="0.5" id="mfAtrSl" value="2.0" class="mono-input">
-                                <span class="input-hint">2.0 × ATR вихід з позиції при сильному контр-русі</span>
                             </div>
-                            <div class="form-group" style="margin-top:10px;">
+                            <div class="form-group">
                                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
                                     <input type="checkbox" id="mfVBreaker" checked>
-                                    <span>V-Reversal Circuit Breaker (захист від V-відскоку)</span>
+                                    <span>V-Reversal Circuit Breaker</span>
                                 </label>
                             </div>
                         </div>
 
-                        <!-- Col 3: Factor Weights & Thresholds -->
                         <div class="config-col">
                             <h3>3. Ваги квантових факторів</h3>
                             <div class="form-row">
@@ -238,22 +377,12 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>AR(1) Weight w_AR:</label>
+                                    <label>AR(1) w_AR:</label>
                                     <input type="number" step="0.05" id="mfWAR1" value="0.15" class="mono-input">
                                 </div>
                                 <div class="form-group">
                                     <label>Curvature w_CURV:</label>
                                     <input type="number" step="0.05" id="mfWCurv" value="0.10" class="mono-input">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Поріг сигналу UP:</label>
-                                    <input type="number" step="0.01" id="mfThreshUp" value="0.18" class="mono-input">
-                                </div>
-                                <div class="form-group">
-                                    <label>Поріг сигналу DOWN:</label>
-                                    <input type="number" step="0.01" id="mfThreshDown" value="-0.18" class="mono-input">
                                 </div>
                             </div>
                         </div>
@@ -312,17 +441,17 @@
                         <div class="metric-sub" id="mfResTradesCount">0 з 0 активних вікон</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Мат. Очікування (Expected Value E[X])</div>
+                        <div class="metric-label">Мат. Очікування (EV)</div>
                         <div class="metric-value" id="mfResEV">0.00%</div>
                         <div class="metric-sub" id="mfResWinLossRate">Win: 0.0% | Payoff: 0.0</div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">Коефіцієнт Шарпа & Сортіно</div>
                         <div class="metric-value" id="mfResSharpe">0.00</div>
-                        <div class="metric-sub" id="mfResSortino">Sortino: 0.00 | Calmar: 0.00</div>
+                        <div class="metric-sub" id="mfResSortino">Sortino: 0.00</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Дохідність стратегії vs B&H</div>
+                        <div class="metric-label">Дохідність vs B&H</div>
                         <div class="metric-value" id="mfResReturn">0.0%</div>
                         <div class="metric-sub" id="mfResBhReturn">Buy & Hold: 0.0%</div>
                     </div>
@@ -335,7 +464,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2>Крива капіталу (Walk-Forward Equity Curve) проти Buy & Hold Benchmark</h2>
+                        <h2>Крива капіталу (Walk-Forward Equity Curve) проти Buy & Hold</h2>
                     </div>
                     <div class="card-body">
                         <div class="chart-wrapper">
@@ -346,7 +475,7 @@
 
                 <div class="card">
                     <div class="card-header flex-between">
-                        <h2>Послідовний журнал перевірки предіктів з фіксацією захисних виходів</h2>
+                        <h2>Журнал перевірки предіктів з фіксацією захисних виходів</h2>
                         <button id="btnExportMfCsv" class="btn-sm">Експорт предіктів у CSV</button>
                     </div>
                     <div class="card-body">
@@ -355,9 +484,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Вікно навчання (In-Sample)</th>
-                                        <th>Вікно перевірки (Out-of-Sample)</th>
-                                        <th>Сліпий предікт</th>
+                                        <th>Вікно In-Sample</th>
+                                        <th>Вікно Out-of-Sample</th>
+                                        <th>Предікт</th>
                                         <th>Причина / Вихід</th>
                                         <th>Ціна старт &rarr; фініш</th>
                                         <th>Факт. рух (%)</th>
@@ -373,7 +502,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: PORTFOLIO ENSEMBLE BASKET -->
+        <!-- TAB 5: PORTFOLIO ENSEMBLE BASKET -->
         <section id="tab-portfolio" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -381,7 +510,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label>Оберіть активи для портфельного кошика (диверсифікація ризику):</label>
+                        <label>Оберіть активи для портфельного кошика:</label>
                         <div id="portfolioTickersCheckboxGroup" class="checkbox-pills-group"></div>
                     </div>
                     <div class="form-row" style="margin-top:15px;">
@@ -424,12 +553,12 @@
                         <div class="metric-sub" id="portSortino">Sortino: 0.00</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Дохідність портфеля vs B&H</div>
+                        <div class="metric-label">Дохідність vs B&H</div>
                         <div class="metric-value" id="portReturn">0.0%</div>
                         <div class="metric-sub" id="portBhReturn">Buy & Hold: 0.0%</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Портфельне просідання (Max DD)</div>
+                        <div class="metric-label">Портфельний Max DD</div>
                         <div class="metric-value" id="portMaxDd">0.0%</div>
                         <div class="metric-sub">Ефект диверсифікації</div>
                     </div>
@@ -448,7 +577,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: CUSTOM RULES -->
+        <!-- TAB 6: CUSTOM RULES -->
         <section id="tab-custom" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -474,27 +603,27 @@
                         <div class="config-col">
                             <h3>2. Вікна</h3>
                             <div class="form-group">
-                                <label for="customTrainBars">Вікно аналізу (T_train, свічок):</label>
+                                <label for="customTrainBars">T_train (свічок):</label>
                                 <input type="number" id="customTrainBars" value="60" class="mono-input">
                             </div>
                             <div class="form-group">
-                                <label for="customPredictBars">Вікно перевірки (T_predict, свічок):</label>
+                                <label for="customPredictBars">T_predict (свічок):</label>
                                 <input type="number" id="customPredictBars" value="15" class="mono-input">
                             </div>
                             <div class="form-group">
-                                <label for="customStepBars">Крок (Step, свічок):</label>
+                                <label for="customStepBars">Step (свічок):</label>
                                 <input type="number" id="customStepBars" value="15" class="mono-input">
                             </div>
                         </div>
                         <div class="config-col">
                             <h3>3. Формули</h3>
                             <div class="form-group">
-                                <label for="conditionUp">Умова для предікту UP (BUY / LONG):</label>
-                                <input type="text" id="conditionUp" placeholder="наприклад: zscore < -1.5 and ar1_w < 0 and atr_pct < 4.0" class="mono-input">
+                                <label for="conditionUp">Умова UP (BUY / LONG):</label>
+                                <input type="text" id="conditionUp" placeholder="zscore < -1.5 and ar1_w < 0" class="mono-input">
                             </div>
                             <div class="form-group">
-                                <label for="conditionDown">Умова для предікту DOWN (SELL / SHORT):</label>
-                                <input type="text" id="conditionDown" placeholder="наприклад: zscore > 1.5 and ar1_w < 0 and atr_pct < 4.0" class="mono-input">
+                                <label for="conditionDown">Умова DOWN (SELL / SHORT):</label>
+                                <input type="text" id="conditionDown" placeholder="zscore > 1.5 and ar1_w < 0" class="mono-input">
                             </div>
                             <div class="vars-helper">
                                 <span class="vars-title">Змінні вікна (клікніть для вставки):</span>
@@ -513,7 +642,7 @@
 
         <!-- Footer -->
         <footer class="app-footer">
-            <span>AutoPortfolioManager &bull; Advanced Quant & Robustness Engine</span>
+            <span>AutoPortfolioManager &bull; 24/7 Autonomous Quant Engine & Live Tracker</span>
         </footer>
     </div>
 
