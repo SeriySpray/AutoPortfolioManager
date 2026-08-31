@@ -1,11 +1,11 @@
 #!/bin/bash
 # ==============================================================================
-# Cloudflare Zero-Config Tunnel (100% Guaranteed Access without OCI Firewall issues)
+# Cloudflare Zero-Conflict Tunnel for Coexistence with Existing Services
 # ==============================================================================
 
 set -e
 
-echo "🌐 [1/2] Завантаження Cloudflare Tunnel..."
+echo "🌐 [1/3] Завантаження Cloudflare Tunnel..."
 ARCH=$(uname -m)
 if [ "$ARCH" = "x86_64" ]; then
     CLOUDFLARED_URL="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
@@ -18,10 +18,41 @@ fi
 curl -sL "$CLOUDFLARED_URL" -o cloudflared
 chmod +x cloudflared
 
-echo "🚀 [2/2] Створення захищеного публічного HTTPS-тунелю до портів дашборду..."
-echo "------------------------------------------------------------------"
-echo "✅ За кілька секунд з'явиться пряме публічне посилання на ваш дашборд!"
-echo "   (Працює В ОБХІД усіх фаєрволів Oracle, VCN, iptables та провайдерів)"
-echo "------------------------------------------------------------------"
+echo "🔧 [2/3] Налаштування фонового сервісу тунелю (quant-tunnel.service)..."
+INSTALL_DIR=$(pwd)
 
-./cloudflared tunnel --url http://127.0.0.1:5000
+sudo tee /etc/systemd/system/quant-tunnel.service > /dev/null <<EOF
+[Unit]
+Description=AutoPortfolioManager Cloudflare HTTPS Tunnel
+After=network.target quant-web.service
+
+[Service]
+User=$USER
+WorkingDirectory=$INSTALL_DIR
+ExecStart=$INSTALL_DIR/cloudflared tunnel --url http://127.0.0.1:5000
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable quant-tunnel.service
+sudo systemctl restart quant-tunnel.service
+
+echo "🚀 [3/3] Отримання публічного HTTPS посилання на дашборд..."
+sleep 3
+
+echo ""
+echo "=================================================================="
+echo "✅ КВАНТОВИЙ ДАШБОРД ТА КАМЕРА ТЕПЕР ПРАЦЮЮТЬ ПАРАЛЕЛЬНО 24/7!"
+echo "------------------------------------------------------------------"
+echo "🔗 ВАШЕ ПУБЛІЧНЕ HTTPS ПОСИЛАННЯ:"
+journalctl -u quant-tunnel.service -n 50 --no-pager | grep -o 'https://[-a-zA-Z0-9@:%._\+~#=]\+\.trycloudflare\.com' | tail -n 1
+echo "------------------------------------------------------------------"
+echo "💡 Якщо посилання вище порожнє, виконайте:"
+echo "   journalctl -u quant-tunnel.service -n 20"
+echo "=================================================================="
