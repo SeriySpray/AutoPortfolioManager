@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# Cloudflare Zero-Conflict Tunnel for Coexistence with Existing Services
+# Cloudflare Zero-Conflict Tunnel (Port 5055)
 # ==============================================================================
 
 set -e
@@ -29,7 +29,7 @@ After=network.target quant-web.service
 [Service]
 User=$USER
 WorkingDirectory=$INSTALL_DIR
-ExecStart=$INSTALL_DIR/cloudflared tunnel --url http://127.0.0.1:5000
+ExecStart=$INSTALL_DIR/cloudflared tunnel --url http://127.0.0.1:5055
 Restart=always
 RestartSec=5
 StandardOutput=journal
@@ -44,15 +44,15 @@ sudo systemctl enable quant-tunnel.service
 sudo systemctl restart quant-tunnel.service
 
 echo "🚀 [3/3] Отримання публічного HTTPS посилання на дашборд..."
-sleep 3
+sleep 4
 
 echo ""
 echo "=================================================================="
 echo "✅ КВАНТОВИЙ ДАШБОРД ТА КАМЕРА ТЕПЕР ПРАЦЮЮТЬ ПАРАЛЕЛЬНО 24/7!"
 echo "------------------------------------------------------------------"
 echo "🔗 ВАШЕ ПУБЛІЧНЕ HTTPS ПОСИЛАННЯ:"
-journalctl -u quant-tunnel.service -n 50 --no-pager | grep -o 'https://[-a-zA-Z0-9@:%._\+~#=]\+\.trycloudflare\.com' | tail -n 1
+journalctl -u quant-tunnel.service -n 50 --no-pager -l | grep -o 'https://[-a-zA-Z0-9@:%._\+~#=]\+\.trycloudflare\.com' | tail -n 1
 echo "------------------------------------------------------------------"
 echo "💡 Якщо посилання вище порожнє, виконайте:"
-echo "   journalctl -u quant-tunnel.service -n 20"
+echo "   journalctl -u quant-tunnel.service -n 25 --no-pager -l"
 echo "=================================================================="

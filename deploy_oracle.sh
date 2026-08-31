@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # AutoPortfolioManager - Safe Multi-Project Deployment for Oracle Cloud
-# Coexists cleanly with existing projects (cameras, web servers, docker containers)
+# Coexists cleanly with camera service (Uses Dedicated Port 5055)
 # ==============================================================================
 
 set -e
@@ -27,9 +27,9 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "⚙️ [3/5] Налаштування ізольованих systemd сервісів на порту 5000..."
+echo "⚙️ [3/5] Налаштування ізольованих systemd сервісів на вільному порті 5055..."
 
-# 1. Gunicorn Backend on dedicated port 5000
+# 1. Gunicorn Backend on dedicated port 5055
 sudo tee /etc/systemd/system/quant-web.service > /dev/null <<EOF
 [Unit]
 Description=AutoPortfolioManager Gunicorn Backend
@@ -38,10 +38,11 @@ After=network.target
 [Service]
 User=$USER
 WorkingDirectory=$INSTALL_DIR
-ExecStart=$INSTALL_DIR/venv/bin/gunicorn -w 2 -b 0.0.0.0:5000 app:app --timeout 180 --access-logfile - --error-logfile -
+ExecStart=$INSTALL_DIR/venv/bin/gunicorn -w 2 -b 127.0.0.1:5055 app:app --timeout 180 --access-logfile - --error-logfile -
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
+Environment=PORT=5055
 
 [Install]
 WantedBy=multi-user.target
@@ -65,11 +66,11 @@ Environment=PYTHONUNBUFFERED=1
 WantedBy=multi-user.target
 EOF
 
-echo "🔥 [4/5] Розблокування порту 5000 в iptables..."
-sudo iptables -I INPUT 1 -p tcp --dport 5000 -j ACCEPT 2>/dev/null || true
+echo "🔥 [4/5] Розблокування порту 5055 в iptables..."
+sudo iptables -I INPUT 1 -p tcp --dport 5055 -j ACCEPT 2>/dev/null || true
 
 if command -v ufw &> /dev/null; then
-    sudo ufw allow 5000/tcp || true
+    sudo ufw allow 5055/tcp || true
 fi
 
 echo "🔄 [5/5] Запуск сервісів..."
@@ -81,8 +82,8 @@ sudo systemctl restart quant-daemon.service
 
 echo ""
 echo "=================================================="
-echo "✅ КВАНТОВИЙ СЕРВІС УСПІШНО ЗАПУЩЕНО!"
-echo "   • Працює в ізоляції на порті 5000, не зачіпаючи камеру"
+echo "✅ КВАНТОВИЙ СЕРВІС УСПІШНО ЗАПУЩЕНО НА ПОРТІ 5055!"
+echo "   • Працює без конфліктів із камерою"
 echo "--------------------------------------------------"
 echo "💡 ДЛЯ ОТРИМАННЯ ПРЯМОГО ПУБЛІЧНОГО HTTPS ПОСИЛАННЯ:"
 echo "   ./setup_cloudflare_tunnel.sh"
