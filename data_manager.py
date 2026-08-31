@@ -8,14 +8,13 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 
 class DataManager:
-    """Manages downloading, local caching in Parquet, and date slicing for stock market data."""
+    """Manages fast, timeout-protected downloading, local caching in Parquet, and date slicing."""
 
     def __init__(self, cache_dir: str = CACHE_DIR):
         self.cache_dir = cache_dir
         os.makedirs(self.cache_dir, exist_ok=True)
 
     def _get_file_path(self, ticker: str) -> str:
-        # Standardize ticker: replace . with - (e.g., BRK.B -> BRK-B)
         clean = ticker.upper().strip().replace(".", "-")
         return os.path.join(self.cache_dir, f"{clean}.parquet")
 
@@ -34,26 +33,33 @@ class DataManager:
                 loaded += 1
         return loaded
 
-
     def download_all_history(self, ticker: str) -> Tuple[bool, str, int]:
         """
-        Downloads the complete historical Daily OHLCV data for a ticker using yfinance
-        with auto_adjust=True (split and dividend adjusted) to prevent split-induced data corruption.
+        Fast, robust, and timeout-protected OHLCV downloader.
+        Uses 10y period with auto_adjust=True.
         """
         clean_ticker = ticker.upper().strip().replace(".", "-")
         if not clean_ticker:
             return False, "Тікер не може бути порожнім", 0
 
         try:
-            stock = yf.Ticker(clean_ticker)
-            # auto_adjust=True ensures Open, High, Low, Close are split-adjusted
-            df = stock.history(period="max", auto_adjust=True)
+            # 1. Primary fast download using yf.download (10 years of data, ~2500 bars)
+            df = yf.download(clean_ticker, period="10y", auto_adjust=True, progress=False, timeout=10)
+            
+            # Handle MultiIndex columns in new yfinance versions
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = [col[0] for col in df.columns]
 
-            if df.empty:
+            # 2. Fallback to Ticker.history if download returned empty
+            if df is None or df.empty:
+                stock = yf.Ticker(clean_ticker)
+                df = stock.history(period="5y", auto_adjust=True, timeout=10)
+
+            if df is None or df.empty:
                 return False, f"Дані для тікера '{clean_ticker}' не знайдено або вони недоступні.", 0
 
             df = df.reset_index()
-            # Normalize Date column to timezone-naive datetime64[ns]
+            # Normalize Date column
             if "Date" in df.columns:
                 df["Date"] = pd.to_datetime(df["Date"]).dt.tz_localize(None)
             elif "Datetime" in df.columns:
@@ -68,7 +74,6 @@ class DataManager:
             df = df[required_cols].sort_values("Date").drop_duplicates(subset=["Date"]).reset_index(drop=True)
             df.dropna(subset=["Close"], inplace=True)
 
-            # Ensure numeric types
             for c in ["Open", "High", "Low", "Close"]:
                 df[c] = pd.to_numeric(df[c], errors="coerce")
             df["Volume"] = pd.to_numeric(df["Volume"], errors="coerce").fillna(0).astype(int)
@@ -109,7 +114,6 @@ class DataManager:
             if not success or not os.path.exists(file_path):
                 return None
 
-
         try:
             df = pd.read_parquet(file_path, engine="pyarrow")
             df["Date"] = pd.to_datetime(df["Date"])
@@ -119,52 +123,48 @@ class DataManager:
                 df = df[df["Date"] >= start_dt]
 
             if end_date:
-                # Include end date up to end of that day
                 end_dt = pd.to_datetime(end_date)
                 df = df[df["Date"] <= end_dt]
 
             return df.sort_values("Date").reset_index(drop=True)
-        except Exception as e:
-            print(f"Error reading cache for {clean_ticker}: {e}")
+        except Exception:
             return None
 
-    def list_cached_tickers(self) -> List[Dict]:
-        """Lists all locally cached tickers with their date ranges and record counts."""
-        result = []
+    def list_cached_tickers(self) -> List[Dict[str, str]]:
+        """Returns metadata for all locally cached stock data."""
         if not os.path.exists(self.cache_dir):
-            return result
+            return []
 
-        for fname in os.listdir(self.cache_dir):
-            if fname.endswith(".parquet"):
-                ticker = fname[:-8]
-                file_path = os.path.join(self.cache_dir, fname)
-                try:
-                    df = pd.read_parquet(file_path, columns=["Date", "Close"], engine="pyarrow")
-                    if not df.empty:
-                        df["Date"] = pd.to_datetime(df["Date"])
-                        start_date = df["Date"].min().strftime("%Y-%m-%d")
-                        end_date = df["Date"].max().strftime("%Y-%m-%d")
-                        count = len(df)
-                        last_close = float(df["Close"].iloc[-1])
-                        result.append({
-                            "ticker": ticker,
-                            "records": count,
-                            "start_date": start_date,
-                            "end_date": end_date,
-                            "last_price": round(last_close, 2),
-                            "file_size_kb": round(os.path.getsize(file_path) / 1024, 1)
-                        })
-                except Exception as e:
-                    print(f"Error inspecting {fname}: {e}")
+        files = [f for f in os.listdir(self.cache_dir) if f.endswith(".parquet")]
+        result = []
 
-        result.sort(key=lambda x: x["ticker"])
-        return result
+        for f in files:
+            ticker = f.replace(".parquet", "")
+            file_path = os.path.join(self.cache_dir, f)
+            try:
+                df = pd.read_parquet(file_path, engine="pyarrow")
+                if not df.empty and "Date" in df.columns:
+                    dates = pd.to_datetime(df["Date"])
+                    result.append({
+                        "ticker": ticker,
+                        "records": len(df),
+                        "start_date": dates.min().strftime("%Y-%m-%d"),
+                        "end_date": dates.max().strftime("%Y-%m-%d"),
+                        "last_price": round(float(df["Close"].iloc[-1]), 2)
+                    })
+            except Exception:
+                continue
+
+        return sorted(result, key=lambda x: x["ticker"])
 
     def delete_cached_ticker(self, ticker: str) -> bool:
-        """Removes a ticker from the local cache."""
+        """Deletes a locally cached parquet file."""
         clean_ticker = ticker.upper().strip().replace(".", "-")
         file_path = self._get_file_path(clean_ticker)
         if os.path.exists(file_path):
-            os.remove(file_path)
-            return True
+            try:
+                os.remove(file_path)
+                return True
+            except OSError:
+                return False
         return False
