@@ -38,7 +38,8 @@ After=network.target
 [Service]
 User=$USER
 WorkingDirectory=$INSTALL_DIR
-ExecStart=$INSTALL_DIR/venv/bin/gunicorn -w 2 -b 127.0.0.1:5055 app:app --timeout 180 --access-logfile - --error-logfile -
+ExecStart=$INSTALL_DIR/venv/bin/gunicorn -w 2 --threads 4 -b 0.0.0.0:5055 app:app --timeout 180 --access-logfile - --error-logfile -
+
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1

@@ -32,12 +32,10 @@ def get_math_variables():
 
 @app.route("/api/cached-tickers", methods=["GET"])
 def get_cached_tickers():
-    """Returns list of downloaded tickers with date ranges. Auto-seeds if empty."""
+    """Returns list of downloaded tickers with date ranges instantly."""
     tickers = data_mgr.list_cached_tickers()
-    if not tickers:
-        data_mgr.bootstrap_core_universe()
-        tickers = data_mgr.list_cached_tickers()
     return jsonify(tickers)
+
 
 
 
@@ -368,8 +366,8 @@ def get_live_status():
             size = r[2]
             entry_p = r[3]
             
-            # Fetch latest close price from data cache
-            df = data_mgr.get_data_slice(ticker)
+            # Fetch latest close price from data cache (non-blocking)
+            df = data_mgr.get_data_slice(ticker, auto_download=False)
             curr_p = float(df["Close"].iloc[-1]) if (df is not None and not df.empty) else entry_p
 
             pnl_pct = ((curr_p - entry_p) / entry_p * 100.0) if direction == 1 else ((entry_p - curr_p) / entry_p * 100.0)
@@ -391,11 +389,12 @@ def get_live_status():
                 "updated_at": r[9]
             })
 
-        # Scanner metrics across monitored assets
+        # Scanner metrics across monitored assets (non-blocking)
         scanner_list = []
         for t in tracked_tickers:
-            df = data_mgr.get_data_slice(t)
+            df = data_mgr.get_data_slice(t, auto_download=False)
             if df is not None and len(df) >= 30:
+
                 eval_res = MathEngine.evaluate_multi_factor_window(
                     train_df=df.iloc[-60:],
                     w_mean_revert=0.15,

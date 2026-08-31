@@ -92,19 +92,23 @@ class DataManager:
         self,
         ticker: str,
         start_date: Optional[str] = None,
-        end_date: Optional[str] = None
+        end_date: Optional[str] = None,
+        auto_download: bool = True
     ) -> Optional[pd.DataFrame]:
         """
         Retrieves a slice of historical data for a ticker between start_date and end_date.
-        If not yet downloaded, downloads it automatically.
+        If auto_download is True and not yet downloaded, downloads it. Otherwise returns None immediately.
         """
         clean_ticker = ticker.upper().strip().replace(".", "-")
         file_path = self._get_file_path(clean_ticker)
 
-        if not os.path.exists(file_path):
+        if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+            if not auto_download:
+                return None
             success, _, _ = self.download_all_history(clean_ticker)
             if not success or not os.path.exists(file_path):
                 return None
+
 
         try:
             df = pd.read_parquet(file_path, engine="pyarrow")
