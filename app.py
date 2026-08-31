@@ -354,70 +354,51 @@ def get_live_status():
         hb_row = cur.fetchone()
         last_heartbeat = hb_row[0] if hb_row else None
 
-        # Open Positions with live price calculation
+        # Open Positions
         cur.execute("SELECT ticker, direction, size, entry_price, entry_date, atr_sl_price, target_price, composite_score, unrealized_pnl_pct, updated_at FROM positions")
         pos_rows = cur.fetchall()
         positions = []
         tot_unrealized_pnl = 0.0
 
         for r in pos_rows:
-            ticker = r[0]
             direction = r[1]
             size = r[2]
             entry_p = r[3]
-            
-            # Fetch latest close price from data cache (non-blocking)
-            df = data_mgr.get_data_slice(ticker, auto_download=False)
-            curr_p = float(df["Close"].iloc[-1]) if (df is not None and not df.empty) else entry_p
-
-            pnl_pct = ((curr_p - entry_p) / entry_p * 100.0) if direction == 1 else ((entry_p - curr_p) / entry_p * 100.0)
-            sized_pnl_pct = round(pnl_pct * abs(size), 2)
-            tot_unrealized_pnl += sized_pnl_pct
+            pnl_pct = r[8] or 0.0
+            tot_unrealized_pnl += pnl_pct
 
             positions.append({
-                "ticker": ticker,
+                "ticker": r[0],
                 "direction": direction,
                 "direction_label": "BUY / LONG" if direction == 1 else ("SELL / SHORT" if direction == -1 else "FLAT"),
                 "size": size,
                 "entry_price": round(entry_p, 2),
-                "current_price": round(curr_p, 2),
+                "current_price": round(entry_p * (1.0 + (pnl_pct / 100.0 / max(0.1, abs(size)))), 2) if direction == 1 else round(entry_p * (1.0 - (pnl_pct / 100.0 / max(0.1, abs(size)))), 2),
                 "entry_date": r[4],
                 "atr_sl_price": round(r[5], 2) if r[5] else None,
                 "target_price": round(r[6], 2) if r[6] else None,
                 "composite_score": round(r[7], 3) if r[7] else 0.0,
-                "unrealized_pnl_pct": sized_pnl_pct,
+                "unrealized_pnl_pct": round(pnl_pct, 2),
                 "updated_at": r[9]
             })
 
-        # Scanner metrics across monitored assets (non-blocking)
+        # Scanner metrics from SQLite cache (Instant 0.001s, 0MB RAM)
+        cur.execute("SELECT ticker, price, composite_score, signal, hurst, slope, atr_pct, chop_index, status FROM scanner_cache")
+        scan_rows = cur.fetchall()
         scanner_list = []
-        for t in tracked_tickers:
-            df = data_mgr.get_data_slice(t, auto_download=False)
-            if df is not None and len(df) >= 30:
+        for s in scan_rows:
+            scanner_list.append({
+                "ticker": s[0],
+                "price": s[1],
+                "composite_score": s[2],
+                "signal": s[3],
+                "hurst": s[4],
+                "slope": s[5],
+                "atr_pct": s[6],
+                "chop_index": s[7],
+                "status": s[8]
+            })
 
-                eval_res = MathEngine.evaluate_multi_factor_window(
-                    train_df=df.iloc[-60:],
-                    w_mean_revert=0.15,
-                    w_momentum=0.60,
-                    w_ar1=0.15,
-                    w_curv=0.10,
-                    threshold_up=0.18,
-                    threshold_down=-0.18,
-                    sizing_mode="kelly"
-                )
-                m = eval_res.get("metrics", {})
-                is_held = any(p["ticker"] == t for p in positions)
-                scanner_list.append({
-                    "ticker": t,
-                    "price": round(float(df["Close"].iloc[-1]), 2),
-                    "composite_score": eval_res.get("composite_score", 0.0),
-                    "signal": "LONG" if eval_res.get("direction") == 1 else ("SHORT" if eval_res.get("direction") == -1 else "NEUTRAL"),
-                    "hurst": m.get("hurst", 0.5),
-                    "slope": m.get("slope", 0.0),
-                    "atr_pct": m.get("atr_pct", 0.0),
-                    "chop_index": m.get("chop_index", 50.0),
-                    "status": "У ПОЗИЦІЇ" if is_held else "МОНІТОРИНГ"
-                })
 
         # History (Last 50 closed trades)
         cur.execute("SELECT ticker, direction, size, entry_price, exit_price, entry_date, exit_date, pnl_pct, exit_reason, created_at FROM trade_history ORDER BY id DESC LIMIT 50")

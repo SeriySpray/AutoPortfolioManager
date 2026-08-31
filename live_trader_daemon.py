@@ -13,17 +13,15 @@ from math_engine import MathEngine, MultiFactorModel
 
 class LiveQuantDaemon:
     """
-    24/7 Real-Time Quantitative Trading & Signal Daemon for Oracle Cloud Server.
-    - Continuously fetches live market data
-    - Evaluates Multi-Factor & Hurst alpha models
-    - Manages live positions, dynamic ATR Stop-Loss & Take-Profit exits
-    - Logs live portfolio state and dispatches Telegram / Webhook alerts
+    Ultra-lightweight 24/7 Real-Time Quantitative Trading & Signal Daemon.
+    Optimized for low-RAM cloud VPS instances (e.g. 1GB RAM Oracle VMs).
+    Pre-computes alpha scanner metrics directly into SQLite to keep Web API instant.
     """
 
     def __init__(
         self,
-        tickers: List[str] = ["AAPL", "NVDA", "MSFT", "AMZN", "TSLA", "QQQ"],
-        poll_interval_seconds: int = 300,
+        tickers: List[str] = ["AAPL", "NVDA", "MSFT", "AMZN", "TSLA", "QQQ", "META", "GOOGL"],
+        poll_interval_seconds: int = 120,
         telegram_bot_token: Optional[str] = None,
         telegram_chat_id: Optional[str] = None,
         db_path: str = "live_portfolio.db"
@@ -34,13 +32,11 @@ class LiveQuantDaemon:
         self.tg_chat_id = telegram_chat_id or os.getenv("TELEGRAM_CHAT_ID")
         self.db_path = db_path
         self.dm = DataManager()
-        self.dm.bootstrap_core_universe(self.tickers)
         self.is_running = False
         self._init_db()
 
-
     def _init_db(self):
-        """Initializes SQLite database for tracking live positions and trade logs."""
+        """Initializes SQLite database for tracking live positions, trade logs, and scanner cache."""
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         
@@ -82,14 +78,28 @@ class LiveQuantDaemon:
                 updated_at TEXT
             )
         """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS scanner_cache (
+                ticker TEXT PRIMARY KEY,
+                price REAL,
+                composite_score REAL,
+                signal TEXT,
+                hurst REAL,
+                slope REAL,
+                atr_pct REAL,
+                chop_index REAL,
+                status TEXT,
+                updated_at TEXT
+            )
+        """)
         conn.commit()
         conn.close()
 
     def send_notification(self, message: str):
-        """Sends live message to Telegram if configured, or prints to stdout."""
         ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         formatted = f"[{ts}] {message}"
-        print(formatted)
+        print(formatted, flush=True)
 
         if self.tg_token and self.tg_chat_id:
             try:
@@ -101,7 +111,7 @@ class LiveQuantDaemon:
                 }
                 requests.post(url, json=payload, timeout=5)
             except Exception as e:
-                print(f"⚠️ Telegram notification error: {e}")
+                print(f"⚠️ Telegram notification error: {e}", flush=True)
 
     def update_system_status(self, status: str, active_positions: int):
         conn = sqlite3.connect(self.db_path)
@@ -114,23 +124,14 @@ class LiveQuantDaemon:
         conn.close()
 
     def process_ticker_live_tick(self, ticker: str):
-        """Fetches latest data, updates open positions, checks ATR barriers, and evaluates new alpha."""
-        # 1. Update data
         succ, msg, count = self.dm.download_all_history(ticker)
-        df = self.dm.get_data_slice(ticker)
-        if df is None or len(df) < 60:
+        df = self.dm.get_data_slice(ticker, auto_download=False)
+        if df is None or len(df) < 30:
             return
 
         last_row = df.iloc[-1]
-        current_price = float(last_row["Close"])
+        current_price = round(float(last_row["Close"]), 2)
         current_date = last_row["Date"].strftime("%Y-%m-%d")
-
-        conn = sqlite3.connect(self.db_path)
-        cur = conn.cursor()
-
-        # Check existing open position
-        cur.execute("SELECT ticker, direction, size, entry_price, entry_date, atr_sl_price, target_price FROM positions WHERE ticker=?", (ticker,))
-        pos = cur.fetchone()
 
         train_slice = df.iloc[-60:]
         eval_res = MathEngine.evaluate_multi_factor_window(
@@ -151,28 +152,44 @@ class LiveQuantDaemon:
         pos_size = eval_res["position_size"]
         metrics = eval_res["metrics"]
         atr_val = float(metrics.get("atr_val", 2.0))
+        atr_pct = float(metrics.get("atr_pct", 2.5))
+        hurst = float(metrics.get("hurst", 0.5))
+        slope = float(metrics.get("slope", 0.0))
+        chop = float(metrics.get("chop_index", 50.0))
 
-        # 2. Manage existing open position
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+
+        cur.execute("SELECT ticker, direction, size, entry_price, entry_date, atr_sl_price, target_price FROM positions WHERE ticker=?", (ticker,))
+        pos = cur.fetchone()
+
+        status_text = "У ПОЗИЦІЇ" if pos else "МОНІТОРИНГ"
+        sig_label = "LONG" if direction == 1 else ("SHORT" if direction == -1 else "NEUTRAL")
+
+        # Update scanner cache in SQLite
+        now = datetime.datetime.now().isoformat()
+        cur.execute("""
+            INSERT OR REPLACE INTO scanner_cache (ticker, price, composite_score, signal, hurst, slope, atr_pct, chop_index, status, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (ticker, current_price, comp_score, sig_label, hurst, slope, atr_pct, chop, status_text, now))
+
+        # Position Management
         if pos:
             _, p_dir, p_size, p_entry, p_date, p_sl, p_target = pos
             pnl_pct = ((current_price - p_entry) / p_entry * 100.0) if p_dir == 1 else ((p_entry - current_price) / p_entry * 100.0)
 
-            # Check ATR Stop-Loss hit
             sl_triggered = False
             if p_dir == 1 and p_sl and current_price <= p_sl:
                 sl_triggered = True
             elif p_dir == -1 and p_sl and current_price >= p_sl:
                 sl_triggered = True
 
-            # Check Signal Reversal
             signal_reversed = (p_dir == 1 and direction == -1) or (p_dir == -1 and direction == 1)
 
             if sl_triggered or signal_reversed:
                 exit_reason = "ATR Stop-Loss захист" if sl_triggered else "Розворот квантового сигналу"
                 realized_pnl = round(pnl_pct * abs(p_size), 2)
 
-                # Record trade history
-                now = datetime.datetime.now().isoformat()
                 cur.execute("""
                     INSERT INTO trade_history (ticker, direction, size, entry_price, exit_price, entry_date, exit_date, pnl_pct, exit_reason, created_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -187,16 +204,13 @@ class LiveQuantDaemon:
                     f"   • Результат: {realized_pnl:+0.2f}%"
                 )
             else:
-                # Update unrealized PnL
-                cur.execute("UPDATE positions SET unrealized_pnl_pct=?, updated_at=? WHERE ticker=?", (round(pnl_pct, 2), datetime.datetime.now().isoformat(), ticker))
+                cur.execute("UPDATE positions SET unrealized_pnl_pct=?, updated_at=? WHERE ticker=?", (round(pnl_pct * abs(p_size), 2), now, ticker))
                 conn.commit()
 
-        # 3. Enter new position if flat and signal triggered
         elif direction != 0:
             sl_price = round(current_price - (2.0 * atr_val), 2) if direction == 1 else round(current_price + (2.0 * atr_val), 2)
             target_p = round(current_price * (1.0 + (comp_score * 0.05)), 2)
 
-            now = datetime.datetime.now().isoformat()
             cur.execute("""
                 INSERT INTO positions (ticker, direction, size, entry_price, entry_date, atr_sl_price, target_price, composite_score, unrealized_pnl_pct, updated_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0.0, ?)
@@ -213,10 +227,10 @@ class LiveQuantDaemon:
                 f"   • Обґрунтування: {eval_res['reason']}"
             )
 
+        conn.commit()
         conn.close()
 
     def run_live_cycle(self):
-        """Main 24/7 continuous daemon execution loop."""
         self.is_running = True
         self.send_notification("🚀 Квантовий демон успішно запущено на сервері Oracle! Моніторинг активів розпочато.")
 
@@ -234,7 +248,7 @@ class LiveQuantDaemon:
                     try:
                         self.process_ticker_live_tick(ticker)
                     except Exception as e:
-                        print(f"Помилка обробки {ticker}: {e}")
+                        print(f"Помилка обробки {ticker}: {e}", flush=True)
 
                 time.sleep(self.poll_interval)
             except KeyboardInterrupt:
@@ -242,7 +256,7 @@ class LiveQuantDaemon:
                 self.send_notification("🛑 Демон зупинено оператором.")
                 break
             except Exception as e:
-                print(f"Помилка циклу демона: {e}")
+                print(f"Помилка циклу демона: {e}", flush=True)
                 time.sleep(10)
 
 

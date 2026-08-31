@@ -14,9 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMathVariables();
     bindEvents();
     
-    // Initial live bot fetch and start 4-second auto-polling
+    // Initial live bot fetch and start 6-second auto-polling
     fetchLiveBotStatus();
-    livePollingInterval = setInterval(fetchLiveBotStatus, 4000);
+    livePollingInterval = setInterval(fetchLiveBotStatus, 6000);
+
 });
 
 function showAlert(message, isError = false, durationMs = 4000) {
