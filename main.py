@@ -41,7 +41,7 @@ def load_and_calculate_workflow(
     if is_cached:
         with console.status("[bold cyan]Завантаження кешованих котирувань S&P 500 (Parquet)...[/bold cyan]", spinner="dots"):
             prices_df, meta = load_sp500_data(force_refresh=False)
-        console.print(f"[green]✓[/green] Зчитано з кешу: [bold]{len(prices_df.columns)}[/bold] активів, історія з {prices_df.index[0].strftime('%Y-%m-%d')} по {prices_df.index[-1].strftime('%Y-%m-%d')}.")
+        console.print(f"[green][OK][/green] Зчитано з кешу: [bold]{len(prices_df.columns)}[/bold] активів, історія з {prices_df.index[0].strftime('%Y-%m-%d')} по {prices_df.index[-1].strftime('%Y-%m-%d')}.")
     else:
         console.print("[yellow]Завантаження максимальної доступної історії для всіх активів S&P 500 з Yahoo Finance...[/yellow]")
         with Progress(
@@ -59,12 +59,12 @@ def load_and_calculate_workflow(
 
             prices_df, meta = load_sp500_data(force_refresh=True, progress_callback=update_progress)
 
-        console.print(f"[green]✓[/green] Успішно завантажено та збережено в Parquet: [bold]{len(prices_df.columns)}[/bold] активів.")
+        console.print(f"[green][OK][/green] Успішно завантажено та збережено в Parquet: [bold]{len(prices_df.columns)}[/bold] активів.")
 
     with console.status("[bold magenta]Розрахунок адаптованого показника SSQ-Sharpe для кожного активу...[/bold magenta]", spinner="line"):
         df_results = compute_all_sp500_metrics(prices_df, meta, rf_annual=rf_annual)
 
-    console.print(f"[bright_green]✓ Розрахунок завершено для {len(df_results)} компаній.[/bright_green]\n")
+    console.print(f"[bright_green]Розрахунок завершено для {len(df_results)} компаній.[/bright_green]\n")
     return df_results, prices_df, meta
 
 
@@ -82,8 +82,8 @@ def interactive_menu_loop(
         console.print("  [bold green]1[/bold green] — Показати [bold]ТОП-25 лідерів[/bold] за SSQ-Sharpe")
         console.print("  [bold yellow]2[/bold yellow] — Показати [bold]25 аутсайдерів[/bold] (найбільший хвостовий ризик)")
         console.print("  [bold cyan]3[/bold cyan] — [bold]Детальний аналіз[/bold] конкретної акції (ввести тікер)")
-        console.print("  [bold bright_green]4[/bold bright_green] — 🎯 [bold]Актуальний ТОП-10 на найближчий 1 місяць[/bold] (з рекомендаціями по плечу 2x-3x)")
-        console.print("  [bold bright_magenta]5[/bold bright_magenta] — 📊 [bold]Запустити Walk-Forward бектест[/bold] (місячні відрізки з плечем 1x/2x/3x)")
+        console.print("  [bold bright_green]4[/bold bright_green] — [bold]Актуальний ТОП-10 на найближчий 1 місяць[/bold] (з рекомендаціями по плечу 2x-3x)")
+        console.print("  [bold bright_magenta]5[/bold bright_magenta] — [bold]Запустити Walk-Forward бектест[/bold] (місячні відрізки з плечем 1x/2x/3x)")
         console.print("  [bold magenta]6[/bold magenta] — [bold]Експортувати[/bold] результати всіх 500+ активів у CSV")
         console.print("  [bold red]7[/bold red] — [bold]Перезапустити аналіз[/bold] (скинути кеш та завантажити наново)")
         console.print("  [bold white]0[/bold white] (або q) — [dim]Вихід[/dim]\n")
@@ -117,7 +117,7 @@ def interactive_menu_loop(
         elif choice == "6":
             filename = "results_sp500_sharpe.csv"
             df_results.to_csv(filename, index=False)
-            console.print(f"[bold bright_green]✓ Результати збережено у файл: [underline]{filename}[/underline][/bold bright_green]\n")
+            console.print(f"[bold bright_green]Результати збережено у файл: [underline]{filename}[/underline][/bold bright_green]\n")
         elif choice == "7":
             confirm = console.input("[bold red]Ви дійсно бажаєте видалити локальний кеш та завантажити котирування наново? (y/n) > [/bold red]").strip().lower()
             if confirm in ("y", "yes", "т", "так"):
@@ -184,7 +184,7 @@ def main():
 
     if args.export:
         df_results.to_csv(args.export, index=False)
-        console.print(f"[bold green]✓ Дані експортовано у: {args.export}[/bold green]")
+        console.print(f"[bold green]Дані експортовано у: {args.export}[/bold green]")
 
     if args.ticker:
         render_ticker_card(df_results, args.ticker)

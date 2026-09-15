@@ -18,7 +18,7 @@ console = Console()
 def print_banner() -> None:
     """Print the application banner and methodology explanation."""
     banner_text = Text()
-    banner_text.append("⚡ AutoPortfolioManager — Quant Sharpe Screener ⚡\n", style="bold cyan")
+    banner_text.append("AutoPortfolioManager — Quant Sharpe Screener\n", style="bold cyan")
     banner_text.append("Single-Stock Quant Sharpe (SSQ-Sharpe) for S&P 500\n\n", style="bold white")
     banner_text.append("Formula: ", style="bold yellow")
     banner_text.append("SSQ-Sharpe = E(R - Rf) / [ σ_down,Lo × Ψ_tail × Φ_drawdown ]\n", style="italic green")
@@ -43,7 +43,7 @@ def render_rankings_table(df: pd.DataFrame, top_n: int = 25, bottom: bool = Fals
         return
 
     subset = df.tail(top_n).iloc[::-1] if bottom else df.head(top_n)
-    title = f"🔻 Найбільш ризиковані активи S&P 500 (BOTTOM {top_n})" if bottom else f"🏆 ТОП-{top_n} Активів S&P 500 за SSQ-Sharpe"
+    title = f"Найбільш ризиковані активи S&P 500 (BOTTOM {top_n})" if bottom else f"ТОП-{top_n} Активів S&P 500 за SSQ-Sharpe"
 
     table = Table(
         title=title,
@@ -119,7 +119,7 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
     match = df[df["ticker"] == ticker_clean]
 
     if match.empty:
-        console.print(f"[bold red]❌ Тікер '{ticker_clean}' не знайдено у списку активів S&P 500.[/bold red]\n")
+        console.print(f"[bold red][Помилка] Тікер '{ticker_clean}' не знайдено у списку активів S&P 500.[/bold red]\n")
         return
 
     row = match.iloc[0]
@@ -127,7 +127,7 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
     content = Text()
 
     # 1. General Header
-    content.append(f"📌 {row['ticker']} — {row['name']}\n", style="bold bright_yellow")
+    content.append(f"{row['ticker']} — {row['name']}\n", style="bold bright_yellow")
     content.append(f"Сектор: {row['sector']}  |  Історичний період: {row['start_date']} — {row['end_date']} ({row['total_years']} років, {row['total_days']} торгових днів)\n", style="dim white")
     content.append(f"Ціни: Початкова = ${row['start_price']:.2f}  |  Кінцева = ${row['end_price']:.2f}\n\n", style="white")
 
@@ -137,7 +137,7 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
     down_vol = row["downside_dev"] * 100.0
     mdd = row["max_drawdown"] * 100.0
 
-    content.append("📈 Базова прибутковість та волатильність:\n", style="bold cyan")
+    content.append("Базова прибутковість та волатильність:\n", style="bold cyan")
     content.append(f"  • Середньорічний дохід (CAGR):   ", style="white")
     content.append(f"{cagr:+.2f}%\n", style="bold green" if cagr >= 0 else "bold red")
     content.append(f"  • Загальна волатильність (σ):     {vol:.2f}% річних (включає як ріст, так і падіння)\n", style="white")
@@ -145,7 +145,7 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
     content.append(f"  • Максимальне просідання (Max DD): {mdd:.2f}%\n\n", style="red")
 
     # 3. Four Risk Factors
-    content.append("🔬 Складові адаптованої квант-формули ризику:\n", style="bold magenta")
+    content.append("Складові адаптованої квант-формули ризику:\n", style="bold magenta")
 
     # Lo Factor
     rho1 = row["autocorr_lag1"]
@@ -185,19 +185,19 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
     rank_classic = int(row["classic_rank"])
     delta = int(row["rank_delta"])
 
-    content.append("⚖️ Порівняння коефіцієнтів та ранг у S&P 500:\n", style="bold bright_white")
+    content.append("Порівняння коефіцієнтів та ранг у S&P 500:\n", style="bold bright_white")
     content.append(f"  • Classic Sharpe Ratio:  {sr_classic:.2f}  (Ранг у S&P 500: #{rank_classic})\n", style="dim white")
     content.append(f"  • Sortino Ratio:         {sr_sortino:.2f}\n", style="dim white")
     content.append(f"  • SSQ-Sharpe (Адаптований): {sr_ssq:.2f}  (Ранг у S&P 500: #{rank_ssq})\n", style="bold bright_green")
 
     if delta > 10:
-        content.append(f"\n💡 Висновок: Акція суттєво піднялася в рейтингу (на +{delta} позицій) у порівнянні з класичним Шарпом, "
+        content.append(f"\nВисновок: Акція суттєво піднялася в рейтингу (на +{delta} позицій) у порівнянні з класичним Шарпом, "
                        "оскільки її волатильність здебільшого висхідна, а просідання не були затяжними.", style="bright_green")
     elif delta < -10:
-        content.append(f"\n⚠️ Висновок: Акція опустилася в рейтингу (на {delta} позицій), тому що класичний Шарп "
+        content.append(f"\nВисновок: Акція опустилася в рейтингу (на {delta} позицій), тому що класичний Шарп "
                        "маскував небезпечні жирні ліві хвости та глибокі затяжні просідання.", style="bright_red")
     else:
-        content.append("\nℹ️ Висновок: Позиція активу стабільна, профіль ризику відповідає стандартним очікуванням.", style="cyan")
+        content.append("\nВисновок: Позиція активу стабільна, профіль ризику відповідає стандартним очікуванням.", style="cyan")
 
     panel = Panel(
         content,
@@ -219,7 +219,7 @@ def render_backtest_summary(results: dict) -> None:
 
     # 1. Main comparison table
     table = Table(
-        title=f"📊 Результати бектесту з плечем ({results['start_date']} — {results['end_date']}, {results['total_months']} міс.)",
+        title=f"Результати бектесту з плечем ({results['start_date']} — {results['end_date']}, {results['total_months']} міс.)",
         title_style="bold bright_white",
         box=box.ROUNDED,
         header_style="bold cyan",
@@ -295,7 +295,7 @@ def render_backtest_summary(results: dict) -> None:
     df_stocks = results.get("top_stocks")
     if df_stocks is not None and not df_stocks.empty:
         stock_table = Table(
-            title="⭐ Найбільш стабільні та вигідні компанії для одномісячного утримання (All-Stars)",
+            title="Найбільш стабільні та вигідні компанії для одномісячного утримання (All-Stars)",
             title_style="bold bright_white",
             box=box.ROUNDED,
             header_style="bold cyan",
@@ -340,7 +340,7 @@ def render_current_leveraged_picks(picks_df: pd.DataFrame) -> None:
         return
 
     table = Table(
-        title="🎯 ТОП актуальних акцій на найближчий 1 місяць (Рекомендації для плеча 2x-3x)",
+        title="ТОП актуальних акцій на найближчий 1 місяць (Рекомендації для плеча 2x-3x)",
         title_style="bold bright_white",
         box=box.ROUNDED,
         header_style="bold cyan",
