@@ -211,3 +211,179 @@ def render_ticker_card(df: pd.DataFrame, ticker: str) -> None:
         padding=(1, 2),
     )
     console.print(panel)
+
+
+def render_backtest_summary(results: dict) -> None:
+    """
+    Renders a comprehensive Rich report of the 1-month leveraged backtest.
+    """
+    t1 = results["tier_1x"]
+    t2 = results["tier_2x"]
+    t3 = results["tier_3x"]
+
+    # 1. Main comparison table
+    table = Table(
+        title=f"📊 Результати щомісячного бектесту з плечем ({results['start_date']} — {results['end_date']}, {results['total_months']} місяців)",
+        title_style="bold bright_white",
+        box=box.ROUNDED,
+        header_style="bold cyan",
+        border_style="dim blue",
+        expand=True,
+    )
+
+    table.add_column("Ключова метрика", style="bold white", width=25)
+    table.add_column("1x (Без плеча)", justify="right", style="white", width=18)
+    table.add_column("2x (Помірне плече)", justify="right", style="bold bright_cyan", width=18)
+    table.add_column("3x (Агресивне плече)", justify="right", style="bold bright_green", width=18)
+
+    def color_stat(val: float, is_pct: bool = True, invert: bool = False) -> str:
+        s = f"{val:+.1f}%" if is_pct else f"{val:.2f}"
+        if invert:
+            return f"[red]{s}[/red]" if val < 0 else f"[green]{s}[/green]"
+        return f"[green]{s}[/green]" if val >= 0 else f"[red]{s}[/red]"
+
+    table.add_row(
+        "Кумулятивний прибуток",
+        color_stat(t1["cum_return"]),
+        color_stat(t2["cum_return"]),
+        color_stat(t3["cum_return"]),
+    )
+    table.add_row(
+        "Річна дохідність (CAGR)",
+        color_stat(t1["cagr"]),
+        color_stat(t2["cagr"]),
+        color_stat(t3["cagr"]),
+    )
+    table.add_row(
+        "Річна волатильність",
+        f"{t1['annual_vol']:.1f}%",
+        f"{t2['annual_vol']:.1f}%",
+        f"{t3['annual_vol']:.1f}%",
+    )
+    table.add_row(
+        "Максимальна просадка (Max DD)",
+        f"[red]{t1['max_drawdown']:.1f}%[/red]",
+        f"[red]{t2['max_drawdown']:.1f}%[/red]",
+        f"[red]{t3['max_drawdown']:.1f}%[/red]",
+    )
+    table.add_row(
+        "Win Rate (% прибуткових місяців)",
+        f"[bold bright_yellow]{t1['win_rate']:.1f}%[/bold bright_yellow]",
+        f"[bold bright_yellow]{t2['win_rate']:.1f}%[/bold bright_yellow]",
+        f"[bold bright_yellow]{t3['win_rate']:.1f}%[/bold bright_yellow]",
+    )
+    table.add_row(
+        "Реалізований Sharpe",
+        f"{t1['sharpe']:.2f}",
+        f"{t2['sharpe']:.2f}",
+        f"{t3['sharpe']:.2f}",
+    )
+    table.add_row(
+        "Найгірший місяць (Worst Month)",
+        f"[red]{t1['worst_month']:+.1f}%[/red]",
+        f"[red]{t2['worst_month']:+.1f}%[/red]",
+        f"[red]{t3['worst_month']:+.1f}%[/red]",
+    )
+    table.add_row(
+        "Найкращий місяць (Best Month)",
+        f"[green]{t1['best_month']:+.1f}%[/green]",
+        f"[green]{t2['best_month']:+.1f}%[/green]",
+        f"[green]{t3['best_month']:+.1f}%[/green]",
+    )
+
+    console.print(table)
+    console.print("[dim]Примітка: У розрахунках 2x та 3x враховано вартість брокерського фінансування позики 6.5% річних.[/dim]\n")
+
+    # 2. Stock Leaderboard
+    df_stocks = results.get("top_stocks")
+    if df_stocks is not None and not df_stocks.empty:
+        stock_table = Table(
+            title="⭐ Найбільш стабільні та вигідні компанії для одномісячного утримання (All-Stars)",
+            title_style="bold bright_white",
+            box=box.ROUNDED,
+            header_style="bold cyan",
+            border_style="dim blue",
+            expand=True,
+        )
+
+        stock_table.add_column("Тікер", style="bold yellow", width=6)
+        stock_table.add_column("Компанія", style="white", no_wrap=True)
+        stock_table.add_column("Сектор", style="dim cyan", no_wrap=True)
+        stock_table.add_column("Місяців", justify="center", width=9)
+        stock_table.add_column("Сер. ріст", justify="right", width=11)
+        stock_table.add_column("Win Rate", justify="right", style="bold bright_yellow", width=10)
+        stock_table.add_column("Worst Month", justify="right", style="red", width=12)
+        stock_table.add_column("Best Month", justify="right", style="green", width=12)
+
+        for _, r in df_stocks.head(10).iterrows():
+            avg_ret = r["avg_month_ret"]
+            avg_str = f"[green]{avg_ret:+.1f}%[/green]" if avg_ret >= 0 else f"[red]{avg_ret:+.1f}%[/red]"
+
+            stock_table.add_row(
+                str(r["ticker"]),
+                str(r["name"])[:20],
+                str(r["sector"])[:16],
+                f"{int(r['times_picked'])}",
+                avg_str,
+                f"{r['win_rate']:.0f}%",
+                f"{r['worst_month']:+.1f}%",
+                f"{r['best_month']:+.1f}%",
+            )
+
+        console.print(stock_table)
+        console.print("[dim]Ці акції найчастіше потрапляли у відбір алгоритму і показували найвищу повторюваність прибутку.[/dim]\n")
+
+
+def render_current_leveraged_picks(picks_df: pd.DataFrame) -> None:
+    """
+    Renders the current recommended portfolio for the upcoming 1-month period.
+    """
+    if picks_df.empty:
+        console.print("[red]Не вдалося знайти кандидатів під критерії безпечного плеча.[/red]\n")
+        return
+
+    table = Table(
+        title="🎯 ТОП актуальних акцій на найближчий 1 місяць (Рекомендації для плеча 2x-3x)",
+        title_style="bold bright_white",
+        box=box.ROUNDED,
+        header_style="bold cyan",
+        border_style="dim green",
+        expand=True,
+    )
+
+    table.add_column("Тікер", style="bold yellow", width=6)
+    table.add_column("Компанія", style="white", min_width=14, max_width=20)
+    table.add_column("Ріст 3M", justify="right", width=9)
+    table.add_column("Волат.", justify="right", style="white", width=7)
+    table.add_column("Max DD", justify="right", style="red", width=8)
+    table.add_column("SSQ 3M", justify="right", style="bold bright_green", width=8)
+    table.add_column("Плече", justify="center", width=12)
+    table.add_column("Stop-Loss", justify="right", style="bold red", width=10)
+
+    for i, (_, r) in enumerate(picks_df.iterrows(), 1):
+        ret3 = r["recent_3m_ret"]
+        ret_str = f"[green]{ret3:+.1f}%[/green]" if ret3 >= 0 else f"[red]{ret3:+.1f}%[/red]"
+
+        lev_str = r["rec_leverage"]
+        if "3x" in lev_str:
+            lev_styled = "[bold bright_green]3x Stable[/bold bright_green]"
+        else:
+            lev_styled = "[bold bright_yellow]2x Medium[/bold bright_yellow]"
+
+        table.add_row(
+            str(r["ticker"]),
+            str(r["name"])[:20],
+            ret_str,
+            f"{r['recent_vol']:.1f}%",
+            f"{r['recent_max_dd']:.1f}%",
+            f"{r['recent_ssq']:.2f}",
+            lev_styled,
+            f"-{r['stop_loss_pct']:.1f}%",
+        )
+
+    console.print(table)
+    console.print(
+        "[dim]Порада з ризик-менеджменту: Safe Stop-Loss розраховано так, щоб при відповідному плечі ваш загальний збиток на угоду "
+        "не перевищував 17-18% капіталу в разі несподіваного розвороту ринку.[/dim]\n"
+    )
+
