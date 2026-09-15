@@ -35,7 +35,8 @@ def print_banner() -> None:
 
 def render_rankings_table(df: pd.DataFrame, top_n: int = 25, bottom: bool = False) -> None:
     """
-    Renders a styled Rich table of stock rankings.
+    Renders a styled Rich table of stock rankings formatted cleanly for standard terminals.
+    Guarantees that Sortino, SSQ-SR, and Delta columns are never clipped or wrapped.
     """
     if df.empty:
         console.print("[red]Немає даних для відображення.[/red]")
@@ -50,68 +51,63 @@ def render_rankings_table(df: pd.DataFrame, top_n: int = 25, bottom: bool = Fals
         box=box.ROUNDED,
         header_style="bold cyan",
         border_style="dim blue",
-        expand=True,
+        padding=(0, 0),
+        pad_edge=False,
     )
 
-    table.add_column("#", justify="right", style="bold white", width=4)
-    table.add_column("Тікер", justify="left", style="bold yellow", width=8)
-    table.add_column("Компанія", justify="left", style="white", min_width=18, max_width=25)
-    table.add_column("Сектор", justify="left", style="dim cyan", min_width=14, max_width=22)
-    table.add_column("Роки", justify="right", style="dim white", width=5)
-    table.add_column("CAGR %", justify="right", width=9)
-    table.add_column("Max DD %", justify="right", width=9)
-    table.add_column("Classic SR", justify="right", style="dim", width=10)
-    table.add_column("Sortino", justify="right", style="dim", width=9)
-    table.add_column("SSQ-Sharpe", justify="right", style="bold bright_green", width=11)
-    table.add_column("Δ Ранг", justify="center", width=8)
+    table.add_column(" # ", justify="right", style="bold white")
+    table.add_column(" Тікер ", justify="left", style="bold yellow")
+    table.add_column(" Компанія ", justify="left", style="white", max_width=13, no_wrap=True)
+    table.add_column(" CAGR ", justify="right")
+    table.add_column(" MaxDD ", justify="right")
+    table.add_column(" Sharpe ", justify="right", style="dim")
+    table.add_column(" Sortino ", justify="right", style="dim")
+    table.add_column(" SSQ-SR ", justify="right", style="bold bright_green")
+    table.add_column(" Δ ", justify="center")
 
     for _, row in subset.iterrows():
         rank = str(int(row["ssq_rank"]))
         ticker = str(row["ticker"])
-        name = str(row["name"])[:25]
-        sector = str(row["sector"])[:22]
-        years = f"{row['total_years']:.0f}"
+        name = str(row["name"])[:13]
 
         # CAGR formatting
         cagr = row["cagr"] * 100.0
         cagr_str = f"{cagr:+.1f}%"
-        cagr_styled = f"[green]{cagr_str}[/green]" if cagr >= 0 else f"[red]{cagr_str}[/red]"
+        cagr_styled = f"[green]{cagr_str:>7}[/green]" if cagr >= 0 else f"[red]{cagr_str:>7}[/red]"
 
         # Max Drawdown formatting
         mdd = row["max_drawdown"] * 100.0
-        mdd_styled = f"[red]{mdd:.1f}%[/red]"
+        mdd_styled = f"[red]{mdd:>6.1f}%[/red]"
 
-        classic_sr = f"{row['classic_sharpe']:.2f}"
-        sortino = f"{row['sortino_ratio']:.2f}"
-        ssq = f"{row['ssq_sharpe']:.2f}"
+        classic_sr = f"{row['classic_sharpe']:>6.2f}"
+        sortino = f"{row['sortino_ratio']:>7.2f}"
+        ssq = f"{row['ssq_sharpe']:>7.2f}"
 
         # Rank delta formatting
         delta = int(row["rank_delta"])
         if delta > 0:
-            delta_str = f"[bright_green]▲+{delta}[/bright_green]"
+            delta_str = f"[bright_green]+{delta}[/bright_green]"
         elif delta < 0:
-            delta_str = f"[bright_red]▼{delta}[/bright_red]"
+            delta_str = f"[bright_red]{delta}[/bright_red]"
         else:
             delta_str = "[dim]=[/dim]"
 
         table.add_row(
-            rank,
-            ticker,
-            name,
-            sector,
-            years,
-            cagr_styled,
-            mdd_styled,
-            classic_sr,
-            sortino,
-            ssq,
-            delta_str,
+            f" {rank} ",
+            f" {ticker} ",
+            f" {name} ",
+            f" {cagr_styled} ",
+            f" {mdd_styled} ",
+            f" {classic_sr} ",
+            f" {sortino} ",
+            f" {ssq} ",
+            f" {delta_str} ",
         )
 
     console.print(table)
     console.print(
-        "[dim]Пояснення: [bold bright_green]SSQ-Sharpe[/bold bright_green] враховує лише падіння, штрафує жирні хвости та глибину дна. "
-        "[bright_green]▲[/bright_green]/[bright_red]▼[/bright_red] показує, на скільки позицій актив піднявся/опустився відносно класичного Шарпа.[/dim]\n"
+        "[dim]Пояснення: [bold bright_green]SSQ-SR[/bold bright_green] — комбінований показник ризику (Downside + Lo + Tails + Drawdown). "
+        "[bold]Δ[/bold] — зсув позиції відносно класичного Шарпа.[/dim]\n"
     )
 
 
@@ -223,18 +219,19 @@ def render_backtest_summary(results: dict) -> None:
 
     # 1. Main comparison table
     table = Table(
-        title=f"📊 Результати щомісячного бектесту з плечем ({results['start_date']} — {results['end_date']}, {results['total_months']} місяців)",
+        title=f"📊 Результати бектесту з плечем ({results['start_date']} — {results['end_date']}, {results['total_months']} міс.)",
         title_style="bold bright_white",
         box=box.ROUNDED,
         header_style="bold cyan",
         border_style="dim blue",
-        expand=True,
+        pad_edge=False,
+        padding=(0, 1),
     )
 
-    table.add_column("Ключова метрика", style="bold white", width=25)
-    table.add_column("1x (Без плеча)", justify="right", style="white", width=18)
-    table.add_column("2x (Помірне плече)", justify="right", style="bold bright_cyan", width=18)
-    table.add_column("3x (Агресивне плече)", justify="right", style="bold bright_green", width=18)
+    table.add_column("Метрика", style="bold white")
+    table.add_column("1x (Без плеча)", justify="right", style="white")
+    table.add_column("2x (Помірне)", justify="right", style="bold bright_cyan")
+    table.add_column("3x (Агресивне)", justify="right", style="bold bright_green")
 
     def color_stat(val: float, is_pct: bool = True, invert: bool = False) -> str:
         s = f"{val:+.1f}%" if is_pct else f"{val:.2f}"
